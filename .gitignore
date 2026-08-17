@@ -1,0 +1,5 @@
+config.php
+.DS_Store
+Thumbs.db
+*.jsonl
+3D DEMO/
