@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="assets/css/studio.css?v=20260819-studio">
+  <link rel="stylesheet" href="assets/css/studio.css?v=20260819b-studio">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -89,54 +89,139 @@
       </div>
     </section>
 
-    <!-- ══ 02 · Project grid ══ -->
-    <section class="grid" aria-label="Selected work">
-      <div class="grid__cols"><div class="grid__col" data-col="0"><a class="plate" href="project-detail.html" data-speed="1.00">
-            <span class="plate__frame"><img src="assets/images/earth-house.webp" alt="The Earth House" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">The Earth House</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.00">
-            <span class="plate__frame"><img src="assets/images/material-detail.webp" alt="Material study" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Material study</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.00">
-            <span class="plate__frame"><img src="assets/images/noma-studio.webp" alt="Noma Studio" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Noma Studio</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.00">
-            <span class="plate__frame"><img src="assets/pano/living-area-thumb.webp" alt="Living Area 360" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Living Area 360</span><span class="annot">↗</span></span>
-          </a></div><div class="grid__col" data-col="1"><a class="plate" href="project-detail.html" data-speed="1.06">
-            <span class="plate__frame"><img src="assets/images/sandstone-courtyard.webp" alt="Aaranya" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Aaranya</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.06">
-            <span class="plate__frame"><img src="assets/images/hero.png" alt="Serein terrace" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Serein terrace</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.06">
-            <span class="plate__frame"><img src="assets/images/courtyard-house-hero.jpg" alt="Courtyard House" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Courtyard House</span><span class="annot">↗</span></span>
-          </a></div><div class="grid__col" data-col="2"><a class="plate" href="project-detail.html" data-speed="1.12">
-            <span class="plate__frame"><img src="assets/images/noma-studio.webp" alt="Noma Studio" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Noma Studio</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.12">
-            <span class="plate__frame"><img src="assets/images/courtyard-house-hero.jpg" alt="Courtyard House" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Courtyard House</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.12">
-            <span class="plate__frame"><img src="assets/images/hero-radhe.webp" alt="Serein" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Serein</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.12">
-            <span class="plate__frame"><img src="assets/images/earth-house.webp" alt="The Earth House" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">The Earth House</span><span class="annot">↗</span></span>
-          </a></div><div class="grid__col" data-col="3"><a class="plate" href="project-detail.html" data-speed="1.18">
-            <span class="plate__frame"><img src="assets/images/hero-radhe.webp" alt="Serein" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Serein</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.18">
-            <span class="plate__frame"><img src="assets/pano/kitchen-thumb.webp" alt="Kitchen 360" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Kitchen 360</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.18">
-            <span class="plate__frame"><img src="assets/images/sandstone-courtyard.webp" alt="Aaranya" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Aaranya</span><span class="annot">↗</span></span>
-          </a><a class="plate" href="project-detail.html" data-speed="1.18">
-            <span class="plate__frame"><img src="assets/images/hero.png" alt="Serein terrace" loading="lazy" decoding="async"></span>
-            <span class="plate__cap"><span class="plate__name">Serein terrace</span><span class="annot">↗</span></span>
-          </a></div></div>
+    <!-- ══ 02 · Selected work ══ -->
+    <section class="folio" id="work" aria-label="Selected work">
+      <div class="folio__head">
+        <span class="tag">selected work<i></i></span>
+        <div class="folio__index">
+          <span class="annot">Sheet A-101 · index of plates</span>
+          <div class="dim"><span class="dim__label annot">09 plates — 07 projects · 02 tours</span></div>
+        </div>
+      </div>
+
+      <div class="folio__grid">
+        <a class="folio__item" data-span="7" data-size="lg" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/earth-house.webp" alt="The Earth House, Ahmedabad" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">01</span>
+            <span class="folio__name">The Earth House</span>
+            <span class="folio__meta annot">Residence · Ahmedabad · 2025</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+        <a class="folio__item" data-span="5" data-size="lg" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/sandstone-courtyard.webp" alt="Aaranya, Surat" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">02</span>
+            <span class="folio__name">Aaranya</span>
+            <span class="folio__meta annot">Residence · Surat · 2024</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+
+        <a class="folio__item" data-span="4" data-size="md" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/hero-radhe.webp" alt="Serein, Udaipur" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">03</span>
+            <span class="folio__name">Serein</span>
+            <span class="folio__meta annot">Hospitality · Udaipur · 2023</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+        <a class="folio__item" data-span="4" data-size="md" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/courtyard-house-hero.jpg" alt="Courtyard House, Ahmedabad" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">04</span>
+            <span class="folio__name">Courtyard House</span>
+            <span class="folio__meta annot">Residence · Ahmedabad · 2022</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+        <a class="folio__item" data-span="4" data-size="md" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/material-detail.webp" alt="Material study in sandstone and teak" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">05</span>
+            <span class="folio__name">Material Study</span>
+            <span class="folio__meta annot">Detail · Ahmedabad · 2025</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+
+        <a class="folio__item" data-span="7" data-size="mg" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/noma-studio.webp" alt="Noma Studio, Vadodara" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">06</span>
+            <span class="folio__name">Noma Studio</span>
+            <span class="folio__meta annot">Workplace · Vadodara · 2025</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+        <a class="folio__item" data-span="5" data-size="mg" href="project-detail.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/hero.png" alt="Serein terrace, Udaipur" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">07</span>
+            <span class="folio__name">Serein Terrace</span>
+            <span class="folio__meta annot">Hospitality · Udaipur · 2023</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+
+        <a class="folio__item" data-span="6" data-size="pan" href="experience.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="folio__badge annot">360°</span>
+            <img src="assets/pano/living-area-thumb.webp" alt="Living area 360 walkthrough" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">08</span>
+            <span class="folio__name">Living Area</span>
+            <span class="folio__meta annot">Walkthrough · panorama · 8K</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+        <a class="folio__item" data-span="6" data-size="pan" href="experience.html">
+          <span class="folio__frame">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="folio__badge annot">360°</span>
+            <img src="assets/pano/kitchen-thumb.webp" alt="Kitchen 360 walkthrough" loading="lazy" decoding="async">
+          </span>
+          <span class="folio__cap">
+            <span class="folio__no annot">09</span>
+            <span class="folio__name">Kitchen</span>
+            <span class="folio__meta annot">Walkthrough · panorama · 8K</span>
+            <span class="folio__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="folio__foot">
+        <span class="annot">All work is drawn, detailed and supervised in house.</span>
+        <a class="btn" href="projects.html">
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          All projects <span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
     </section>
 
     <!-- ══ 03 · Statement ══ -->
@@ -151,13 +236,91 @@
       <p class="statement__text" id="statement-text"><span class="sw"><span class="sw__fill">Since</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">2013,</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw sw--em"><span class="sw__fill">Radhe</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw sw--em"><span class="sw__fill">Studio</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">has</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">brought</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">together</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">architects,</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">makers</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">and</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">engineers</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">who</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">read</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">a</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">site</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">before</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">they</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">draw</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">a</span><span class="sw__bar" aria-hidden="true"></span></span> <span class="sw"><span class="sw__fill">line.</span><span class="sw__bar" aria-hidden="true"></span></span></p>
     </section>
 
-    <!-- ══ 04 · Services ══ -->
-    <section class="services" id="services" aria-label="Services">
-      <div class="services__pin" id="services-pin">
-        <div class="services__stage">
+    <!-- ══ 04 · Our services ══ -->
+    <section class="svc" id="services" aria-label="Our services">
+      <div class="svc__head">
+        <div class="svc__intro">
+          <span class="tag">our services<i></i></span>
+          <h2 class="svc__title">Interiors we design, detail and deliver.</h2>
+          <p class="svc__lead">Eight kinds of work, one drawing office. Each one is set out,
+            detailed and supervised by the same team that met you first.</p>
+        </div>
+        <div class="svc__ref">
+          <span class="annot">Sheet A-201 · schedule of services</span>
+          <div class="dim"><span class="dim__label annot">08 disciplines — one drawing office</span></div>
+        </div>
+      </div>
+
+      <ol class="svc__grid">
+        <li class="svc__card" data-svc>
           <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span class="services__fig annot">fig. <span data-service-fig>01</span></span>
-          <div class="services__diagram" data-diagram="0"><svg viewBox="0 0 200 200" data-dia="0">
+          <span class="svc__no annot">01</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 22 24 8l18 14"/><path d="M10 22v18h28V22"/><path d="M24 40V27h14"/><path d="M15 40v-8h6v8"/></svg></span>
+          <h3 class="svc__name">Home interior design</h3>
+          <p class="svc__desc">Full homes planned room by room — storage, light and flow resolved before a single fitting is bought.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">02</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 10h15v9H6ZM27 10h15v9H27ZM6 29h15v9H6ZM27 29h15v9H27Z"/><path d="M13.5 19v4M34.5 19v4M13.5 38v4M34.5 38v4"/><path d="M24 6v36" stroke-dasharray="4 4"/></svg></span>
+          <h3 class="svc__name">Office interiors</h3>
+          <p class="svc__desc">Workplaces set out for how teams actually sit, meet and concentrate, with services coordinated early.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">03</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="9"/><path d="M20 8h8v5h-8ZM20 35h8v5h-8ZM8 20h5v8H8ZM35 20h5v8h-5Z"/></svg></span>
+          <h3 class="svc__name">Restaurant interiors</h3>
+          <p class="svc__desc">Covers, kitchen line and service routes planned together, then dressed in a material story guests remember.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">04</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 17h26v22H7Z"/><path d="M11 21h18v6H11Z"/><path d="M37 21h6v7h-6Z"/><circle cx="40" cy="14" r="3"/><path d="M7 39h26"/></svg></span>
+          <h3 class="svc__name">Hotel and lounge design</h3>
+          <p class="svc__desc">Keys, lobbies and lounges built as one sequence — arrival, light and acoustics tuned room by room.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">05</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M4 40h40"/><path d="M8 40V22l9-7 9 7v18"/><path d="M26 40V28h9v12"/><path d="M40 40v-7"/><circle cx="40" cy="29" r="3.5"/><path d="M14 40v-7h6v7"/></svg></span>
+          <h3 class="svc__name">Villa and bungalow design</h3>
+          <p class="svc__desc">Larger homes where landscape, terrace and interior are drawn as one continuous plan.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">06</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M5 12h13v26H5Z" stroke-dasharray="4 4"/><path d="M30 10h13v30H30Z"/><path d="M30 17h13M30 25h13M30 33h13"/><path d="M20 25h6m-2.5-3 3 3-3 3"/></svg></span>
+          <h3 class="svc__name">Luxury renovation</h3>
+          <p class="svc__desc">Existing homes surveyed, stripped back and rebuilt to a higher spec without losing what already worked.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">07</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="15" cy="24" r="9"/><circle cx="15" cy="24" r="3.5"/><path d="M24 24h19"/><path d="M34 24v6M40 24v5"/></svg></span>
+          <h3 class="svc__name">Turnkey projects</h3>
+          <p class="svc__desc">Design, procurement and execution on one contract — you hand over a brief and receive keys.</p>
+        </li>
+        <li class="svc__card" data-svc>
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="svc__no annot">08</span>
+          <span class="svc__glyph" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M13 25h20v5H13Z"/><path d="M13 25V9h5v16"/><path d="M33 25v-9"/><path d="M16 30v9M30 30v9"/><path d="M18 16h15"/></svg></span>
+          <h3 class="svc__name">Bespoke furniture</h3>
+          <p class="svc__desc">Joinery and loose pieces detailed to the millimetre and made with workshops we have used for years.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ══ 05 · Process ══ -->
+    <section class="proc" id="process" aria-label="How we work">
+      <div class="proc__pin" id="process-pin">
+
+        <div class="proc__stage">
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="proc__fig annot">fig. <span data-step-fig>01</span></span>
+          <span class="proc__scale annot">esc 1:50</span>
+          <span class="proc__grid-lines" aria-hidden="true"></span>
+          <div class="proc__diagram" data-diagram="0"><svg viewBox="0 0 200 200" data-dia="0">
   <g data-part="dim"><path d="M20 16h160M20 12v8M180 12v8"/></g>
   <g data-part="boundary"><path d="M20 32 180 26 174 176 28 168Z"/></g>
   <g data-part="setback"><path d="M38 49 162 44 157 159 45 151Z" stroke-dasharray="5 5"/></g>
@@ -170,7 +333,8 @@
     <circle cx="179" cy="189" r="9"/>
     <path d="M179 181v16M175 185l4-5 4 5"/>
   </g>
-</svg></div><div class="services__diagram" data-diagram="1"><svg viewBox="0 0 200 200" data-dia="1">
+</svg></div>
+          <div class="proc__diagram" data-diagram="1"><svg viewBox="0 0 200 200" data-dia="1">
   <g data-part="shell">
     <path d="M20 30h160v142H20Z"/>
     <path d="M26 36h148v130H26Z"/>
@@ -202,7 +366,8 @@
   <g data-part="dims">
     <path d="M20 186h160M20 182v8M180 182v8M104 183v6"/>
   </g>
-</svg></div><div class="services__diagram" data-diagram="2"><svg viewBox="0 0 200 200" data-dia="2">
+</svg></div>
+          <div class="proc__diagram" data-diagram="2"><svg viewBox="0 0 200 200" data-dia="2">
   <g data-part="layer" data-layer="0"><path d="M30 34v132M42 34v132M30 34h12M30 166h12"/></g>
   <g data-part="layer" data-layer="1">
     <path d="M42 34v132M78 34v132M42 34h36M42 166h36"/>
@@ -219,7 +384,8 @@
     <circle cx="103" cy="156" r="2.5"/><path d="M103 156h49M152 152v8"/>
   </g>
   <g data-part="dims"><path d="M30 182h78M30 178v8M108 178v8"/></g>
-</svg></div><div class="services__diagram" data-diagram="3"><svg viewBox="0 0 200 200" data-dia="3">
+</svg></div>
+          <div class="proc__diagram" data-diagram="3"><svg viewBox="0 0 200 200" data-dia="3">
   <g data-part="ground">
     <path d="M14 168h172"/>
     <path d="M20 178l8 -8M35.2 178l8 -8M50.4 178l8 -8M65.6 178l8 -8M80.8 178l8 -8M96 178l8 -8M111.2 178l8 -8M126.4 178l8 -8M141.6 178l8 -8M156.8 178l8 -8"/>
@@ -238,33 +404,86 @@
     <path d="M34 108 100 78M166 108 100 78"/>
   </g>
 </svg></div>
+          <div class="proc__diagram" data-diagram="4"><svg viewBox="0 0 200 200" data-dia="4">
+  <g data-part="room">
+    <path d="M24 34h152v138H24Z"/>
+    <path d="M30 40h140v126H30Z"/>
+  </g>
+  <g data-part="rug"><path d="M62 96h76v54H62Z" stroke-dasharray="6 5"/></g>
+  <g data-part="sofa">
+    <path d="M56 84h88V58H56Z"/>
+    <path d="M64 84V66h72v18"/>
+  </g>
+  <g data-part="seat">
+    <path d="M40 100h20v34H40Z"/>
+    <path d="M140 100h20v34h-20Z"/>
+  </g>
+  <g data-part="table"><circle cx="100" cy="120" r="17"/><circle cx="100" cy="120" r="6"/></g>
+  <g data-part="dress">
+    <circle cx="158" cy="152" r="9"/><path d="M158 161v9"/>
+    <path d="M34 154l10-16 10 16Z"/><path d="M44 154v14"/>
+  </g>
+  <g data-part="check"><path d="M137 14l8 9 19-21"/></g>
+</svg></div>
         </div>
-        <div class="services__panel-stack"><article class="services__panel" data-service="0" aria-hidden="false">
-          <span class="tag">services<i></i></span>
-          <p class="services__num">01</p>
-          <h3 class="services__title">Feasibility &amp; Consultation</h3>
-          <p class="services__body">We begin by listening. Understanding your brief, your site and what planning and building regulations actually allow lets us shape realistic, ambitious proposals that sit inside your budget.</p>
-        </article><article class="services__panel" data-service="1" aria-hidden="true">
-          <span class="tag">services<i></i></span>
-          <p class="services__num">02</p>
-          <h3 class="services__title">Design &amp; Planning</h3>
-          <p class="services__body">Plans, sections and material palettes developed together and tested against Indian light and climate, then carried through approvals with the drawings and arguments that get them consented.</p>
-        </article><article class="services__panel" data-service="2" aria-hidden="true">
-          <span class="tag">services<i></i></span>
-          <p class="services__num">03</p>
-          <h3 class="services__title">Technical Design and Detailing</h3>
-          <p class="services__body">We produce comprehensive technical packages for approval and contractor pricing. Our focus on materiality and construction logic keeps designs buildable, durable and true to the original idea.</p>
-        </article><article class="services__panel" data-service="3" aria-hidden="true">
-          <span class="tag">services<i></i></span>
-          <p class="services__num">04</p>
-          <h3 class="services__title">Construction Management and Support</h3>
-          <p class="services__body">We work alongside contractors through the build — answering queries, reviewing work on site and holding quality and design intent all the way to handover.</p>
-        </article></div>
-        <div class="services__rail" aria-hidden="true"><i style="top:0%"></i><i style="top:33%"></i><i style="top:67%"></i><i style="top:100%"></i></div>
+
+        <div class="proc__col">
+          <span class="tag">process<i></i></span>
+          <div class="proc__stack">
+            <article class="proc__panel" data-step="0" aria-hidden="false">
+              <p class="proc__num">01</p>
+              <p class="proc__kicker">Discover</p>
+              <h3 class="proc__title">Site read</h3>
+              <p class="proc__body">The home, brief, constraints, and intent are mapped into one clear starting point.</p>
+              <ul class="proc__chips"><li>Survey</li><li>Brief lock</li></ul>
+            </article>
+            <article class="proc__panel" data-step="1" aria-hidden="true">
+              <p class="proc__num">02</p>
+              <p class="proc__kicker">Compose</p>
+              <h3 class="proc__title">Spatial concept</h3>
+              <p class="proc__body">Planning, mood, storage, light, and proportion become one architectural direction.</p>
+              <ul class="proc__chips"><li>Plan</li><li>Mood</li></ul>
+            </article>
+            <article class="proc__panel" data-step="2" aria-hidden="true">
+              <p class="proc__num">03</p>
+              <p class="proc__kicker">Resolve</p>
+              <h3 class="proc__title">Detail lock</h3>
+              <p class="proc__body">Drawings, materials, finishes, and costs are resolved before site spending begins.</p>
+              <ul class="proc__chips"><li>Drawings</li><li>Samples</li></ul>
+            </article>
+            <article class="proc__panel" data-step="3" aria-hidden="true">
+              <p class="proc__num">04</p>
+              <p class="proc__kicker">Build</p>
+              <h3 class="proc__title">Controlled site</h3>
+              <p class="proc__body">Vendors, measurements, procurement, and finishes follow the approved design system.</p>
+              <ul class="proc__chips"><li>Schedule</li><li>Quality</li></ul>
+            </article>
+            <article class="proc__panel" data-step="4" aria-hidden="true">
+              <p class="proc__num">05</p>
+              <p class="proc__kicker">Handover</p>
+              <h3 class="proc__title">Final styling</h3>
+              <p class="proc__body">Snags close, styling lands, and the completed space is walked through with you.</p>
+              <ul class="proc__chips"><li>Snags</li><li>Walkthrough</li></ul>
+            </article>
+          </div>
+
+          <ol class="proc__ticker" aria-hidden="true">
+            <li data-tick="0"><span>01</span>Discover</li>
+            <li data-tick="1"><span>02</span>Compose</li>
+            <li data-tick="2"><span>03</span>Resolve</li>
+            <li data-tick="3"><span>04</span>Build</li>
+            <li data-tick="4"><span>05</span>Handover</li>
+          </ol>
+        </div>
+
+        <div class="proc__rail" aria-hidden="true">
+          <span class="proc__rail-fill"></span>
+          <i style="top:0%"></i><i style="top:25%"></i><i style="top:50%"></i><i style="top:75%"></i><i style="top:100%"></i>
+        </div>
       </div>
     </section>
 
-    <!-- ══ 05 · Enquiry ══ -->
+    <!-- ══ 06 · Enquiry ══ -->
     <section class="cta" aria-label="Start a project">
       <span class="tag">information<i></i></span>
       <h2>Do you have a project?</h2>
@@ -301,6 +520,6 @@
 
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/js/studio.js?v=20260819-studio"></script>
+  <script src="assets/js/studio.js?v=20260819b-studio"></script>
 </body>
 </html>

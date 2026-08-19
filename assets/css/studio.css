@@ -396,22 +396,108 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @keyframes scrollTick { 0% { transform: translateY(-100%); } 60%,100% { transform: translateY(100%); } }
 .hero__scroll span { writing-mode: vertical-rl; font-size: .55rem; letter-spacing: .3em; color: var(--muted); }
 
-/* ═══ HOME · Parallax project grid ═════════════════════════════════ */
-.grid {
-  position: relative;
-  padding: clamp(4rem, 9vw, 9rem) var(--page-x) clamp(5rem, 10vw, 10rem);
-}
-.grid__cols {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1rem, 3vw, 3rem);
-  align-items: start;
-}
-.grid__col { display: grid; gap: clamp(2.5rem, 6vw, 6rem); }
-.grid__col:nth-child(2) { padding-top: clamp(3rem, 8vw, 8rem); }
-.grid__col:nth-child(3) { padding-top: clamp(1.5rem, 4vw, 4rem); }
-.grid__col:nth-child(4) { padding-top: clamp(5rem, 12vw, 12rem); }
+/* ═══ HOME · Selected work ═════════════════════════════════════════
+   A drawing index rather than a scatter of pictures: nine plates set on a
+   twelve-column sheet, every one numbered, named and dimensioned. */
+.folio { position: relative; padding: clamp(3.5rem, 8vw, 8rem) var(--page-x) clamp(4rem, 9vw, 9rem); }
 
+.folio__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.folio__index { display: grid; justify-items: end; gap: 2.1rem; }
+.folio__index .dim { width: 100%; }
+
+.folio__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(1.1rem, 2.2vw, 2.2rem) clamp(1rem, 2vw, 2rem);
+}
+
+.folio__item {
+  position: relative;
+  display: grid;
+  grid-template-rows: var(--h) auto;
+  align-content: start;
+}
+.folio__item[data-span='4'] { grid-column: span 4; }
+.folio__item[data-span='5'] { grid-column: span 5; }
+.folio__item[data-span='6'] { grid-column: span 6; }
+.folio__item[data-span='7'] { grid-column: span 7; }
+
+/* Row heights are declared, not inherited from the photographs, so every
+   plate in a row lines up whatever shape its image happens to be. */
+.folio__item[data-size='lg']  { --h: clamp(300px, 41vw, 560px); }
+.folio__item[data-size='mg']  { --h: clamp(280px, 35vw, 470px); }
+.folio__item[data-size='md']  { --h: clamp(250px, 29vw, 400px); }
+.folio__item[data-size='pan'] { --h: clamp(180px, 21vw, 300px); }
+
+.folio__frame {
+  position: relative;
+  display: block;
+  height: var(--h);
+  overflow: hidden;
+  background: var(--plate);
+}
+/* The image is taller than its frame so it can drift inside it on scroll;
+   hover uses the standalone `scale` property so the two never fight. */
+.folio__frame img {
+  position: absolute; inset: 0;
+  width: 100%; height: 118%;
+  object-fit: cover;
+  transform: translateY(-7.5%);
+  transition: scale 1.5s var(--ease), filter .6s var(--ease);
+}
+.folio__item:hover .folio__frame img { scale: 1.045; }
+.folio__frame .marks { inset: 12px; }
+.folio__frame .marks i { border-color: transparent; transition: border-color .45s var(--ease); }
+.folio__item:hover .folio__frame .marks i { border-color: var(--amber); }
+
+.folio__badge {
+  position: absolute; z-index: 2; left: .9rem; top: .9rem;
+  padding: .35rem .55rem;
+  background: var(--sheet);
+  color: var(--amber);
+}
+
+.folio__cap {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: .9rem;
+  margin-top: .85rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--hair-soft);
+  transition: border-color .5s var(--ease);
+}
+.folio__item:hover .folio__cap { border-color: var(--amber); }
+.folio__no { grid-column: 1; color: var(--amber); }
+.folio__name {
+  grid-column: 2;
+  color: var(--clay);
+  font-size: .82rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+}
+.folio__meta { grid-column: 3; text-align: right; }
+.folio__arrow {
+  grid-column: 4;
+  color: var(--amber); font-size: .78rem;
+  opacity: 0; transform: translate(-5px, 5px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.folio__item:hover .folio__arrow { opacity: 1; transform: none; }
+
+.folio__foot {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--hair-soft);
+}
+
+/* ═══ HOME · Plates (project rail) ═════════════════════════════════ */
 .plate { position: relative; display: block; }
 .plate__frame { position: relative; overflow: hidden; background: var(--plate); }
 .plate__frame img { width: 100%; height: auto; transition: transform 1.6s var(--ease), filter .6s var(--ease); }
@@ -459,59 +545,206 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   transform-origin: left;
 }
 
-/* ═══ HOME · Services ═══════════════════════════════════════════════ */
-.services { position: relative; }
-.services__pin {
-  height: 100svh;
+/* ═══ HOME · Our services ══════════════════════════════════════════
+   A schedule of what the studio takes on, drawn as a ruled table with a
+   line glyph per trade. */
+.svc {
+  position: relative;
+  padding: clamp(4rem, 8vw, 8rem) var(--page-x);
+  background: var(--sheet-warm);
+  transition: background .6s var(--ease);
+}
+.svc__head {
   display: grid;
-  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, .6fr);
+  align-items: end;
+  gap: clamp(1.5rem, 5vw, 5rem);
+}
+.svc__intro { display: grid; justify-items: start; gap: 1.2rem; }
+.svc__ref { display: grid; justify-items: end; gap: 2.1rem; }
+.svc__ref .dim { width: 100%; }
+.svc__ref .dim__label { background: var(--sheet-warm); }
+.svc__title {
+  max-width: 20ch;
+  color: var(--clay);
+  font-size: clamp(1.6rem, 3.4vw, 2.7rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -.02em;
+}
+.svc__lead { max-width: 44rem; color: var(--muted); line-height: 1.75; }
+
+.svc__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--hair-soft);
+  border-left: 1px solid var(--hair-soft);
+}
+.svc__card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: .6rem;
+  padding: clamp(1.3rem, 2.1vw, 2rem);
+  border-right: 1px solid var(--hair-soft);
+  border-bottom: 1px solid var(--hair-soft);
+  overflow: hidden;
+}
+/* A quiet wash rises through the cell on hover, the way a highlighter
+   passes over a schedule row. */
+.svc__card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--hair-faint);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform .65s var(--ease);
+}
+.svc__card > * { position: relative; }
+.svc__card:hover::before { transform: scaleY(1); }
+.svc__card .marks i { border-color: transparent; transition: border-color .45s var(--ease); }
+.svc__card:hover .marks i { border-color: var(--amber); }
+
+.svc__no { color: var(--amber); }
+.svc__glyph { display: block; width: clamp(40px, 3.4vw, 50px); margin: .5rem 0 .35rem; }
+.svc__glyph svg { display: block; width: 100%; height: auto; overflow: visible; }
+.svc__glyph :is(path, circle, rect, line) {
+  fill: none;
+  stroke: var(--clay);
+  stroke-width: 1.4;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  transition: stroke .5s var(--ease);
+}
+.svc__card:hover .svc__glyph :is(path, circle, rect, line) { stroke: var(--amber); }
+.svc__name { color: var(--clay); font-size: clamp(1rem, 1.25vw, 1.14rem); font-weight: 600; line-height: 1.28; }
+.svc__desc { color: var(--muted); font-size: .82rem; line-height: 1.7; }
+
+/* ═══ HOME · Process ═══════════════════════════════════════════════
+   Five stages, pinned and scrubbed: the drawing on the left builds itself
+   while the note on the right changes. */
+.proc { position: relative; }
+.proc__pin {
+  position: relative;
+  height: 100svh; min-height: 600px;
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
   align-items: center;
   gap: clamp(2rem, 6vw, 6rem);
   padding: var(--head-h) var(--page-x) 0;
 }
 
-.services__stage { position: relative; aspect-ratio: 1 / 1; background: var(--plate); }
-.services__diagram { position: absolute; inset: 0; display: grid; place-items: center; }
-.services__diagram svg { width: 62%; height: auto; overflow: visible; }
+.proc__stage {
+  position: relative;
+  width: 100%;
+  max-width: min(100%, 58vh);
+  margin-inline: auto;
+  aspect-ratio: 1 / 1;
+  background: var(--plate);
+}
+.proc__grid-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--hair-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hair-faint) 1px, transparent 1px);
+  background-size: 12.5% 12.5%;
+}
+.proc__diagram { position: absolute; inset: 0; display: grid; place-items: center; }
+.proc__diagram svg { width: 62%; height: auto; overflow: visible; }
 /* No non-scaling-stroke here: it makes the browser measure dash patterns in
    screen pixels while getTotalLength() reports user units, so a draw-on
    animation would only ever cover part of each path. */
-.services__diagram path, .services__diagram line, .services__diagram circle, .services__diagram rect, .services__diagram polyline {
+.proc__diagram :is(path, line, circle, rect, polyline) {
   fill: none; stroke: var(--amber); stroke-width: 1.5;
   stroke-linecap: square; stroke-linejoin: miter;
 }
-.services__fig { position: absolute; left: 1rem; top: .8rem; }
+.proc__fig { position: absolute; left: 1rem; top: .8rem; }
+.proc__scale { position: absolute; right: 1rem; top: .8rem; }
 
-.services__panel { position: relative; display: grid; align-content: center; justify-items: start; gap: 1rem; }
-.services__num {
-  font-size: clamp(4.5rem, 9vw, 8.5rem);
-  font-weight: 400;
-  line-height: .8;
+.proc__col { display: grid; align-content: center; gap: clamp(1.2rem, 2.4vw, 1.9rem); }
+.proc__stack { position: relative; min-height: clamp(19rem, 32vh, 25rem); }
+.proc__panel { display: grid; justify-items: start; gap: .5rem; align-content: center; }
+.proc__num {
+  font-size: clamp(3.2rem, 6.6vw, 6rem);
+  font-weight: 400; line-height: .82;
+  letter-spacing: -.03em;
   color: var(--hair-soft);
-  letter-spacing: -.02em;
 }
-.services__title {
-  margin-top: -.35em;
+.proc__kicker {
+  margin-top: .5rem;
+  color: var(--amber);
+  font-size: .7rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
+}
+.proc__title {
   color: var(--clay);
-  font-size: clamp(1.6rem, 3.2vw, 2.9rem);
-  font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -.02em;
+  font-size: clamp(1.6rem, 3.1vw, 2.7rem);
+  font-weight: 500; line-height: 1.08; letter-spacing: -.02em;
 }
-.services__body { max-width: 38rem; color: var(--muted); font-size: clamp(.92rem, 1.1vw, 1.05rem); line-height: 1.75; }
+.proc__body {
+  max-width: 34rem; margin-top: .3rem;
+  color: var(--muted);
+  font-size: clamp(.92rem, 1.05vw, 1.04rem); line-height: 1.75;
+}
+.proc__chips { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .7rem; }
+.proc__chips li {
+  position: relative;
+  padding: .45rem .85rem;
+  border: 1px solid var(--hair-soft);
+  color: var(--clay);
+  font-size: .6rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+}
+.proc__chips li::before,
+.proc__chips li::after {
+  content: ''; position: absolute;
+  width: 6px; height: 6px;
+  border: 0 solid var(--amber);
+}
+.proc__chips li::before { left: -1px; top: -1px; border-top-width: 1px; border-left-width: 1px; }
+.proc__chips li::after { right: -1px; bottom: -1px; border-bottom-width: 1px; border-right-width: 1px; }
 
-.services__rail {
+/* Running index of the five stages. */
+.proc__ticker {
+  display: flex; flex-wrap: wrap; gap: .5rem clamp(1rem, 2.4vw, 2.2rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hair-soft);
+}
+.proc__ticker li {
+  display: flex; align-items: baseline; gap: .45rem;
+  color: var(--muted);
+  font-size: .6rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  transition: color .45s var(--ease), opacity .45s var(--ease);
+  opacity: .55;
+}
+.proc__ticker li span { color: var(--hair); font-size: .58rem; font-weight: 500; }
+.proc__ticker li.is-on { color: var(--clay); opacity: 1; }
+.proc__ticker li.is-on span { color: var(--amber); }
+
+.proc__rail {
   position: absolute; right: 0; top: 50%;
   transform: translateY(-50%);
   width: 1px; height: 46%;
   background: var(--hair-soft);
 }
-.services__rail i {
-  position: absolute; left: -3px; width: 7px; height: 1px;
-  background: var(--hair);
-  transition: background .4s, width .4s;
+.proc__rail-fill {
+  position: absolute; left: 0; top: 0;
+  width: 1px; height: 0;
+  background: var(--amber);
+  transition: height .25s linear;
 }
-.services__rail i.is-on { background: var(--amber); width: 15px; left: -7px; }
+.proc__rail i {
+  position: absolute; left: -3px;
+  width: 7px; height: 1px;
+  background: var(--hair);
+  transition: background .4s, width .4s, left .4s;
+}
+.proc__rail i.is-on { background: var(--amber); width: 15px; left: -7px; }
+
+/* Read as a plain list when the pin cannot run. */
+.proc__pin.is-static { height: auto; min-height: 0; display: block; padding-bottom: clamp(3rem, 6vw, 6rem); }
+.proc__pin.is-static .proc__stack { min-height: 0; display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+.proc__pin.is-static .proc__stage { margin-bottom: 2.5rem; }
+.proc__pin.is-static .proc__rail,
+.proc__pin.is-static .proc__ticker { display: none; }
 
 /* ═══ Contact call to action ═══════════════════════════════════════ */
 .cta {
@@ -683,11 +916,17 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* ═══ Responsive ═══════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .grid__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .grid__col:nth-child(3) { padding-top: 0; }
-  .services__pin { grid-template-columns: 1fr; align-content: center; gap: 2rem; }
-  .services__stage { aspect-ratio: 16 / 9; }
-  .services__rail { display: none; }
+  .folio__item[data-span] { grid-column: span 6; }
+  .folio__item[data-size='lg'],
+  .folio__item[data-size='mg'] { --h: clamp(260px, 38vw, 400px); }
+  .folio__item[data-size='md'] { --h: clamp(230px, 32vw, 340px); }
+  .folio__item[data-size='pan'] { --h: clamp(180px, 26vw, 260px); }
+  .svc__head { grid-template-columns: 1fr; align-items: start; }
+  .svc__ref { justify-items: start; }
+  .svc__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proc__pin { grid-template-columns: 1fr; align-content: center; gap: clamp(1.5rem, 4vw, 2.5rem); }
+  .proc__stage { max-width: min(100%, 34vh); }
+  .proc__rail { display: none; }
   .about__grid, .contact__grid { grid-template-columns: 1fr; }
 }
 
@@ -706,8 +945,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .hero__aside { position: static; justify-items: center; text-align: center; margin-top: 0; }
   .hero { grid-template-rows: 1fr; }
   .hero__caption { top: auto; bottom: 22%; }
-  .grid__cols { grid-template-columns: 1fr; }
-  .grid__col { padding-top: 0 !important; }
+  .folio__item[data-span] { grid-column: span 12; }
+  .folio__item[data-size] { --h: clamp(230px, 58vw, 400px); }
+  .folio__head { grid-template-columns: 1fr; align-items: start; gap: 1.8rem; }
+  .folio__index { justify-items: start; }
+  .folio__cap { grid-template-columns: auto minmax(0, 1fr) auto; row-gap: .3rem; }
+  .folio__meta { grid-column: 2 / -1; grid-row: 2; text-align: left; }
+  .folio__arrow { grid-column: 3; grid-row: 1; opacity: 1; transform: none; }
+  .svc__grid { grid-template-columns: 1fr; }
+  .proc__stage { max-width: min(100%, 30vh); }
   .form__row { grid-template-columns: 1fr; }
   .credentials { grid-template-columns: 1fr; }
   .credentials div:nth-child(odd) { border-right: 0; }
