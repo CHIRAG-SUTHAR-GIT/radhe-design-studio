@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   RADHE DESIGN STUDIO — mobile panel skin
+   The drafting sheet is a desktop idea: it needs width for its margins,
+   dimension strings and title blocks. On a phone the page is rebuilt as a
+   stack of near-full-bleed rounded panels alternating warm paper and dark
+   lacquer, which is how the reference carries the same kind of content.
+   Colours sampled from the reference: paper #fbf7ef, panel #180603 to
+   #633b3d, card #e9e3da.
+   Desktop is untouched — everything here lives inside one media query.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  :root, [data-theme='light'] {
+    --sheet:      #fbf7ef;
+    --sheet-2:    #f2ece2;
+    --sheet-warm: #efe9e0;
+    --plate:      #e9e3da;
+    --panel-r:    26px;
+    --panel-x:    13px;
+    --panel-gap:  10px;
+  }
+  [data-theme='dark'] {
+    --sheet:      #120f0c;
+    --sheet-2:    #1a1612;
+    --sheet-warm: #1a1511;
+    --plate:      #221d18;
+  }
+
+  /* The construction grid and the drawing furniture are desktop
+     apparatus; at this width they only add noise. */
+  .blueprint,
+  .statement__dim,
+  .folio__index .dim,
+  .hero__scroll,
+  .titleblock { display: none; }
+
+  .tag {
+    padding: 0;
+    color: var(--muted);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+  .tag::before, .tag::after,
+  .tag > i::before, .tag > i::after { display: none; }
+
+  /* ── The panel itself ─────────────────────────────────────────── */
+  .folio, .statement, .facts, .svc, .proc, .cta {
+    margin: var(--panel-gap) var(--panel-x);
+    padding: clamp(2.4rem, 8vw, 3.2rem) clamp(1.15rem, 4.6vw, 1.6rem);
+    border-radius: var(--panel-r);
+    overflow: hidden;
+  }
+  .folio, .statement, .facts { background: var(--sheet-warm); }
+
+  /* Dark lacquer panels, with the tokens re-scoped so every component
+     inside them inverts without being restyled one by one. */
+  .svc, .proc, .cta {
+    --ink:        #f7f0e7;
+    --clay:       #f2e6da;
+    --clay-strong:#ffffff;
+    --muted:      rgba(247, 240, 231, .60);
+    --hair:       rgba(247, 240, 231, .24);
+    --hair-soft:  rgba(247, 240, 231, .14);
+    --hair-faint: rgba(247, 240, 231, .07);
+    --plate:      rgba(255, 255, 255, .05);
+    background: linear-gradient(176deg, #180603 0%, #240c09 38%, #4a2a2b 78%, #633b3d 100%);
+    color: var(--ink);
+  }
+  [data-theme='dark'] .svc,
+  [data-theme='dark'] .proc,
+  [data-theme='dark'] .cta { background: linear-gradient(176deg, #120503 0%, #1d0907 40%, #3a2021 100%); }
+
+  /* A soft wash bleeding out of one corner, the reference's signature. */
+  .svc::after, .cta::after {
+    content: '';
+    position: absolute; z-index: 0;
+    left: -25%; bottom: -35%;
+    width: 88%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217, 142, 54, .5), rgba(176, 106, 82, .22) 45%, transparent 70%);
+    filter: blur(28px);
+    pointer-events: none;
+  }
+  .svc, .cta { position: relative; }
+  .svc > *, .cta > * { position: relative; z-index: 1; }
+
+  /* ── Type: centred and larger, as the reference sets it ───────── */
+  .folio__head, .facts__head, .svc__head, .cta {
+    text-align: center;
+    justify-items: center;
+  }
+  .folio__head { grid-template-columns: 1fr; gap: 1rem; }
+  .folio__index { justify-items: center; gap: .8rem; }
+
+  .svc__title, .facts__lead, .statement__text {
+    max-width: 22ch;
+    margin-inline: auto;
+    font-size: clamp(1.65rem, 7.4vw, 2.15rem);
+    font-weight: 400;
+    line-height: 1.16;
+    letter-spacing: -.022em;
+  }
+  .statement__text { max-width: 20ch; }
+  .facts__lead { font-size: clamp(1.35rem, 5.8vw, 1.7rem); line-height: 1.24; }
+  .svc__lead, .cta p {
+    max-width: 34ch;
+    margin-inline: auto;
+    font-size: .95rem;
+    line-height: 1.62;
+  }
+  .cta h2 { font-size: clamp(1.7rem, 7.6vw, 2.2rem); max-width: 16ch; }
+
+  /* ── Pill actions ────────────────────────────────────────────── */
+  .btn {
+    justify-content: center;
+    gap: .8rem;
+    width: min(100%, 20rem);
+    margin-inline: auto;
+    padding: 1.15rem 1.6rem;
+    border-radius: 999px;
+    background: #17100b;
+    color: #fbf7ef;
+    font-size: .78rem;
+    letter-spacing: .1em;
+  }
+  .btn .marks { display: none; }
+  .btn__arrow {
+    width: 24px; height: 24px;
+    background: transparent;
+    border-color: rgba(251, 247, 239, .4);
+    color: #fbf7ef;
+  }
+  .btn:hover .btn__arrow { background: #fbf7ef; color: #17100b; border-color: #fbf7ef; }
+
+  /* ── Plates ──────────────────────────────────────────────────── */
+  .folio__grid { gap: 1.1rem; }
+  .folio__frame { border-radius: 18px; }
+  .folio__frame .marks { display: none; }
+  .folio__cap {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    border-top: 0;
+    padding-top: .7rem;
+    margin-top: .55rem;
+  }
+  .folio__badge { border-radius: 999px; background: rgba(251, 247, 239, .92); }
+  .folio__foot { border-top: 0; justify-content: center; }
+  .folio__foot .annot { display: none; }
+
+  .chips { justify-content: flex-start; padding-inline: 2px; }
+  .chip { border-radius: 999px; padding: .62rem 1rem; }
+  .chip.is-on { background: #17100b; border-color: #17100b; color: #fbf7ef; }
+  .chip.is-on span { color: var(--amber); }
+  .chip.is-on::before, .chip.is-on::after { display: none; }
+
+  /* ── Bento ───────────────────────────────────────────────────── */
+  .facts__grid { gap: .7rem; }
+  .facts__cell {
+    border: 0;
+    border-radius: 20px;
+    background: var(--plate);
+    padding: 1.5rem 1.35rem;
+    text-align: left;
+  }
+  .facts__cell[data-tone='warm'] {
+    background:
+      radial-gradient(120% 90% at 85% 8%, rgba(217, 142, 54, .38), transparent 58%),
+      var(--plate);
+  }
+  .facts__cell[data-tone='warm']::before { display: none; }
+  .facts__fig { font-size: clamp(2.4rem, 11vw, 3rem); }
+
+  /* ── Services schedule ───────────────────────────────────────── */
+  .svc__card {
+    border: 0;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .055);
+    padding: 1.6rem 1.4rem;
+  }
+  .svc__card::before { display: none; }
+  .svc__card .marks { display: none; }
+  .svc__arrow { border-radius: 50%; border-color: var(--hair); }
+  .svc__ref { display: none; }
+
+  /* ── Process ─────────────────────────────────────────────────── */
+  .proc__pin { padding-left: 0; padding-right: 0; min-height: 0; }
+  .proc__stage {
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .05);
+    max-width: min(100%, 42vh);
+  }
+  .proc__stage .marks { display: none; }
+  .proc__grid-lines { opacity: .5; }
+  .proc__chips li { border-radius: 999px; }
+  .proc__chips li::before, .proc__chips li::after { display: none; }
+
+  /* The header floats over panels of either colour, so it carries its
+     own scrim rather than relying on the page behind it. */
+  .head {
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--sheet) 94%, transparent) 0%,
+      color-mix(in srgb, var(--sheet) 82%, transparent) 62%,
+      transparent 100%);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+  }
+  @supports not (background: color-mix(in srgb, red 50%, transparent)) {
+    .head { background: var(--sheet); }
+  }
+
+  /* On lacquer the pill inverts — a near-black pill on a near-black
+     panel reads as a hole rather than a control. */
+  .svc .btn, .proc .btn, .cta .btn { background: #fbf7ef; color: #17100b; }
+  .svc .btn__arrow, .proc .btn__arrow, .cta .btn__arrow {
+    border-color: rgba(23, 16, 11, .35);
+    color: #17100b;
+  }
+  .svc .btn:hover .btn__arrow,
+  .cta .btn:hover .btn__arrow { background: #17100b; color: #fbf7ef; border-color: #17100b; }
+
+  /* ── Footer sits on paper, not in a panel ────────────────────── */
+  .foot { padding-inline: calc(var(--panel-x) + .35rem); }
+  .foot__rule { opacity: .4; }
+}
