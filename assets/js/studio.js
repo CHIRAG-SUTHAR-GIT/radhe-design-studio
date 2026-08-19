@@ -494,6 +494,145 @@
     });
   }
 
+  /* ── Index filter chips ────────────────────────────────────────────
+     Filtering changes the grid's height, so ScrollTrigger is told to
+     remeasure once the plates have settled. */
+  const chipRow = $('.chips');
+  if (chipRow) {
+    const chips = $$('.chip', chipRow);
+    const plates = $$('.folio__item');
+    const empty = $('.chips__empty');
+
+    const apply = (want) => {
+      let shown = 0;
+      plates.forEach((plate) => {
+        const on = want === 'all' || plate.dataset.cat === want;
+        if (on) shown += 1;
+        plate.classList.toggle('is-out', !on);
+        if (on && motion) {
+          gsap.fromTo(plate, { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: .5, ease: 'power2.out', overwrite: true });
+        }
+      });
+      if (empty) empty.hidden = shown > 0;
+      if (motion) requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+
+    chips.forEach((chip) => chip.addEventListener('click', () => {
+      chips.forEach((c) => {
+        const on = c === chip;
+        c.classList.toggle('is-on', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      apply(chip.dataset.filter);
+    }));
+  }
+
+  /* ── Counting figures ──────────────────────────────────────────── */
+  const counters = $$('[data-count]');
+  if (counters.length && motion) {
+    counters.forEach((node) => {
+      const target = Number(node.dataset.count) || 0;
+      const box = { v: 0 };
+      gsap.to(box, {
+        v: target,
+        duration: 1.4,
+        ease: 'power2.out',
+        onUpdate() { node.textContent = String(Math.round(box.v)).padStart(2, '0'); },
+        scrollTrigger: { trigger: node, start: 'top 90%', once: true }
+      });
+    });
+  } else {
+    counters.forEach((n) => { n.textContent = String(n.dataset.count).padStart(2, '0'); });
+  }
+
+  /* ── Services carousel ─────────────────────────────────────────────
+     Only ever a carousel while the CSS says so, so the desktop schedule
+     is never driven by this. It advances on its own, but stops the moment
+     a reader touches it — an auto-rotating strip you cannot pause is a
+     genuine accessibility failure, not a flourish. */
+  const svcRail = $('.svc__grid');
+  const svcNav = $('.svc__nav');
+  if (svcRail && svcNav) {
+    const cards = $$('.svc__card', svcRail);
+    const bar = $('.svc__bar i', svcNav);
+    const prev = $('[data-svc-prev]', svcNav);
+    const next = $('[data-svc-next]', svcNav);
+    const isRail = () => getComputedStyle(svcRail).overflowX !== 'visible';
+    let timer = 0;
+    let idle = 0;
+
+    const index = () => {
+      const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+      return Math.round(svcRail.scrollLeft / step);
+    };
+
+    const paint = () => {
+      const i = Math.min(cards.length - 1, Math.max(0, index()));
+      if (bar) {
+        bar.style.width = `${100 / cards.length}%`;
+        bar.style.left = `${(100 / cards.length) * i}%`;
+      }
+      const end = svcRail.scrollLeft >= svcRail.scrollWidth - svcRail.clientWidth - 2;
+      if (prev) prev.disabled = svcRail.scrollLeft <= 2;
+      if (next) next.disabled = end;
+    };
+
+    const go = (dir) => {
+      const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : svcRail.clientWidth;
+      svcRail.scrollBy({ left: step * dir, behavior: 'smooth' });
+    };
+
+    const stop = () => { clearInterval(timer); timer = 0; };
+    const play = () => {
+      stop();
+      if (reduced || !isRail()) return;
+      timer = setInterval(() => {
+        if (document.hidden) return;
+        const end = svcRail.scrollLeft >= svcRail.scrollWidth - svcRail.clientWidth - 2;
+        if (end) svcRail.scrollTo({ left: 0, behavior: 'smooth' });
+        else go(1);
+      }, 3600);
+    };
+
+    // Any interaction pauses it; it only resumes after the reader has
+    // been still for a while.
+    const hold = () => {
+      stop();
+      clearTimeout(idle);
+      idle = setTimeout(play, 7000);
+    };
+
+    prev?.addEventListener('click', () => { go(-1); hold(); });
+    next?.addEventListener('click', () => { go(1); hold(); });
+    svcRail.addEventListener('scroll', paint, { passive: true });
+    ['pointerdown', 'touchstart', 'wheel', 'focusin'].forEach((ev) =>
+      svcRail.addEventListener(ev, hold, { passive: true }));
+    svcNav.addEventListener('mouseenter', stop);
+    svcNav.addEventListener('mouseleave', () => { clearTimeout(idle); play(); });
+
+    // Nothing runs while the schedule is off screen.
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => (entry.isIntersecting ? play() : stop()));
+    }, { threshold: .25 }).observe(svcRail);
+
+    addEventListener('resize', () => { paint(); isRail() ? play() : stop(); });
+    paint();
+  }
+
+  /* ── Accordion ─────────────────────────────────────────────────── */
+  $$('.acc__head').forEach((head) => {
+    head.addEventListener('click', () => {
+      const open = head.getAttribute('aria-expanded') === 'true';
+      // One panel at a time, so the list never grows past a screenful.
+      $$('.acc__head').forEach((other) => {
+        if (other !== head) other.setAttribute('aria-expanded', 'false');
+      });
+      head.setAttribute('aria-expanded', String(!open));
+      if (motion) setTimeout(() => ScrollTrigger.refresh(), 600);
+    });
+  });
+
   /* ── Floating corner note ──────────────────────────────────────── */
   const note = $('.corner-note');
   if (note) {

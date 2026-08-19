@@ -711,7 +711,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .proc__ticker li.is-on span { color: var(--amber); }
 
 .proc__rail {
-  position: absolute; right: 0; top: 50%;
+  /* Inset by the width the active tick grows to on its left, so the rail
+     never pushes the page wider than the viewport. */
+  position: absolute; right: 8px; top: 50%;
   transform: translateY(-50%);
   width: 1px; height: 46%;
   background: var(--hair-soft);
@@ -1139,4 +1141,185 @@ body.is-touring { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .rise { will-change: auto; filter: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* ═══ Filter chips ═════════════════════════════════════════════════
+   A horizontally scrolling rail on a phone, a plain row on a sheet. */
+.chips {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.2rem);
+  padding-bottom: .35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.chips::-webkit-scrollbar { display: none; }
+
+.chip {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex; align-items: baseline; gap: .5rem;
+  padding: .6rem .95rem;
+  border: 1px solid var(--hair-soft);
+  color: var(--clay);
+  font-size: .66rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  white-space: nowrap;
+  transition: border-color .4s var(--ease), color .4s var(--ease), background .4s var(--ease);
+}
+.chip span { color: var(--muted); font-size: .56rem; letter-spacing: .1em; transition: color .4s var(--ease); }
+.chip:hover { border-color: var(--hair); }
+.chip.is-on { border-color: var(--amber); background: var(--hair-faint); }
+.chip.is-on span { color: var(--amber); }
+/* Corner ticks, as on every other framed element here. */
+.chip.is-on::before, .chip.is-on::after {
+  content: ''; position: absolute;
+  width: 6px; height: 6px; border: 0 solid var(--amber);
+}
+.chip.is-on::before { left: -1px; top: -1px; border-top-width: 1px; border-left-width: 1px; }
+.chip.is-on::after { right: -1px; bottom: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+
+.chips__empty { display: block; padding: 2.5rem 0; text-align: center; }
+.chips__empty[hidden] { display: none; }
+
+.folio__item.is-out { display: none; }
+
+/* ═══ Studio at a glance — bento ═══════════════════════════════════ */
+.facts { position: relative; padding: clamp(3rem, 7vw, 7rem) var(--page-x); }
+.facts__head { display: grid; gap: 1.2rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+.facts__lead { max-width: 40rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.6; }
+
+.facts__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(.8rem, 1.6vw, 1.4rem);
+}
+.facts__cell {
+  position: relative;
+  display: grid; align-content: start; gap: .45rem;
+  grid-column: span 12;
+  padding: clamp(1.2rem, 2.2vw, 1.9rem);
+  border: 1px solid var(--hair-soft);
+  overflow: hidden;
+}
+.facts__cell[data-span='4'] { grid-column: span 4; }
+.facts__cell[data-span='5'] { grid-column: span 5; }
+.facts__cell[data-span='7'] { grid-column: span 7; }
+.facts__cell[data-span='8'] { grid-column: span 8; }
+
+/* The reference washes its stat cards in colour; here the wash is the
+   amber of the sheet, kept faint enough to stay a drawing. */
+.facts__cell[data-tone='warm']::before {
+  content: '';
+  position: absolute; z-index: 0; right: -30%; top: -60%;
+  width: 90%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 142, 54, .16), transparent 68%);
+}
+.facts__cell > * { position: relative; z-index: 1; }
+
+.facts__fig {
+  display: flex; align-items: baseline; gap: .5rem;
+  color: var(--amber);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+.facts__fig i { color: var(--muted); font-size: .6rem; font-style: normal; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.facts__fig--code { font-size: clamp(1.1rem, 2.2vw, 1.6rem); font-weight: 500; letter-spacing: .04em; }
+.facts__name { margin-top: .35rem; color: var(--clay); font-size: clamp(.95rem, 1.2vw, 1.1rem); font-weight: 600; }
+.facts__note { color: var(--muted); font-size: .82rem; line-height: 1.65; }
+
+/* ═══ Services carousel (phones) ═══════════════════════════════════ */
+.svc__nav { display: none; }
+.svc__arrow {
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  border: 1px solid var(--hair);
+  color: var(--clay);
+  font-size: .9rem;
+  transition: border-color .4s, color .4s, opacity .4s;
+}
+.svc__arrow:disabled { opacity: .3; }
+.svc__arrow:not(:disabled):hover { border-color: var(--amber); color: var(--amber); }
+.svc__bar { position: relative; flex: 1; height: 1px; background: var(--hair-soft); }
+.svc__bar i {
+  position: absolute; left: 0; top: 0; height: 1px; width: 12.5%;
+  background: var(--amber);
+  transition: left .45s var(--ease), width .45s var(--ease);
+}
+
+/* ═══ Accordion ════════════════════════════════════════════════════ */
+.acc { border-top: 1px solid var(--hair-soft); margin-top: clamp(2.5rem, 5vw, 4rem); }
+.acc__item { border-bottom: 1px solid var(--hair-soft); }
+.acc__head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1.3rem, 2.6vw, 1.9rem) 0;
+  text-align: left;
+}
+.acc__no { color: var(--amber); }
+.acc__title {
+  color: var(--clay);
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -.01em;
+  transition: color .4s var(--ease);
+}
+.acc__head:hover .acc__title { color: var(--amber); }
+.acc__chev {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border: 1px solid var(--hair-soft);
+  border-radius: 50%;
+  color: var(--amber);
+  font-size: .7rem;
+  transition: transform .5s var(--ease), border-color .4s, background .4s;
+}
+.acc__head[aria-expanded='true'] .acc__chev { transform: rotate(180deg); border-color: var(--amber); }
+/* 0fr → 1fr animates cleanly and needs no measured pixel heights. */
+.acc__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease); }
+.acc__head[aria-expanded='true'] + .acc__panel { grid-template-rows: 1fr; }
+.acc__inner { min-height: 0; overflow: hidden; }
+.acc__body { padding: 0 0 clamp(1.4rem, 3vw, 2.2rem); }
+.acc__body p { max-width: 46rem; color: var(--muted); line-height: 1.75; }
+.acc__panel .svc-row__points { margin-top: 1.2rem; }
+
+@media (max-width: 640px) {
+  .acc__head { grid-template-columns: 2.4rem minmax(0, 1fr) auto; gap: .7rem; }
+}
+
+@media (max-width: 1100px) {
+  .facts__cell[data-span] { grid-column: span 6; }
+  .facts__cell[data-span='7'], .facts__cell[data-span='8'] { grid-column: span 12; }
+}
+
+@media (max-width: 760px) {
+  .facts__cell[data-span] { grid-column: span 12; }
+
+  /* The schedule becomes a snap rail with the next cell peeking, which is
+     how the reference carries cards on a phone. */
+  .svc__nav { display: flex; align-items: center; gap: 1rem; margin: 2rem 0 1.2rem; }
+  .svc__grid {
+    display: flex;
+    margin-top: 0;
+    border: 0;
+    gap: .9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .svc__grid::-webkit-scrollbar { display: none; }
+  .svc__card {
+    flex: 0 0 84%;
+    scroll-snap-align: center;
+    border: 1px solid var(--hair-soft);
+  }
 }
