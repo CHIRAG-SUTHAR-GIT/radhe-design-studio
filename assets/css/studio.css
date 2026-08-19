@@ -535,15 +535,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   line-height: 1.28;
   letter-spacing: -.01em;
 }
-/* Each word starts as a grey bar and fills in with type as you scroll. */
-.sw { display: inline-block; position: relative; }
-.sw__fill { color: var(--clay); }
-.sw--em .sw__fill { color: var(--amber); font-weight: 700; border-bottom: 2px solid var(--amber); }
-.sw__bar {
-  position: absolute; inset: .18em 0 .22em;
-  background: var(--hair);
-  transform-origin: left;
-}
 
 /* ═══ HOME · Our services ══════════════════════════════════════════
    A schedule of what the studio takes on, drawn as a ruled table with a
@@ -954,6 +945,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .folio__arrow { grid-column: 3; grid-row: 1; opacity: 1; transform: none; }
   .svc__grid { grid-template-columns: 1fr; }
   .proc__stage { max-width: min(100%, 30vh); }
+  /* The coordinate string and the scale label share a baseline on wide
+     sheets; on a phone there is no room, so the coordinates drop below. */
+  .statement__coords { position: static; display: block; margin-top: 1.1rem; }
   .form__row { grid-template-columns: 1fr; }
   .credentials { grid-template-columns: 1fr; }
   .credentials div:nth-child(odd) { border-right: 0; }
@@ -1101,3 +1095,48 @@ body.is-touring { overflow: hidden; }
 
 /* Footer secondary links. */
 .foot__row .foot__minor { color: var(--muted); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOTION LAYER
+   Scroll-driven type and entrances. Everything here is scrubbed by
+   scroll position rather than played on a timer, so the page only moves
+   while the reader moves it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Swept type — a diagonal gradient is clipped to the glyphs and its
+   position is dragged across the block as it rises, so a sentence
+   resolves from amber through grey into ink, mid-word rather than
+   word by word. Guarded: without background-clip the text must stay
+   visible, so the transparent fill is only applied where it works. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .sweep {
+    --sweep-ink: var(--clay);
+    --sweep-mid: var(--hair);
+    --sweep-far: var(--amber);
+    background-image: linear-gradient(101deg,
+      var(--sweep-ink) 0%,
+      var(--sweep-ink) 28%,
+      var(--sweep-mid) 43%,
+      var(--sweep-far) 60%,
+      var(--sweep-far) 100%);
+    background-size: 320% 100%;
+    background-repeat: no-repeat;
+    background-position: 0% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  /* Body copy resolves into ink; headings into clay. */
+  .sweep--body { --sweep-ink: var(--ink); --sweep-mid: var(--muted); }
+  /* Emphasis holds the accent instead of resolving. */
+  .sweep b, .sweep strong { -webkit-text-fill-color: var(--amber); color: var(--amber); }
+}
+
+/* Blurred rise — a block arrives out of focus and settles as it crosses
+   the lower third, the way the reference lands its cards. */
+.rise { will-change: transform, filter, opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise { will-change: auto; filter: none !important; opacity: 1 !important; transform: none !important; }
+}

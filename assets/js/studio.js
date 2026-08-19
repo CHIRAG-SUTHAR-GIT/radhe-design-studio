@@ -174,28 +174,6 @@
     });
   }
 
-  /* ── Scrubbed statement ────────────────────────────────────────
-     Every word is a grey bar that wipes away to reveal the type, driven
-     directly by scroll position rather than a timed animation. */
-  const statement = $('#statement-text');
-  if (statement && motion) {
-    const bars = $$('.sw__bar', statement);
-    gsap.set(bars, { transformOrigin: 'left center' });
-    gsap.to(bars, {
-      scaleX: 0,
-      ease: 'none',
-      stagger: { each: 1 },
-      scrollTrigger: {
-        trigger: '#statement',
-        start: 'top 72%',
-        end: 'bottom 78%',
-        scrub: .5
-      }
-    });
-  } else if (statement) {
-    $$('.sw__bar', statement).forEach((bar) => bar.remove());
-  }
-
   /* ── Services schedule ─────────────────────────────────────────────
      Cells arrive row by row and each glyph draws itself once, so the
      schedule reads as it is being written out. */
@@ -206,8 +184,8 @@
       const glyph = strokes(card.querySelector('.svc__glyph') || card);
       prime(glyph);
 
-      gsap.fromTo(card, { opacity: 0, y: 26 }, {
-        opacity: 1, y: 0, duration: .8, ease: 'power3.out',
+      gsap.fromTo(card, { opacity: 0, y: 26, filter: 'blur(7px)' }, {
+        opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out',
         delay: (index % 4) * .07,
         scrollTrigger: {
           trigger: card,
@@ -462,13 +440,58 @@
 
   /* ── Quiet reveals for everything else ─────────────────────────── */
   if (motion) {
-    $$('[data-reveal], .prose > *, .project__figures figure, .credentials, .contact__grid > *, .cta > *, .svc__intro > *, .svc__ref > *, .folio__head > *, .folio__foot > *')
+    $$('[data-reveal], .prose > *, .project__figures figure, .credentials, .contact__grid > *, .svc__intro > *, .svc__ref > *, .folio__head > *, .folio__foot > *')
       .forEach((el) => {
         gsap.fromTo(el, { opacity: 0, y: 20 }, {
           opacity: 1, y: 0, duration: .8, ease: 'power2.out',
           scrollTrigger: { trigger: el, start: 'top 92%', once: true }
         });
       });
+  }
+
+  /* ── Swept type ────────────────────────────────────────────────────
+     The gradient behind the glyphs is dragged across the block as it
+     rises, so the sentence resolves from accent through grey into ink.
+     Because it is one gradient over the whole box, the transition cuts
+     mid-word rather than snapping word by word. */
+  const swept = $$('.sweep');
+  if (swept.length && motion) {
+    swept.forEach((el) => {
+      gsap.fromTo(el,
+        { backgroundPosition: '100% 0' },
+        {
+          backgroundPosition: '0% 0',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            end: () => `bottom ${el.offsetHeight > innerHeight * .35 ? 55 : 45}%`,
+            scrub: .55
+          }
+        });
+    });
+  } else {
+    // Resolved state, so the copy is never left sitting in the accent.
+    swept.forEach((el) => { el.style.backgroundPosition = '0% 0'; });
+  }
+
+  /* ── Blurred rise ──────────────────────────────────────────────────
+     Blur is the expensive part, so it is scrubbed over a short band and
+     dropped entirely on the smallest screens, where it costs the most
+     and reads the least. */
+  const risers = $$('[data-rise]');
+  if (risers.length && motion) {
+    const soft = innerWidth > 520 ? 9 : 6;
+    risers.forEach((el) => {
+      gsap.fromTo(el,
+        { y: 34, opacity: 0, filter: `blur(${soft}px)` },
+        {
+          y: 0, opacity: 1, filter: 'blur(0px)',
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 64%', scrub: .5 },
+          onComplete() { el.style.willChange = 'auto'; }
+        });
+    });
   }
 
   /* ── Floating corner note ──────────────────────────────────────── */
@@ -487,6 +510,20 @@
     if (note) note.textContent = 'Thank you — we will reply within two working days.';
     form.reset();
   });
+
+  /* ── Smooth scroll, pointer devices only ───────────────────────────
+     Measured against the reference: its touch flicks go from rest to full
+     speed inside one frame, which is native momentum, not an interpolated
+     scroll. Phones keep their own scrolling; mice and trackpads get the
+     eased one, where it genuinely helps. */
+  if (motion && window.Lenis && matchMedia('(pointer: fine)').matches) {
+    const lenis = new Lenis({ duration: 1.05, wheelMultiplier: .9, smoothWheel: true, syncTouch: false });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    $('#menu-open')?.addEventListener('click', () => lenis.stop());
+    $('#menu-close')?.addEventListener('click', () => lenis.start());
+  }
 
   if (motion) {
     requestAnimationFrame(() => ScrollTrigger.refresh());
