@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
 
 :root {
   --ink: #11100e;
@@ -1915,3 +1914,745 @@ html.has-motion body { overscroll-behavior: none; }
   .motion-hud,
   .page-wipe { display: none !important; }
 }
+
+/* ── CAD plan intro ─────────────────────────────────────────
+   The loader reads as a drafting sheet: lines gather from the edges
+   and assemble one 2D ground-floor plan before the sheet clears. */
+.page-loader.is-cad .page-loader__grid {
+  background-image:
+    linear-gradient(rgba(23,23,19,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23,23,19,.05) 1px, transparent 1px);
+  background-size: 2.25rem 2.25rem;
+}
+
+.page-loader__plan {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.page-loader.is-cad .page-loader__mark {
+  left: var(--page-x);
+  top: clamp(1.6rem, 4vw, 3.2rem);
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+  transform: none;
+}
+
+.page-loader.is-cad .page-loader__mark::before,
+.page-loader.is-cad .page-loader__mark::after { display: none; }
+
+.page-loader.is-cad .page-loader__counter {
+  top: clamp(1.9rem, 4vw, 3.4rem);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-family: var(--mono, 'DM Mono', Consolas, monospace);
+  letter-spacing: .12em;
+}
+
+.page-loader.is-cad .page-loader__counter::after {
+  content: ' %';
+  opacity: .45;
+}
+
+.page-loader__stamp {
+  position: absolute;
+  z-index: 4;
+  left: var(--page-x);
+  bottom: clamp(2rem, 5vw, 4rem);
+  display: grid;
+  gap: .4rem;
+  padding-left: .9rem;
+  border-left: 2px solid var(--clay);
+}
+
+.page-loader__stamp b {
+  font: 500 .72rem/1 var(--sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.page-loader__stamp span {
+  font: 400 .62rem/1 var(--mono, 'DM Mono', Consolas, monospace);
+  letter-spacing: .14em;
+  opacity: .55;
+}
+
+@media (max-width: 760px) {
+  .page-loader.is-cad .page-loader__mark { font-size: 2.4rem; }
+  .page-loader.is-cad .page-loader__word { bottom: clamp(1rem, 4vw, 2rem); }
+  .page-loader__stamp { bottom: clamp(4.2rem, 12vw, 6rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader__plan,
+  .page-loader__stamp { display: none; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   RADHE — EDITORIAL LUXURY LAYER
+   Warm espresso ground, cream plates, high-contrast display serif and
+   photography carrying every section. Built to the SŌL HAUS reference.
+   Declared last: it settles over the earlier light layers.
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --espresso: #1a1310;
+  --espresso-2: #221913;
+  --mocha: #2c211a;
+  --mocha-2: #3a2c23;
+  --cream: #f5eee3;
+  --cream-2: #ece2d3;
+  --cream-3: #ddd0bd;
+  --bronze: #b28a5c;
+  --muted: rgba(245, 238, 227, .64);
+  --muted-2: rgba(245, 238, 227, .42);
+  --hair: rgba(245, 238, 227, .14);
+  --hair-2: rgba(245, 238, 227, .26);
+  --ink-hair: rgba(26, 19, 16, .16);
+
+  --display: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+  --line: var(--hair);
+  --line-light: var(--hair);
+  --acid: var(--bronze);
+  --page-x: clamp(1.25rem, 4vw, 5.5rem);
+}
+
+html, body { background: var(--espresso); }
+body { color: var(--cream); font: 300 16px/1.6 var(--sans); }
+::selection { background: var(--bronze); color: var(--espresso); }
+:focus-visible { outline: 2px solid var(--bronze); outline-offset: 4px; }
+
+/* Film grain — the single most reliable way to stop flat black looking cheap. */
+body::after {
+  content: '';
+  position: fixed;
+  z-index: 9000;
+  inset: -50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  opacity: .05;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* ── Display typography ──────────────────────────────────────────── */
+.lux-display,
+.display,
+.hero h1,
+.inner-hero h1,
+.project-hero h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: normal;
+  line-height: .96;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+}
+
+.lux-display em,
+.display em,
+.hero h1 em,
+.inner-hero h1 em,
+.project-hero h1 em {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: .005em;
+  color: inherit;
+}
+
+.lux-eyebrow {
+  display: block;
+  font: 500 .6rem/1 var(--sans);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.lux-lead {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.lux-rule { width: 100%; height: 1px; background: var(--hair); border: 0; margin: 0; }
+
+/* ── Underlined arrow link — the reference's primary call to action ── */
+.lux-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  width: fit-content;
+  min-width: 13rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--hair-2);
+  font: 500 .68rem/1 var(--sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: inherit;
+  overflow: hidden;
+}
+.lux-link span:last-child { transition: transform .55s var(--ease); }
+.lux-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .6s var(--ease);
+}
+.lux-link:hover::after { transform: scaleX(1); }
+.lux-link:hover span:last-child { transform: translateX(6px); }
+.lux-link--ink { border-bottom-color: var(--ink-hair); }
+
+/* ── Plates: every photograph sits in a frame that reacts slowly ── */
+.lux-plate { position: relative; overflow: hidden; background: var(--mocha); }
+.lux-plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 1.4s cubic-bezier(.19, 1, .22, 1), filter 1.2s ease;
+}
+a:hover .lux-plate img,
+.lux-plate:hover img { transform: scale(1.045); }
+.lux-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(26,19,16,.05) 0%, rgba(26,19,16,.34) 100%);
+  pointer-events: none;
+}
+
+/* ═══ 1. HERO ═══════════════════════════════════════════════════════ */
+.lux-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  padding: 0 var(--page-x) clamp(3rem, 6vw, 5.5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.lux-hero__media { position: absolute; inset: -9% 0; z-index: -2; }
+.lux-hero__media img { width: 100%; height: 100%; object-fit: cover; }
+
+.lux-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(26,19,16,.72) 0%, rgba(26,19,16,.18) 34%, rgba(26,19,16,.5) 68%, rgba(26,19,16,.94) 100%),
+    linear-gradient(90deg, rgba(26,19,16,.66) 0%, rgba(26,19,16,.1) 62%);
+}
+
+.lux-hero__inner {
+  display: grid;
+  gap: clamp(1.6rem, 3vw, 2.4rem);
+  max-width: 60rem;
+  padding-bottom: clamp(1rem, 3vw, 2.5rem);
+}
+
+.lux-hero h1 {
+  margin: 0;
+  font-size: clamp(2.9rem, 7.2vw, 7.4rem);
+  text-shadow: 0 2px 40px rgba(26, 19, 16, .35);
+}
+
+.lux-hero__lead { max-width: 36rem; margin: 0; }
+
+.lux-hero__foot {
+  position: absolute;
+  left: var(--page-x);
+  right: var(--page-x);
+  bottom: clamp(1.4rem, 2.6vw, 2.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--hair);
+  font: 500 .58rem/1 var(--sans);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.lux-hero__foot i { font-style: normal; }
+
+/* ═══ 2. INTENT — cream plate ═══════════════════════════════════════ */
+.lux-intent {
+  display: grid;
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(5rem, 10vw, 10rem) var(--page-x);
+  background: var(--cream);
+  color: var(--espresso);
+}
+
+.lux-intent__copy { display: grid; align-content: start; gap: 1.6rem; max-width: 34rem; }
+.lux-intent .lux-eyebrow { color: rgba(26, 19, 16, .5); }
+.lux-intent h2 { margin: 0; font-size: clamp(2rem, 3.9vw, 3.6rem); }
+.lux-intent p { margin: 0; font-size: .96rem; line-height: 1.85; color: rgba(26, 19, 16, .74); }
+.lux-intent .lux-link { margin-top: .8rem; }
+
+.lux-intent__figures {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(.75rem, 1.4vw, 1.2rem);
+  min-height: clamp(26rem, 42vw, 38rem);
+}
+.lux-intent__figures .lux-plate:first-child { grid-row: span 2; }
+.lux-intent__figures .lux-plate::after { background: linear-gradient(180deg, rgba(26,19,16,0) 40%, rgba(26,19,16,.18) 100%); }
+
+.lux-stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(1rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--ink-hair);
+}
+.lux-stats div { padding: clamp(1.4rem, 2.5vw, 2.2rem) 1.5rem 0 0; }
+.lux-stats dt {
+  font: 500 .56rem/1 var(--sans);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: rgba(26, 19, 16, .5);
+}
+.lux-stats dd {
+  margin: .7rem 0 0;
+  font: 400 clamp(1.9rem, 3vw, 2.9rem)/1 var(--display);
+  color: var(--espresso);
+}
+
+/* ═══ 3. WORK — editorial project rows ══════════════════════════════ */
+.lux-work { padding: clamp(5rem, 10vw, 10rem) var(--page-x); background: var(--espresso); }
+
+.lux-sectionhead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .8fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding-bottom: clamp(2rem, 4vw, 3.5rem);
+  border-bottom: 1px solid var(--hair);
+}
+.lux-sectionhead h2 { margin: .9rem 0 0; font-size: clamp(2rem, 4.4vw, 4rem); }
+.lux-sectionhead p { margin: 0 0 .4rem; max-width: 27rem; font-size: .92rem; line-height: 1.8; color: var(--muted); }
+
+.lux-projects { display: grid; gap: clamp(3rem, 7vw, 7rem); margin-top: clamp(3rem, 6vw, 5.5rem); }
+
+.lux-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  color: inherit;
+}
+.lux-project:nth-child(even) { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+.lux-project:nth-child(even) .lux-project__media { order: 2; }
+
+.lux-project__media { aspect-ratio: 16 / 11; }
+.lux-project__media img { height: 116%; margin-top: -8%; }
+.lux-project:nth-child(even) .lux-project__media { aspect-ratio: 4 / 5; }
+
+.lux-project__body { display: grid; gap: 1.1rem; align-content: center; }
+.lux-project__no { font: 500 .6rem/1 var(--sans); letter-spacing: .3em; color: var(--bronze); }
+.lux-project__body h3 {
+  margin: 0;
+  font: 400 clamp(1.7rem, 2.9vw, 2.7rem)/1 var(--display);
+  text-transform: uppercase;
+  letter-spacing: -.005em;
+}
+.lux-project__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem .9rem;
+  font: 500 .58rem/1 var(--sans);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.lux-project__meta span::after { content: ' ·'; color: var(--bronze); }
+.lux-project__meta span:last-child::after { content: ''; }
+.lux-project__body p { margin: 0; max-width: 26rem; font-size: .92rem; line-height: 1.8; color: var(--muted); }
+
+/* ═══ 4. APPROACH — cream cards floating on a photograph ════════════ */
+.lux-approach {
+  position: relative;
+  padding: clamp(5rem, 9vw, 9rem) var(--page-x);
+  overflow: hidden;
+  isolation: isolate;
+}
+.lux-approach__media { position: absolute; inset: -8% 0; z-index: -2; }
+.lux-approach__media img { width: 100%; height: 100%; object-fit: cover; }
+.lux-approach::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(26,19,16,.94) 0%, rgba(26,19,16,.72) 45%, rgba(26,19,16,.95) 100%);
+}
+
+.lux-approach__head { text-align: center; display: grid; gap: 1rem; justify-items: center; }
+.lux-approach__head h2 { margin: 0; font-size: clamp(2rem, 4.4vw, 4rem); }
+
+.lux-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(.9rem, 1.6vw, 1.5rem);
+  margin: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.lux-step {
+  display: grid;
+  gap: .85rem;
+  padding: clamp(1.4rem, 2.2vw, 2rem);
+  background: var(--cream);
+  color: var(--espresso);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .65);
+  transition: transform .6s var(--ease);
+}
+.lux-step:hover { transform: translateY(-6px); }
+.lux-step__no {
+  font: 500 .58rem/1 var(--sans);
+  letter-spacing: .26em;
+  color: rgba(26, 19, 16, .45);
+}
+.lux-step h3 {
+  margin: 0;
+  font: 400 clamp(1.15rem, 1.8vw, 1.6rem)/1.05 var(--display);
+  text-transform: uppercase;
+}
+.lux-step p { margin: 0; font-size: .84rem; line-height: 1.75; color: rgba(26, 19, 16, .68); }
+.lux-step__rule { width: 2.4rem; height: 2px; background: var(--bronze); opacity: .9; }
+
+/* ═══ 5. WORDS — quote over cream ═══════════════════════════════════ */
+.lux-words {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  background: var(--cream);
+  color: var(--espresso);
+}
+.lux-words__plate { min-height: clamp(24rem, 44vw, 40rem); }
+.lux-words__copy {
+  display: grid;
+  align-content: center;
+  gap: 1.6rem;
+  padding: clamp(3rem, 7vw, 7rem);
+}
+.lux-words blockquote {
+  margin: 0;
+  font: 400 clamp(1.5rem, 2.6vw, 2.5rem)/1.24 var(--display);
+}
+.lux-words blockquote em { font-style: italic; }
+.lux-words cite {
+  font: 500 .6rem/1 var(--sans);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: rgba(26, 19, 16, .5);
+}
+.lux-words .lux-eyebrow { color: rgba(26, 19, 16, .5); }
+
+/* ═══ 6. CTA ════════════════════════════════════════════════════════ */
+.lux-cta {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 1.8rem;
+  padding: clamp(6rem, 11vw, 11rem) var(--page-x);
+  text-align: center;
+  background: var(--espresso-2);
+  border-top: 1px solid var(--hair);
+}
+.lux-cta h2 { margin: 0; max-width: 18ch; font-size: clamp(2.2rem, 5.4vw, 5rem); }
+.lux-cta p { margin: 0; max-width: 34rem; }
+
+/* ── Shared chrome re-skinned to the warm palette ─────────────────── */
+.site-header { color: var(--cream); border-bottom: 1px solid transparent; }
+.site-header.is-scrolled,
+.site-header.is-solid,
+.menu-open .site-header {
+  background: rgba(26, 19, 16, .82);
+  border-color: var(--hair);
+  backdrop-filter: blur(18px) saturate(1.1);
+}
+.desktop-nav { font-size: .62rem; letter-spacing: .22em; }
+.brand__type b { font-family: var(--display); }
+.header-link {
+  background: transparent;
+  border: 1px solid var(--hair-2);
+  border-radius: 0;
+  color: var(--cream);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  transition: background .45s var(--ease), color .45s var(--ease), border-color .45s;
+}
+.header-link:hover { background: var(--cream); border-color: var(--cream); color: var(--espresso); }
+
+.menu-panel { background: var(--espresso-2); color: var(--cream); }
+.menu-panel__links a { font-family: var(--display); text-transform: uppercase; }
+.menu-panel__links a:hover { color: var(--bronze); }
+
+.site-footer { background: var(--espresso-2); color: var(--cream); border-top: 1px solid var(--hair); }
+.footer-column h3 { color: var(--muted-2); letter-spacing: .24em; }
+.footer-bottom { border-top: 1px solid var(--hair); color: var(--muted-2); }
+
+/* Interior pages inherit the same skin. */
+.section,
+.practice-intro,
+.expertise-section,
+.testimonial-section,
+.journal-home,
+.process-section,
+.process-editorial,
+.contact-section,
+.section--sand,
+.section--clay { background: var(--espresso); color: var(--cream); }
+
+.section--dark,
+.selected-projects,
+.studio-feature,
+.journal-feature,
+.inner-hero { background: var(--espresso-2); color: var(--cream); }
+
+.value-card,
+.value-card:nth-child(2),
+.value-card:nth-child(3),
+.service-card,
+.service-card:nth-child(2),
+.service-card:nth-child(3),
+.service-card:nth-child(4),
+.journal-card,
+.quote-grid__copy {
+  background: var(--mocha);
+  color: var(--cream);
+  border: 1px solid var(--hair);
+}
+
+.ticker { background: var(--mocha); color: var(--cream); border-block: 1px solid var(--hair); }
+.ticker__track span::after { color: var(--bronze); }
+
+.section-label,
+.overline,
+figcaption,
+cite { color: var(--muted-2); }
+.display em,
+.process-editorial .display em { color: var(--bronze); }
+.practice-intro__lead { color: var(--cream) !important; }
+
+.button--light,
+.button--dark {
+  background: transparent;
+  border: 1px solid var(--hair-2);
+  border-radius: 0;
+  color: var(--cream);
+  font-size: .6rem;
+  letter-spacing: .2em;
+}
+.button--light:hover,
+.button--dark:hover { background: var(--cream); border-color: var(--cream); color: var(--espresso); }
+.text-link { color: var(--cream); border-bottom-color: var(--hair-2); }
+.text-link:hover { color: var(--bronze); border-bottom-color: var(--bronze); }
+.icon-button { border-color: var(--hair-2); color: var(--cream); }
+.icon-button:hover { background: var(--bronze); border-color: var(--bronze); color: var(--espresso); }
+.pill:hover,
+.pill.is-active,
+.filter-list .pill:hover,
+.filter-list .pill.is-active { background: var(--cream); border-color: var(--cream); color: var(--espresso); }
+.field input, .field select, .field textarea { background: transparent; color: var(--cream); border-color: var(--hair); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--bronze); }
+
+.project-tile__image img,
+.portfolio-item__image img,
+.journal-card__image img,
+.studio-feature__image img,
+.gallery img { filter: saturate(.96) contrast(1.02); }
+
+/* The intro sheet matches the warm ground it hands over to. */
+.page-loader, .page-loader.is-cad { background: var(--espresso); color: var(--cream); }
+.page-loader.is-cad .page-loader__grid {
+  background-image:
+    linear-gradient(rgba(245,238,227,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,238,227,.04) 1px, transparent 1px);
+}
+.page-loader__line { background: var(--bronze); }
+.page-loader__stamp { border-left-color: var(--bronze); }
+.page-loader.is-cad .page-loader__mark { font-family: var(--display); }
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  .lux-intent { grid-template-columns: 1fr; }
+  .lux-intent__figures { min-height: 22rem; }
+  .lux-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lux-project,
+  .lux-project:nth-child(even) { grid-template-columns: 1fr; }
+  .lux-project:nth-child(even) .lux-project__media { order: 0; }
+  .lux-project__media,
+  .lux-project:nth-child(even) .lux-project__media { aspect-ratio: 16 / 10; }
+  .lux-words { grid-template-columns: 1fr; }
+  .lux-sectionhead { grid-template-columns: 1fr; align-items: start; }
+}
+
+@media (max-width: 640px) {
+  .lux-hero { padding-bottom: 8rem; }
+  .lux-hero__foot { flex-wrap: wrap; gap: .6rem 1.2rem; font-size: .52rem; letter-spacing: .2em; }
+  .lux-stats { grid-template-columns: 1fr 1fr; }
+  .lux-steps { grid-template-columns: 1fr; }
+  .lux-intent__figures { grid-template-columns: 1fr; grid-template-rows: none; }
+  .lux-intent__figures .lux-plate:first-child { grid-row: auto; aspect-ratio: 4 / 3; }
+  .lux-intent__figures .lux-plate { aspect-ratio: 4 / 3; }
+}
+
+/* Hero copy must stay legible over any frame of the photograph. */
+.lux-hero__inner .lux-eyebrow { color: rgba(245, 238, 227, .72); }
+.lux-hero__inner .lux-lead { color: rgba(245, 238, 227, .82); }
+
+@media (max-width: 900px) {
+  .lux-hero__scrim {
+    background:
+      linear-gradient(180deg, rgba(26,19,16,.78) 0%, rgba(26,19,16,.34) 26%, rgba(26,19,16,.78) 58%, rgba(26,19,16,.97) 100%);
+  }
+  .lux-hero__inner { gap: 1.2rem; }
+  .lux-hero__lead { font-size: .92rem; line-height: 1.7; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DRAFTING CROSSHAIR
+   A full-viewport AutoCAD crosshair with a pick box and a live
+   coordinate readout. Fine pointers only; the OS cursor is hidden
+   everywhere except text fields, where the caret still matters.
+   ═══════════════════════════════════════════════════════════════════ */
+.cad-cursor {
+  position: fixed;
+  z-index: 8000;
+  inset: 0;
+  pointer-events: none;
+  /* The whole crosshair inverts its backdrop, so it stays readable over a
+     black section, a cream plate or a sunlit photograph alike. Visibility
+     rather than opacity: an opacity below 1 would weaken the inversion. */
+  mix-blend-mode: difference;
+  visibility: hidden;
+}
+.cad-cursor.is-live { visibility: visible; }
+
+.cad-cursor__lines { position: absolute; inset: 0; }
+
+.cad-cursor i {
+  position: absolute;
+  display: block;
+  background: rgba(255, 255, 255, .72);
+  will-change: transform;
+}
+.cad-cursor__h { left: 0; top: 0; width: 100%; height: 1px; }
+.cad-cursor__v { left: 0; top: 0; width: 1px; height: 100%; }
+
+.cad-cursor__box {
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, .95);
+  transition: width .3s var(--ease), height .3s var(--ease),
+              margin .3s var(--ease), border-color .3s, background-color .3s;
+}
+
+.cad-cursor__readout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 16px 0 0 20px;
+  padding: 0;
+  color: #fff;
+  font: 500 9px/1.6 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  will-change: transform;
+}
+.cad-cursor__readout b { display: block; font-weight: 500; }
+.cad-cursor__readout em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  color: #fff;
+  letter-spacing: .2em;
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+/* Snapped to something interactive — the pick box opens up. */
+.cad-cursor.is-snapped .cad-cursor__box {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-color: #fff;
+}
+.cad-cursor.is-snapped .cad-cursor__readout em { opacity: 1; }
+.cad-cursor.is-snapped .cad-cursor__readout { margin: 26px 0 0 30px; }
+.cad-cursor.is-snapped .cad-cursor__h,
+.cad-cursor.is-snapped .cad-cursor__v { background: rgba(255, 255, 255, .85); }
+
+.cad-cursor.is-down .cad-cursor__box {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+}
+
+/* Over a cream plate the crosshair reads through difference blending
+   already, but the readout needs its own weight. */
+
+
+html.cad-on,
+html.cad-on body,
+html.cad-on a,
+html.cad-on button,
+html.cad-on summary,
+html.cad-on .lux-plate,
+html.cad-on img { cursor: none; }
+html.cad-on input,
+html.cad-on textarea,
+html.cad-on select { cursor: auto; }
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cad-cursor { display: none; }
+  html.cad-on, html.cad-on body, html.cad-on a, html.cad-on button { cursor: auto; }
+}
+
+/* ── Crop marks: every major block is registered like a drawing sheet ── */
+.cad-marks {
+  position: absolute;
+  inset: clamp(.9rem, 2vw, 1.8rem);
+  pointer-events: none;
+  z-index: 3;
+}
+.cad-marks i {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 0 solid var(--bronze);
+  opacity: .5;
+}
+.cad-marks i:nth-child(1) { left: 0; top: 0; border-top-width: 1px; border-left-width: 1px; }
+.cad-marks i:nth-child(2) { right: 0; top: 0; border-top-width: 1px; border-right-width: 1px; }
+.cad-marks i:nth-child(3) { right: 0; bottom: 0; border-bottom-width: 1px; border-right-width: 1px; }
+.cad-marks i:nth-child(4) { left: 0; bottom: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.lux-intent .cad-marks i { border-color: rgba(26, 19, 16, .45); }
+
+.lux-intent, .lux-work, .lux-approach, .lux-words, .lux-cta { position: relative; }
+
+/* JS drives every entrance, so nothing is hidden by CSS alone. */
+.motion-word { display: inline-block; overflow: hidden; }

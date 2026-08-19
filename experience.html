@@ -1,215 +1,244 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#11100e">
+  <meta name="theme-color" content="#ececec">
   <title>360 Studio — Radhe Design Studio</title>
-  <meta name="description"
-    content="Step inside Radhe Design Studio projects through an immersive, motion-enabled 360-degree architectural experience. Choose from our demo scenes.">
+  <meta name="description" content="Step inside Radhe Design Studio projects through an immersive 360-degree panorama.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ececec'/%3E%3Ctext x='32' y='46' font-family='Montserrat,sans-serif' font-size='42' font-weight='700' text-anchor='middle' fill='%239d7460'%3ER%3C/text%3E%3Crect x='20' y='9' width='24' height='6' fill='%23d98e36'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="assets/vendor/lenis.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=20260814-cinematic">
-  <link rel="stylesheet" href="assets/css/tour-page.css?v=20260816">
-  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/studio.css?v=20260819-studio">
+  <script>
+    // Applied before first paint so the sheet never flashes the wrong colour.
+    (function () {
+      try {
+        var saved = localStorage.getItem('radhe-theme');
+        var t = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { }
+    })();
+  </script>
 </head>
-
 <body data-page="experience">
-  <a class="skip-link" href="#tour-frame">Skip to 360 experience →</a>
-  <div class="page-loader" aria-hidden="true"><span class="page-loader__mark">R</span><i class="page-loader__line"></i>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="blueprint" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <line class="bp-dash" x1="0" y1="150" x2="1440" y2="150"/>
+      <line class="bp-dash" x1="0" y1="770" x2="1440" y2="770"/>
+      <line class="bp-dash" x1="195" y1="0" x2="195" y2="900"/>
+      <line class="bp-dash" x1="1245" y1="0" x2="1245" y2="900"/>
+      <path d="M20 96h530M20 96v60M20 156h530M270 96v22M355 96v22M20 118h330"/>
+      <path class="bp-amber" d="M420 156a120 120 0 0 0 120-60"/>
+      <circle cx="120" cy="632" r="58"/>
+      <line x1="120" y1="562" x2="120" y2="702"/>
+      <path d="M1420 460v300M1400 470v290M1380 486v274M1360 500v260M1340 516v244"/>
+      <path d="M905 795h490"/>
+    </svg>
   </div>
-  <div class="page-transition" aria-hidden="true"><span>RADHE</span></div>
 
-  <main id="main" class="tour-page">
+  <header class="head">
+    <a class="brand" href="index.html" aria-label="Radhe Design Studio — home"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
+      <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-heavy">DHE</tspan></text>
+      <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
+    </svg></a>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch colour scheme">
+        <i class="theme-toggle__dot" aria-hidden="true"></i><span id="theme-label">Light</span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Primary"><a href="about.html">About</a><span class="nav__sep">|</span><a href="projects.html">Projects</a><span class="nav__sep">|</span><a href="services.html">Services</a><span class="nav__sep">|</span><a href="experience.html" aria-current="page">360</a><span class="nav__sep">|</span><a href="contact.html">Contact</a></nav>
+      <button class="menu-btn" type="button" id="menu-open" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
 
-    <!-- ── Scene Selection Screen ── -->
-    <section class="scene-select" id="scene-select" aria-label="Choose a 360° demo scene">
-      <div class="scene-select__bg" aria-hidden="true"></div>
-      <div class="scene-select__content">
-        <p class="scene-select__label"><span>05</span>360° Immersive Experience</p>
-        <h1 class="scene-select__title">Step <em>inside.</em></h1>
-        <p class="scene-select__subtitle">Choose a space to explore in full 360-degree panorama.</p>
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <button class="menu-btn" type="button" id="menu-close" aria-label="Close menu"><span></span><span></span></button>
+    <a href="about.html"><span>01</span>About</a><a href="projects.html"><span>02</span>Projects</a><a href="services.html"><span>03</span>Services</a><a href="experience.html"><span>04</span>360</a><a href="contact.html"><span>05</span>Contact</a>
+  </div>
 
-        <div class="scene-select__grid" id="scene-grid">
-          <button class="scene-card" id="scene-kitchen" type="button" data-scene="3D%20DEMO/KITCHEN.png"
-            aria-label="Open Kitchen 360° view">
-            <div class="scene-card__image">
-              <img src="3D%20DEMO/KITCHEN.png" alt="Kitchen panorama preview" loading="eager">
-            </div>
-            <div class="scene-card__overlay"></div>
-            <div class="scene-card__info">
-              <span class="scene-card__tag">Demo 1</span>
-              <h2 class="scene-card__name">Kitchen</h2>
-              <p class="scene-card__desc">Explore the fully designed kitchen with premium finishes and modern cabinetry.
-              </p>
-              <span class="scene-card__cta">Enter 360° View <span>→</span></span>
-            </div>
-            <div class="scene-card__badge" aria-hidden="true">360°</div>
-          </button>
+  <main id="main" class="page">
 
-          <button class="scene-card" id="scene-living" type="button" data-scene="3D%20DEMO/LIVING%20AREA.png"
-            aria-label="Open Living Area 360° view">
-            <div class="scene-card__image">
-              <img src="3D%20DEMO/LIVING%20AREA.png" alt="Living Area panorama preview" loading="eager">
-            </div>
-            <div class="scene-card__overlay"></div>
-            <div class="scene-card__info">
-              <span class="scene-card__tag">Demo 2</span>
-              <h2 class="scene-card__name">Living Area</h2>
-              <p class="scene-card__desc">Walk through the spacious living area with natural light and curated
-                interiors.</p>
-              <span class="scene-card__cta">Enter 360° View <span>→</span></span>
-            </div>
-            <div class="scene-card__badge" aria-hidden="true">360°</div>
-          </button>
-        </div>
-
-        <p class="scene-select__hint">
-          <i aria-hidden="true"></i>
-          <span>Select a scene above to begin your immersive experience</span>
-        </p>
-      </div>
+    <section class="inner tour" id="scene-select" aria-label="Choose a 360 degree scene">
+      <span class="tag">360 studio<i></i></span>
+      <h1 class="page-title">Step inside the drawing.</h1>
+      <p class="page-lead">Two rooms rendered as full spherical panoramas. Drag to look around,
+        scroll to zoom, or turn on motion control and move your phone.</p>
+      <div class="scene-grid"><button class="scene" id="scene-kitchen" type="button" data-scene="assets/pano/kitchen"
+          aria-label="Open the Kitchen 360 degree view">
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="scene__frame"><img src="assets/pano/kitchen-thumb.webp" alt="Kitchen panorama preview" width="1200" height="600" loading="eager" decoding="async"></span>
+          <span class="scene__body">
+            <span class="annot">Demo 01</span>
+            <span class="scene__name">Kitchen</span>
+            <span class="scene__desc">A fully designed kitchen with premium finishes and modern cabinetry.</span>
+            <span class="scene__cta">Enter 360° view <b aria-hidden="true">→</b></span>
+          </span>
+          <span class="scene__badge annot" aria-hidden="true">360°</span>
+        </button><button class="scene" id="scene-living" type="button" data-scene="assets/pano/living-area"
+          aria-label="Open the Living Area 360 degree view">
+          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="scene__frame"><img src="assets/pano/living-area-thumb.webp" alt="Living Area panorama preview" width="1200" height="600" loading="eager" decoding="async"></span>
+          <span class="scene__body">
+            <span class="annot">Demo 02</span>
+            <span class="scene__name">Living Area</span>
+            <span class="scene__desc">The spacious living area with natural light and curated interiors.</span>
+            <span class="scene__cta">Enter 360° view <b aria-hidden="true">→</b></span>
+          </span>
+          <span class="scene__badge annot" aria-hidden="true">360°</span>
+        </button></div>
     </section>
 
-    <!-- ── 360 Viewer (hidden until scene selected) ── -->
-    <section class="tour-viewer" id="tour-viewer" aria-label="360° panorama viewer" hidden>
-      <iframe class="tour-page__frame" id="tour-frame" src="" title="Radhe 360 Studio interactive panorama"
+    <section class="viewer" id="tour-viewer" aria-label="360 degree panorama viewer" hidden>
+      <iframe class="viewer__frame" id="tour-frame" src="" title="Radhe 360 Studio interactive panorama"
         allow="accelerometer; gyroscope; fullscreen" allowfullscreen></iframe>
 
-      <button class="change-view-btn" id="change-view-btn" type="button" aria-label="Change scene">
-        <span class="change-view-btn__icon" aria-hidden="true">⟵</span>
-        <span class="change-view-btn__text">Change View</span>
+      <button class="viewer__back" id="change-view-btn" type="button">
+        <span aria-hidden="true">←</span> Change view
       </button>
+      <div class="viewer__name annot" id="viewer-scene-name" aria-live="polite"></div>
+      <p class="viewer__hint annot" id="tour-identity" hidden>
+        Drag or swipe to look · Scroll to zoom · Motion enabled on supported devices</p>
 
-      <div class="viewer-scene-name" id="viewer-scene-name" aria-live="polite"></div>
+      <div class="viewer__loading" id="tour-loading" role="status" aria-live="polite">
+        <div>
+          <p class="viewer__loading-name" id="tour-loading-label">Loading panorama</p>
+          <span class="viewer__track"><i id="tour-loading-bar"></i></span>
+          <p class="annot" style="margin-top:.8rem">Preparing the 360° view</p>
+        </div>
+      </div>
     </section>
 
-    <!-- ── Header ── -->
-    <header class="site-header is-solid">
-      <a class="brand" href="index.html" aria-label="Radhe Design Studio home">
-        <span class="brand__mark">R</span><span class="brand__type"><b>Radhe</b>Design Studio</span>
-      </a>
-      <nav class="desktop-nav" aria-label="Primary navigation">
-        <a data-nav="studio" href="about.html">Studio</a>
-        <a data-nav="projects" href="portfolio.html">Projects</a>
-        <a data-nav="services" href="services.html">Services</a>
-        <a data-nav="journal" href="journal.html">Journal</a>
-        <a data-nav="experience" href="experience.html" aria-current="page">360 Studio</a>
-      </nav>
-      <div class="header-actions">
-        <a class="header-link" href="contact.html">Start a project</a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-panel"
-          aria-label="Open menu"><span></span><span></span></button>
-      </div>
-    </header>
-
-    <aside class="menu-panel" id="menu-panel" aria-hidden="true">
-      <nav class="menu-panel__links" aria-label="Menu navigation">
-        <a href="about.html"><span>01</span>Studio</a>
-        <a href="portfolio.html"><span>02</span>Projects</a>
-        <a href="services.html"><span>03</span>Services</a>
-        <a href="journal.html"><span>04</span>Journal</a>
-        <a href="experience.html"><span>05</span>360 Studio</a>
-        <a href="contact.html"><span>06</span>Contact</a>
-      </nav>
-      <div class="menu-panel__aside">
-        <p>Move through space, study every detail and experience the design from within.</p>
-        <div class="menu-panel__meta"><a href="mailto:hello@radhedesignstudio.com">Email us</a><span>Ahmedabad ·
-            India</span></div>
-      </div>
-    </aside>
-
-    <p class="tour-page__identity" id="tour-identity" hidden>
-      <i></i><span>Drag or swipe to look · Scroll to zoom · Motion enabled on supported devices</span>
-    </p>
-  </main>
-
-  <script src="assets/vendor/gsap.min.js"></script>
-  <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/vendor/lenis.min.js"></script>
-  <script src="assets/js/main.js?v=20260814-cinematic"></script>
-
-  <script>
+    <script>
       (() => {
         'use strict';
-
         const sceneSelect = document.getElementById('scene-select');
         const tourViewer = document.getElementById('tour-viewer');
         const tourFrame = document.getElementById('tour-frame');
         const changeBtn = document.getElementById('change-view-btn');
         const sceneName = document.getElementById('viewer-scene-name');
         const tourIdentity = document.getElementById('tour-identity');
-        const sceneCards = document.querySelectorAll('.scene-card');
-
+        const loadingEl = document.getElementById('tour-loading');
+        const loadingBar = document.getElementById('tour-loading-bar');
+        const loadingLabel = document.getElementById('tour-loading-label');
         const VIEWER_BASE = 'PANO%20TO%203D/dist/index.html';
+        let loaderTimeout = 0;
 
-        /* ── Open a scene ── */
-        function openScene(sceneUrl, name) {
-          // Pass the scene path as a URL parameter to the viewer
-          // The path is relative to the viewer's location (PANO TO 3D/dist/)
-          const relativeToViewer = '../../' + decodeURIComponent(sceneUrl);
-          tourFrame.src = VIEWER_BASE + '?scene=' + encodeURIComponent(relativeToViewer);
+        /* Pick a panorama the GPU can take without a main-thread resize:
+           a texture wider than MAX_TEXTURE_SIZE has to be rescaled by the
+           browser, which is what made large scenes stutter. */
+        const panoTier = (() => {
+          try {
+            const probe = document.createElement('canvas');
+            const gl = probe.getContext('webgl2') || probe.getContext('webgl');
+            if (!gl) return '4k';
+            const roomy = gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 8192
+              && matchMedia('(pointer: fine)').matches
+              && !matchMedia('(max-width: 900px)').matches;
+            const slowLink = navigator.connection
+              && /^(slow-)?2g$|^3g$/.test(navigator.connection.effectiveType || '');
+            return roomy && !slowLink ? '8k' : '4k';
+          } catch { return '4k'; }
+        })();
+
+        const showLoader = (name) => {
+          loadingLabel.textContent = name;
+          loadingBar.style.width = '4%';
+          loadingEl.classList.add('is-active');
+          clearTimeout(loaderTimeout);
+          loaderTimeout = setTimeout(hideLoader, 20000);
+        };
+        const setProgress = (v) => { loadingBar.style.width = Math.max(4, Math.min(100, v)) + '%'; };
+        function hideLoader() { clearTimeout(loaderTimeout); loadingEl.classList.remove('is-active'); }
+
+        const openScene = (sceneUrl, name) => {
+          tourFrame.src = VIEWER_BASE + '?scene=' + encodeURIComponent(`../../${sceneUrl}-${panoTier}.jpg`);
           sceneName.textContent = name;
+          showLoader(name);
+          sceneSelect.hidden = true;
+          tourViewer.hidden = false;
+          tourIdentity.hidden = false;
+          document.body.classList.add('is-touring');
+        };
 
-          // Auto-enter fullscreen (user gesture context from card click)
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => { });
-          }
+        const goBack = () => {
+          hideLoader();
+          if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+          tourViewer.hidden = true;
+          tourFrame.src = '';
+          tourIdentity.hidden = true;
+          sceneSelect.hidden = false;
+          document.body.classList.remove('is-touring');
+        };
 
-          // Transition: hide selector, show viewer
-          sceneSelect.classList.add('is-leaving');
-          setTimeout(() => {
-            sceneSelect.hidden = true;
-            sceneSelect.classList.remove('is-leaving');
-            tourViewer.hidden = false;
-            tourViewer.classList.add('is-entering');
-            tourIdentity.hidden = false;
-
-            setTimeout(() => {
-              tourViewer.classList.remove('is-entering');
-            }, 50);
-          }, 420);
-        }
-
-        /* ── Go back to scene selection ── */
-        function goBack() {
-          // Exit fullscreen when returning to selection
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => { });
-          }
-
-          tourViewer.classList.add('is-leaving');
-          setTimeout(() => {
-            tourViewer.hidden = true;
-            tourViewer.classList.remove('is-leaving');
-            tourFrame.src = '';
-            tourIdentity.hidden = true;
-            sceneSelect.hidden = false;
-            sceneSelect.classList.add('is-entering');
-            setTimeout(() => sceneSelect.classList.remove('is-entering'), 50);
-          }, 420);
-        }
-
-        /* ── Event listeners ── */
-        sceneCards.forEach(card => {
-          card.addEventListener('click', () => {
-            const sceneUrl = card.getAttribute('data-scene');
-            const name = card.querySelector('.scene-card__name').textContent;
-            openScene(sceneUrl, name);
-          });
+        document.querySelectorAll('.scene').forEach((card) => {
+          card.addEventListener('click', () => openScene(
+            card.dataset.scene, card.querySelector('.scene__name').textContent));
         });
-
         changeBtn.addEventListener('click', goBack);
 
-        /* ── Stagger entrance animations ── */
-        const cards = document.querySelectorAll('.scene-card');
-        cards.forEach((card, i) => {
-          card.style.setProperty('--card-delay', `${600 + i * 180}ms`);
+        /* Full screen is owned by this page. A requestFullscreen() from inside
+           the iframe promotes the iframe into this document's top layer, which
+           hides the header and the way back out of the viewer. */
+        const toggleFullscreen = () => {
+          if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+          else document.documentElement.requestFullscreen().catch(() => {});
+        };
+
+        addEventListener('message', (event) => {
+          if (event.source !== tourFrame.contentWindow) return;
+          const data = event.data;
+          if (!data || data.type !== 'radhe-360') return;
+          if (data.action === 'toggle-fullscreen') toggleFullscreen();
+          if (data.action === 'scene-progress') setProgress(data.value);
+          if (data.action === 'scene-ready') { setProgress(100); setTimeout(hideLoader, 320); }
+          if (data.action === 'scene-error') {
+            loadingLabel.textContent = 'Could not load this scene';
+            setTimeout(hideLoader, 2600);
+          }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+          tourFrame.contentWindow?.postMessage({
+            type: 'radhe-360-host', action: 'fullscreen-state',
+            active: Boolean(document.fullscreenElement)
+          }, '*');
+        });
+
+        addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && !tourViewer.hidden && !document.fullscreenElement) goBack();
         });
       })();
-  </script>
-</body>
+    </script>
+  </main>
 
+  <footer class="foot">
+    <div class="foot__rule"></div>
+    <div class="foot__mark"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
+      <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-heavy">DHE</tspan></text>
+      <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
+    </svg></div>
+    <div class="foot__rule"></div>
+    <div class="foot__row">
+      <a href="contact.html">Contact us</a>
+      <a href="tel:+919876543210">+91 98765 43210</a>
+      <a href="mailto:hello@radhedesignstudio.com">hello@radhedesignstudio.com</a>
+      <a href="journal.html">Journal</a>
+      <span>Ahmedabad · Gujarat · India</span>
+    </div>
+    <dl class="titleblock">
+      <div><dt>Project</dt><dd>Radhe Design Studio</dd></div>
+      <div><dt>Sheet</dt><dd>A-000</dd></div>
+      <div><dt>Scale</dt><dd>ESC 1:50</dd></div>
+      <div><dt>Rev</dt><dd><span data-today>2026-08-19</span></dd></div>
+    </dl>
+  </footer>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/js/studio.js?v=20260819-studio"></script>
+</body>
 </html>

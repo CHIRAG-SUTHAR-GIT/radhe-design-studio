@@ -3,7 +3,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  background: #11100e;
+  background: #1a1310;
 }
 
 body[data-page='experience'] {
@@ -13,7 +13,7 @@ body[data-page='experience'] {
 .tour-page {
   position: fixed;
   inset: 0;
-  background: #11100e;
+  background: #1a1310;
 }
 
 /* ── Scene Selection Screen ───────────────── */
@@ -26,7 +26,7 @@ body[data-page='experience'] {
   justify-content: center;
   padding: 6rem var(--page-x, clamp(1.25rem, 3.2vw, 4rem)) 2rem;
   overflow-y: auto;
-  background: #11100e;
+  background: #1a1310;
   transition: opacity .42s cubic-bezier(.22, 1, .36, 1), transform .42s cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -58,7 +58,7 @@ body[data-page='experience'] {
   inset: 0;
   background:
     radial-gradient(ellipse 80% 50% at 30% 40%, rgba(189, 79, 50, .08), transparent),
-    radial-gradient(ellipse 60% 60% at 70% 60%, rgba(240, 201, 168, .06), transparent);
+    radial-gradient(ellipse 60% 60% at 70% 60%, rgba(178, 138, 92, .06), transparent);
   pointer-events: none;
 }
 
@@ -72,7 +72,7 @@ body[data-page='experience'] {
 
 .scene-select__label {
   margin: 0 0 1.5rem;
-  color: rgba(240, 201, 168, .8);
+  color: rgba(178, 138, 92, .8);
   font: 500 .62rem/1 var(--mono, 'DM Mono', Consolas, monospace);
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -86,15 +86,17 @@ body[data-page='experience'] {
 
 .scene-select__title {
   margin: 0 0 1rem;
-  color: #fbf8f2;
-  font: 400 clamp(3.8rem, 8vw, 8rem)/.86 var(--serif, 'Instrument Serif', Georgia, serif);
-  letter-spacing: -.055em;
+  color: #f5eee3;
+  font: 400 clamp(3.2rem, 6.6vw, 6.4rem)/.92 var(--display, 'Playfair Display', Georgia, serif);
+  letter-spacing: -.01em;
+  text-transform: uppercase;
   animation: fadeUp .8s cubic-bezier(.22, 1, .36, 1) .35s both;
 }
 
 .scene-select__title em {
-  color: #f0c9a8;
+  color: #b28a5c;
   font-style: italic;
+  text-transform: none;
 }
 
 .scene-select__subtitle {
@@ -134,7 +136,7 @@ body[data-page='experience'] {
   border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 0;
   background: rgba(255, 255, 255, .03);
-  color: #fbf8f2;
+  color: #f5eee3;
   text-align: left;
   padding: 0;
   cursor: pointer;
@@ -155,11 +157,11 @@ body[data-page='experience'] {
 }
 
 .scene-card:hover {
-  border-color: rgba(240, 201, 168, .4);
+  border-color: rgba(178, 138, 92, .4);
   transform: translateY(-6px);
   box-shadow:
     0 24px 64px rgba(0, 0, 0, .4),
-    0 0 0 1px rgba(240, 201, 168, .12) inset;
+    0 0 0 1px rgba(178, 138, 92, .12) inset;
 }
 
 .scene-card:active {
@@ -194,8 +196,8 @@ body[data-page='experience'] {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(0deg, rgba(17, 16, 14, .88) 0%, rgba(17, 16, 14, .3) 45%, rgba(17, 16, 14, .05) 70%),
-    linear-gradient(180deg, rgba(17, 16, 14, .4) 0%, transparent 25%);
+    linear-gradient(0deg, rgba(26, 19, 16, .96) 0%, rgba(26, 19, 16, .78) 34%, rgba(26, 19, 16, .28) 62%, rgba(26, 19, 16, .06) 82%),
+    linear-gradient(180deg, rgba(26, 19, 16, .45) 0%, transparent 28%);
   pointer-events: none;
   transition: opacity .45s;
 }
@@ -218,9 +220,9 @@ body[data-page='experience'] {
   display: inline-block;
   margin-bottom: .8rem;
   padding: .35rem .72rem;
-  background: rgba(240, 201, 168, .15);
-  border: 1px solid rgba(240, 201, 168, .25);
-  color: #f0c9a8;
+  background: rgba(178, 138, 92, .15);
+  border: 1px solid rgba(178, 138, 92, .25);
+  color: #b28a5c;
   font: 500 .55rem/1 var(--mono, 'DM Mono', Consolas, monospace);
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -245,7 +247,7 @@ body[data-page='experience'] {
   display: inline-flex;
   align-items: center;
   gap: .65rem;
-  color: #f0c9a8;
+  color: #b28a5c;
   font: 500 .62rem/1 var(--mono, 'DM Mono', Consolas, monospace);
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -277,9 +279,9 @@ body[data-page='experience'] {
   height: 3.6rem;
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 50%;
-  background: rgba(17, 16, 14, .65);
+  background: rgba(26, 19, 16, .65);
   backdrop-filter: blur(12px);
-  color: #f0c9a8;
+  color: #b28a5c;
   font: 600 .72rem/1 var(--sans, 'Instrument Sans', Arial, sans-serif);
   letter-spacing: .04em;
   transition: transform .45s cubic-bezier(.22, 1, .36, 1), border-color .45s;
@@ -287,7 +289,7 @@ body[data-page='experience'] {
 
 .scene-card:hover .scene-card__badge {
   transform: rotate(20deg) scale(1.08);
-  border-color: rgba(240, 201, 168, .45);
+  border-color: rgba(178, 138, 92, .45);
 }
 
 /* ── Bottom Hint ──────────────────────────── */
@@ -309,9 +311,9 @@ body[data-page='experience'] {
   width: 7px;
   height: 7px;
   flex: 0 0 auto;
-  background: #f0c9a8;
+  background: #b28a5c;
   border-radius: 50;
-  box-shadow: 0 0 0 5px rgba(240, 201, 168, .1);
+  box-shadow: 0 0 0 5px rgba(178, 138, 92, .1);
   animation: hintPulse 2.4s ease-in-out infinite;
 }
 
@@ -319,11 +321,11 @@ body[data-page='experience'] {
 
   0%,
   100% {
-    box-shadow: 0 0 0 5px rgba(240, 201, 168, .1);
+    box-shadow: 0 0 0 5px rgba(178, 138, 92, .1);
   }
 
   50% {
-    box-shadow: 0 0 0 12px rgba(240, 201, 168, .05);
+    box-shadow: 0 0 0 12px rgba(178, 138, 92, .05);
   }
 }
 
@@ -332,7 +334,7 @@ body[data-page='experience'] {
   position: absolute;
   inset: 0;
   z-index: 20;
-  background: #11100e;
+  background: #1a1310;
   transition: opacity .42s cubic-bezier(.22, 1, .36, 1), transform .42s cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -368,7 +370,7 @@ body[data-page='experience'] {
   width: 100%;
   height: calc(100% - 74px);
   border: 0;
-  background: #11100e;
+  background: #1a1310;
 }
 
 /* ── Change View Button ───────────────────── */
@@ -383,9 +385,9 @@ body[data-page='experience'] {
   padding: .85rem 1.3rem;
   border: 1px solid rgba(255, 255, 255, .18);
   border-radius: 999px;
-  background: rgba(17, 16, 14, .72);
+  background: rgba(26, 19, 16, .72);
   backdrop-filter: blur(14px);
-  color: #fbf8f2;
+  color: #f5eee3;
   cursor: pointer;
   transition: background .3s, border-color .3s, transform .3s cubic-bezier(.22, 1, .36, 1);
 }
@@ -426,7 +428,7 @@ body[data-page='experience'] {
   align-items: center;
   gap: .6rem;
   padding: .75rem 1rem;
-  background: rgba(17, 16, 14, .58);
+  background: rgba(26, 19, 16, .58);
   border: 1px solid rgba(255, 255, 255, .14);
   backdrop-filter: blur(14px);
   color: rgba(255, 255, 255, .82);
@@ -441,9 +443,9 @@ body[data-page='experience'] {
   width: 7px;
   height: 7px;
   flex: 0 0 auto;
-  background: #f0c9a8;
+  background: #b28a5c;
   border-radius: 50%;
-  box-shadow: 0 0 0 5px rgba(240, 201, 168, .1);
+  box-shadow: 0 0 0 5px rgba(178, 138, 92, .1);
 }
 
 /* ── Identity hint (shown in viewer) ──────── */
@@ -459,7 +461,7 @@ body[data-page='experience'] {
   max-width: min(31rem, calc(100vw - 2 * var(--page-x, 1.25rem)));
   padding: .75rem .9rem;
   color: rgba(255, 255, 255, .82);
-  background: rgba(17, 16, 14, .58);
+  background: rgba(26, 19, 16, .58);
   border: 1px solid rgba(255, 255, 255, .14);
   backdrop-filter: blur(14px);
   pointer-events: none;
@@ -474,9 +476,9 @@ body[data-page='experience'] {
   width: 7px;
   height: 7px;
   flex: 0 0 auto;
-  background: #f0c9a8;
+  background: #b28a5c;
   border-radius: 50%;
-  box-shadow: 0 0 0 5px rgba(240, 201, 168, .1);
+  box-shadow: 0 0 0 5px rgba(178, 138, 92, .1);
 }
 
 .tour-page__identity span {
@@ -522,8 +524,8 @@ body[data-page='experience'] .scroll-progress {
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
   margin-top: 4rem;
-  background: var(--line, rgba(17, 16, 14, .18));
-  border: 1px solid var(--line, rgba(17, 16, 14, .18));
+  background: var(--line, rgba(26, 19, 16, .18));
+  border: 1px solid var(--line, rgba(26, 19, 16, .18));
 }
 
 .practice-facts>div {
@@ -664,4 +666,57 @@ body[data-page='experience'] .scroll-progress {
   .scene-card__image {
     height: 13rem;
   }
+}
+/* ── Panorama loading state ─────────────────
+   Driven by real download progress posted from the viewer, so it never
+   sits at a dead zero while a large file is in flight. */
+.tour-loading {
+  position: absolute;
+  z-index: 1080;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #1a1310;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .5s cubic-bezier(.22, 1, .36, 1), visibility .5s;
+}
+
+.tour-loading.is-active { opacity: 1; visibility: visible; }
+
+.tour-loading__inner {
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  width: min(28rem, 72vw);
+  text-align: center;
+}
+
+.tour-loading__label {
+  font: 400 clamp(1.6rem, 3vw, 2.4rem)/1 var(--display, 'Playfair Display', Georgia, serif);
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  color: #f5eee3;
+}
+
+.tour-loading__track {
+  width: 100%;
+  height: 1px;
+  background: rgba(245, 238, 227, .16);
+  overflow: hidden;
+}
+
+.tour-loading__track i {
+  display: block;
+  width: 4%;
+  height: 100%;
+  background: #b28a5c;
+  transition: width .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.tour-loading__hint {
+  font: 500 .58rem/1 var(--mono, 'DM Mono', Consolas, monospace);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(245, 238, 227, .45);
 }

@@ -1,157 +1,132 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#11100e">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ececec">
   <title>The Earth House — Radhe Design Studio</title>
-  <meta name="description"
-    content="The Earth House, a calm Ahmedabad residence shaped by light, raw tactility and daily ritual.">
+  <meta name="description" content="A family home turned inward around a neem tree, where lime plaster and local stone keep the rooms cool through the Gujarat summer.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ececec'/%3E%3Ctext x='32' y='46' font-family='Montserrat,sans-serif' font-size='42' font-weight='700' text-anchor='middle' fill='%239d7460'%3ER%3C/text%3E%3Crect x='20' y='9' width='24' height='6' fill='%23d98e36'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="assets/vendor/lenis.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=20260814-cinematic">
-  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/studio.css?v=20260819-studio">
+  <script>
+    // Applied before first paint so the sheet never flashes the wrong colour.
+    (function () {
+      try {
+        var saved = localStorage.getItem('radhe-theme');
+        var t = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { }
+    })();
+  </script>
 </head>
-
-<body data-page="projects">
-  <a class="skip-link" href="#main">Skip to content →</a>
-  <div class="page-loader" aria-hidden="true"><span class="page-loader__mark">R</span><i class="page-loader__line"></i>
+<body data-page="project-detail">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="blueprint" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <line class="bp-dash" x1="0" y1="150" x2="1440" y2="150"/>
+      <line class="bp-dash" x1="0" y1="770" x2="1440" y2="770"/>
+      <line class="bp-dash" x1="195" y1="0" x2="195" y2="900"/>
+      <line class="bp-dash" x1="1245" y1="0" x2="1245" y2="900"/>
+      <path d="M20 96h530M20 96v60M20 156h530M270 96v22M355 96v22M20 118h330"/>
+      <path class="bp-amber" d="M420 156a120 120 0 0 0 120-60"/>
+      <circle cx="120" cy="632" r="58"/>
+      <line x1="120" y1="562" x2="120" y2="702"/>
+      <path d="M1420 460v300M1400 470v290M1380 486v274M1360 500v260M1340 516v244"/>
+      <path d="M905 795h490"/>
+    </svg>
   </div>
-  <div class="page-transition" aria-hidden="true"><span>RADHE</span></div>
-  <div class="scroll-progress" aria-hidden="true"></div>
-  <header class="site-header"><a class="brand" href="index.html" aria-label="Radhe Design Studio home"><span
-        class="brand__mark">R</span><span class="brand__type"><b>Radhe</b>Design Studio</span></a>
-    <nav class="desktop-nav" aria-label="Primary navigation"><a data-nav="studio" href="about.html">Studio</a><a
-        data-nav="projects" href="portfolio.html">Projects</a><a data-nav="services" href="services.html">Services</a><a
-        data-nav="journal" href="journal.html">Journal</a><a data-nav="experience" href="experience.html">360 Studio</a></nav>
-    <div class="header-actions"><a class="header-link" href="contact.html">Start a project</a><button
-        class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-panel"
-        aria-label="Open menu"><span></span><span></span></button></div>
+
+  <header class="head">
+    <a class="brand" href="index.html" aria-label="Radhe Design Studio — home"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
+      <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-heavy">DHE</tspan></text>
+      <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
+    </svg></a>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch colour scheme">
+        <i class="theme-toggle__dot" aria-hidden="true"></i><span id="theme-label">Light</span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Primary"><a href="about.html">About</a><span class="nav__sep">|</span><a href="projects.html">Projects</a><span class="nav__sep">|</span><a href="services.html">Services</a><span class="nav__sep">|</span><a href="experience.html">360</a><span class="nav__sep">|</span><a href="contact.html">Contact</a></nav>
+      <button class="menu-btn" type="button" id="menu-open" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
   </header>
-  <aside class="menu-panel" id="menu-panel" aria-hidden="true">
-    <nav class="menu-panel__links" aria-label="Menu navigation"><a href="about.html"><span>01</span>Studio</a><a
-        href="portfolio.html"><span>02</span>Projects</a><a href="services.html"><span>03</span>Services</a><a
-        href="journal.html"><span>04</span>Journal</a><a href="experience.html"><span>05</span>360 Studio</a><a href="contact.html"><span>06</span>Contact</a></nav>
-    <div class="menu-panel__aside">
-      <p>Interior architecture for homes and places with a lasting sense of belonging.</p>
-      <div class="menu-panel__meta"><a href="mailto:hello@radhedesignstudio.com">Email us</a><span>Ahmedabad ·
-          India</span></div>
-    </div>
-  </aside>
-  <main id="main">
-    <section class="project-hero"><img src="assets/images/earth-house.webp"
-        alt="The Earth House living room with a sculptural plaster stair" fetchpriority="high">
-      <div class="project-hero__content">
-        <p class="overline">Residence · Ahmedabad · 2025</p>
-        <h1 data-reveal>The Earth<br>House.</h1>
-        <div class="project-hero__meta" data-reveal><span>4,800 sq. ft.</span><span>Interior
-            architecture</span><span>Turnkey execution</span></div>
-      </div>
+
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <button class="menu-btn" type="button" id="menu-close" aria-label="Close menu"><span></span><span></span></button>
+    <a href="about.html"><span>01</span>About</a><a href="projects.html"><span>02</span>Projects</a><a href="services.html"><span>03</span>Services</a><a href="experience.html"><span>04</span>360</a><a href="contact.html"><span>05</span>Contact</a>
+  </div>
+
+  <main id="main" class="page">
+
+    <section class="inner" aria-label="The Earth House">
+      <h1 class="project__title">The Earth House</h1>
+      <p class="project__sub">A family home turned inward around a neem tree, where lime plaster and local stone keep the rooms cool through the Gujarat summer.</p>
+      <p class="project__body">The house is reconfigured to work as an adaptable family home.
+        A new opening relocates and enlarges the kitchen and dining area, freeing space for an
+        additional bedroom. A level change at the rear makes room for a small courtyard, which
+        improves cross ventilation, draws light deeper into the plan and gives the second bedroom
+        a sheltered outdoor space.</p>
+
+      <dl class="project__meta">
+        <div><dt>Programme</dt><dd>Residence</dd></div>
+        <div><dt>Location</dt><dd>Ahmedabad</dd></div>
+        <div><dt>Completed</dt><dd>2025</dd></div>
+        <div><dt>Area</dt><dd>3 400 sq ft</dd></div>
+        <div><dt>Status</dt><dd>Built</dd></div>
+      </dl>
+
+      <div class="project__figures"><figure data-reveal>
+          <span class="plate__frame" style="position:relative;display:block">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/earth-house.webp" alt="Living room looking through to the courtyard" loading="lazy" decoding="async">
+          </span>
+          <figcaption class="annot">fig. 01 — Living room looking through to the courtyard</figcaption>
+        </figure><figure data-reveal>
+          <span class="plate__frame" style="position:relative;display:block">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/material-detail.webp" alt="Lime plaster, brass inlay and local stone" loading="lazy" decoding="async">
+          </span>
+          <figcaption class="annot">fig. 02 — Lime plaster, brass inlay and local stone</figcaption>
+        </figure><figure data-reveal>
+          <span class="plate__frame" style="position:relative;display:block">
+            <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <img src="assets/images/courtyard-house-hero.jpg" alt="The courtyard from the verandah" loading="lazy" decoding="async">
+          </span>
+          <figcaption class="annot">fig. 03 — The courtyard from the verandah</figcaption>
+        </figure></div>
     </section>
-    <section class="section project-story">
-      <div>
-        <p class="section-label"><span>01</span>The idea</p>
-        <div class="project-facts" data-reveal>
-          <div><span>Location</span><strong>Ahmedabad, Gujarat</strong></div>
-          <div><span>Year</span><strong>2025</strong></div>
-          <div><span>Type</span><strong>Private residence</strong></div>
-          <div><span>Scope</span><strong>Full service</strong></div>
-        </div>
-      </div>
-      <div>
-        <h2 class="display" data-reveal>A calm home shaped by sunlight, raw tactility and <em>daily ritual.</em></h2>
-        <p class="lead" data-reveal>The house began with a desire for togetherness without constant exposure. Curved
-          thresholds soften the plan, garden courts create moments of pause and a measured palette allows light to
-          become the primary decoration.</p>
-        <p data-reveal>Earthy plaster, honed travertine and teak establish a restrained material language. Built-in
-          furniture continues the architecture at a smaller scale, while objects collected over time give the rooms
-          their particular warmth.</p>
-      </div>
-    </section>
-    <div class="gallery">
-      <figure data-reveal="image"><img src="assets/images/hero-radhe.webp" alt="Living space opening to a rain garden"
-          loading="lazy"></figure>
-      <figure data-reveal="image"><img src="assets/images/sandstone-courtyard.webp"
-          alt="Shaded courtyard with a reflecting pool" loading="lazy"></figure>
-      <figure data-reveal="image"><img src="assets/images/courtyard-house-hero.jpg"
-          alt="Contemporary Indian courtyard framed by shaded verandahs and terracotta jaali" loading="lazy"></figure>
-    </div>
-    <section class="section section--dark process-layout">
-      <div>
-        <p class="section-label"><span>02</span>Material language</p>
-        <h2 class="display" data-reveal>Quiet, but never <em>blank.</em></h2>
-      </div>
-      <div class="accordion" data-reveal>
-        <details open>
-          <summary><span>01</span>
-            <h3>Lime plaster</h3><i class="accordion__icon"></i>
-          </summary>
-          <div class="accordion__body">
-            <p>A hand-worked surface catches changing daylight and softens the geometry of the central stair.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span>02</span>
-            <h3>Honed stone</h3><i class="accordion__icon"></i>
-          </summary>
-          <div class="accordion__body">
-            <p>Low-sheen local stone grounds the house and carries continuously between inside and garden thresholds.
-            </p>
-          </div>
-        </details>
-        <details>
-          <summary><span>03</span>
-            <h3>Warm timber</h3><i class="accordion__icon"></i>
-          </summary>
-          <div class="accordion__body">
-            <p>Teak joinery brings scale, tactility and a precise line against the softer mineral surfaces.</p>
-          </div>
-        </details>
-      </div>
-    </section>
-    <section class="quote-grid">
-      <div class="quote-grid__image"><img src="assets/images/earth-house.webp"
-          alt="Sunlight moving through The Earth House" loading="lazy"></div>
-      <div class="quote-grid__copy">
-        <p class="section-label"><span>03</span>Client reflection</p>
-        <blockquote data-reveal>“It feels like the house has always known us.”</blockquote><cite>Aditi & Karan ·
-          Homeowners</cite>
-      </div>
-    </section>
-    <section class="cta">
-      <p class="section-label">Next · Selected work</p>
-      <h2 class="display" data-reveal>Explore the spaces that came <em>after.</em></h2><a class="button button--dark"
-        href="portfolio.html">All projects <span>↗</span></a>
-    </section>
+    <a class="corner-note" href="projects.html">
+      <i aria-hidden="true"></i><span>Next project<b>Aaranya</b></span></a>
   </main>
-  <footer class="site-footer">
-    <div class="footer-main">
-      <div class="footer-brand"><a class="brand" href="index.html"><span class="brand__mark">R</span><span
-            class="brand__type"><b>Radhe</b>Design Studio</span></a>
-        <p>Interior architecture rooted in place, purpose and the people who inhabit it.</p>
-      </div>
-      <div class="footer-column">
-        <h3>Explore</h3><a href="about.html">Studio</a><a href="portfolio.html">Projects</a><a
-          href="services.html">Services</a><a href="journal.html">Journal</a>
-      </div>
-      <div class="footer-column">
-        <h3>Visit</h3><span>Ahmedabad, Gujarat</span><span>Mon–Sat · 10:00–18:30</span><a href="tel:+919876543210">+91
-          98765 43210</a>
-      </div>
-      <div class="footer-column">
-        <h3>Begin</h3><a href="contact.html">Start a project</a><a
-          href="mailto:hello@radhedesignstudio.com">hello@radhedesignstudio.com</a>
-      </div>
+
+  <footer class="foot">
+    <div class="foot__rule"></div>
+    <div class="foot__mark"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
+      <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-heavy">DHE</tspan></text>
+      <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
+    </svg></div>
+    <div class="foot__rule"></div>
+    <div class="foot__row">
+      <a href="contact.html">Contact us</a>
+      <a href="tel:+919876543210">+91 98765 43210</a>
+      <a href="mailto:hello@radhedesignstudio.com">hello@radhedesignstudio.com</a>
+      <a href="journal.html">Journal</a>
+      <span>Ahmedabad · Gujarat · India</span>
     </div>
-    <div class="footer-bottom"><span>© <span data-year></span> Radhe Design Studio</span><span>Ahmedabad · India</span>
-    </div>
+    <dl class="titleblock">
+      <div><dt>Project</dt><dd>Radhe Design Studio</dd></div>
+      <div><dt>Sheet</dt><dd>A-000</dd></div>
+      <div><dt>Scale</dt><dd>ESC 1:50</dd></div>
+      <div><dt>Rev</dt><dd><span data-today>2026-08-19</span></dd></div>
+    </dl>
   </footer>
+
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/vendor/lenis.min.js"></script>
-  <script src="assets/js/main.js?v=20260814-cinematic"></script>
+  <script src="assets/js/studio.js?v=20260819-studio"></script>
 </body>
-
 </html>

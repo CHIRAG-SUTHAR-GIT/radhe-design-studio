@@ -24,20 +24,27 @@
         // Wrap pointermove to invert delta (mirror around drag start)
         // Only for real user events, not synthetic ones from auto-rotate/inertia
         const origMove = listener;
+        // Reused across the whole drag: allocating an object per pointermove
+        // was showing up as jitter on long drags.
+        const mirror = {
+          pointerId: 0,
+          clientX: 0,
+          clientY: 0,
+          buttons: 1,
+          pointerType: 'mouse',
+          _synthetic: false,
+          preventDefault() { },
+          stopPropagation() { }
+        };
         handlers[type] = function (e) {
           const origin = dragOrigins.get(e.pointerId);
           if (origin && !e._synthetic) {
-            const mirroredX = origin.startX - (e.clientX - origin.startX);
-            const mirroredY = origin.startY - (e.clientY - origin.startY);
-            const inverted = new Proxy(e, {
-              get(target, prop) {
-                if (prop === 'clientX') return mirroredX;
-                if (prop === 'clientY') return mirroredY;
-                const val = target[prop];
-                return typeof val === 'function' ? val.bind(target) : val;
-              }
-            });
-            return origMove.call(this, inverted);
+            mirror.pointerId = e.pointerId;
+            mirror.pointerType = e.pointerType;
+            mirror.buttons = e.buttons;
+            mirror.clientX = origin.startX - (e.clientX - origin.startX);
+            mirror.clientY = origin.startY - (e.clientY - origin.startY);
+            return origMove.call(this, mirror);
           }
           return origMove.call(this, e);
         };
@@ -236,17 +243,39 @@
       } else {
         cancelAnimationFrame(autoFrame);
         autoFrame = 0;
+        endAutoDrag();
       }
     });
     autoButton.setAttribute('aria-pressed', 'false');
 
+    let autoOpen = false;
+    let autoX = 0;
+    let autoLast = 0;
+
+    function endAutoDrag() {
+      if (!autoOpen) return;
+      invoke('pointerup', fakeEvent(9102, autoX, 0));
+      autoOpen = false;
+    }
+
     function runAutoRotate(time) {
-      if (!autoRotate) return;
-      if (time > autoPausedUntil && !reducedMotion) {
-        const id = 9102;
-        invoke('pointerdown', fakeEvent(id, 0, 0));
-        invoke('pointermove', fakeEvent(id, .42, 0));
-        invoke('pointerup', fakeEvent(id, .42, 0));
+      if (!autoRotate) { endAutoDrag(); return; }
+      const running = time > autoPausedUntil && !reducedMotion;
+      if (running) {
+        if (!autoOpen) {
+          autoX = 0;
+          autoLast = time;
+          invoke('pointerdown', fakeEvent(9102, 0, 0));
+          autoOpen = true;
+        }
+        // Frame-rate independent, and one event per frame rather than three.
+        const elapsed = Math.min(50, time - autoLast);
+        autoLast = time;
+        autoX += elapsed * .026;
+        invoke('pointermove', fakeEvent(9102, autoX, 0));
+      } else {
+        endAutoDrag();
+        autoLast = time;
       }
       autoFrame = requestAnimationFrame(runAutoRotate);
     }
@@ -319,13 +348,29 @@
     });
     motionButton.setAttribute('aria-pressed', 'false');
 
+    const embedded = window.parent !== window;
+
     const fullscreenButton = makeTool('Full screen', '⛶', 'Toggle full screen', async () => {
+      // Inside an iframe, requestFullscreen() promotes the iframe itself into the
+      // host page's top layer, which hides the host's own tour controls. Ask the
+      // host to go full screen instead and only fall back when standing alone.
+      if (embedded) {
+        parent.postMessage({ type: 'radhe-360', action: 'toggle-fullscreen' }, '*');
+        return;
+      }
       try {
         if (document.fullscreenElement) await document.exitFullscreen();
         else await document.documentElement.requestFullscreen();
       } catch {
         showToast('Full screen is not available in this browser.');
       }
+    });
+
+    addEventListener('message', (event) => {
+      const data = event.data;
+      if (!data || data.type !== 'radhe-360-host' || data.action !== 'fullscreen-state') return;
+      fullscreenButton.classList.toggle('is-active', Boolean(data.active));
+      fullscreenButton.setAttribute('aria-pressed', String(Boolean(data.active)));
     });
 
     document.addEventListener('fullscreenchange', () => {
@@ -383,8 +428,8 @@
       const glide = (now) => {
         const elapsed = Math.min(34, now - last);
         last = now;
-        x += velocityX * elapsed;
-        y += velocityY * elapsed;
+        x -= velocityX * elapsed;
+        y -= velocityY * elapsed;
         invoke('pointermove', fakeEvent(id, x, y));
         const friction = Math.pow(.92, elapsed / 16.67);
         velocityX *= friction;
@@ -439,46 +484,67 @@
     const urlParams = new URLSearchParams(location.search);
     const scenePath = urlParams.get('scene');
     if (scenePath && sourceInput) {
-      const feedFile = (blob, name) => {
-        const file = new File([blob], name, { type: blob.type || 'image/png' });
-        const transfer = new DataTransfer();
-        transfer.items.add(file);
-        sourceInput.files = transfer.files;
-        sourceInput.dispatchEvent(new Event('change', { bubbles: true }));
-      };
-
-      const loadAutoScene = () => {
-        const fileName = decodeURIComponent(scenePath).split('/').pop();
-
-        // Primary: fetch API (reliable on HTTP servers)
-        fetch(scenePath)
-          .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
-          .then(blob => feedFile(blob, fileName))
-          .catch(() => {
-            // Fallback: XHR (works on file:// with status 0)
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', scenePath, true);
-            xhr.responseType = 'blob';
-            xhr.onload = () => {
-              if ((xhr.status === 0 || xhr.status === 200) && xhr.response && xhr.response.size > 0) {
-                feedFile(xhr.response, fileName);
-              }
-            };
-            xhr.send();
-          });
-      };
-      // Delay to let the viewer fully initialize its React/Three.js components
-      setTimeout(loadAutoScene, 1200);
-
-      /* ── Auto-enter fullscreen when scene is loaded via URL param ── */
-      const tryFullscreen = () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => { });
+      const post = (action, value) => {
+        if (window.parent !== window) {
+          parent.postMessage({ type: 'radhe-360', action, value }, '*');
         }
       };
-      // Fullscreen requires user gesture — listen for first interaction on the parent page
-      // The iframe load itself counts if triggered by a click from experience.html
-      setTimeout(tryFullscreen, 800);
+
+      // One XHR with real progress events. Downloading through XHR rather than
+      // fetch means the host can show how far along the panorama actually is,
+      // and it still works from file:// where the status comes back as 0.
+      const loadAutoScene = () => {
+        const fileName = decodeURIComponent(scenePath).split('/').pop();
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', scenePath, true);
+        xhr.responseType = 'blob';
+
+        xhr.onprogress = (event) => {
+          if (!event.lengthComputable) return;
+          // Download is the first 80% of the wait; decode and mesh build the rest.
+          post('scene-progress', Math.round((event.loaded / event.total) * 80));
+        };
+
+        xhr.onload = () => {
+          const ok = (xhr.status === 0 || xhr.status === 200) && xhr.response && xhr.response.size > 0;
+          if (!ok) { post('scene-error'); return; }
+          post('scene-progress', 86);
+          const file = new File([xhr.response], fileName, { type: xhr.response.type || 'image/jpeg' });
+          const transfer = new DataTransfer();
+          transfer.items.add(file);
+          sourceInput.files = transfer.files;
+          internalSceneChange = true;
+          sourceInput.dispatchEvent(new Event('change', { bubbles: true }));
+          internalSceneChange = false;
+          waitForScene();
+        };
+
+        xhr.onerror = () => post('scene-error');
+        xhr.send();
+      };
+
+      // The app reports "Ready" in its own status pill once the mesh is built.
+      const waitForScene = () => {
+        const started = performance.now();
+        let progress = 86;
+        const poll = () => {
+          const status = document.querySelector('.status-pill, .brand-row + *, .stage');
+          const ready = /ready/i.test(document.body.innerText.slice(0, 400));
+          if (ready || performance.now() - started > 12000) { post('scene-ready'); return; }
+          progress = Math.min(98, progress + 1);
+          post('scene-progress', progress);
+          setTimeout(poll, 260);
+        };
+        setTimeout(poll, 300);
+      };
+
+      // Give the viewer a moment to mount its React tree and canvas first.
+      const waitForInput = () => {
+        if (sourceInput.isConnected) loadAutoScene();
+        else setTimeout(waitForInput, 200);
+      };
+      setTimeout(waitForInput, 350);
+
     }
   });
 })();
