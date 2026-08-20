@@ -1323,3 +1323,22 @@ body.is-touring { overflow: hidden; }
     border: 1px solid var(--hair-soft);
   }
 }
+
+/* ── Hero reveal: rides in as the plate opens to full bleed ──────── */
+.hero__reveal {
+  position: absolute;
+  left: var(--page-x); right: var(--page-x);
+  bottom: clamp(3rem, 9vh, 6rem);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+}
+.hero__reveal-line {
+  max-width: 24ch;
+  color: #fdfaf5;
+  font-size: clamp(1.5rem, 3.4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  text-shadow: 0 2px 30px rgba(12, 10, 8, .6);
+}

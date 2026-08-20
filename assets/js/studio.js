@@ -98,6 +98,7 @@
   addEventListener('keydown', (e) => { if (e.key === 'Escape') setDrawer(false); });
 
   /* ── Hero plate slideshow ──────────────────────────────────────── */
+  let heroSlides = null;
   const figure = $('#hero-figure');
   if (figure) {
     const plates = $$('img', figure);
@@ -133,6 +134,54 @@
     }, { threshold: .1 }).observe(figure);
 
     if (!playing && toggle) toggle.innerHTML = '&#9654;';
+
+    /* Held while the hero is scrubbing open — a crossfade part-way through
+       the pin leaves two rooms visible through each other. */
+    heroSlides = {
+      hold: () => clearInterval(timer),
+      resume: () => start()
+    };
+  }
+
+  /* ── Cinematic hero: pinned, scrubbed ────────────────────────────
+     The reference holds its hero for ~2520px at scrub .8 while the image
+     opens out to fill the viewport. Same idea here: the plate grows to
+     full bleed, the wordmark scales past the viewer and a line rides in.
+
+     Width and height are tweened in explicit pixels rather than CSS
+     units — GSAP cannot interpolate a min() expression, and a silent
+     no-op there is what stops the pin from ever being built. */
+  const heroPin = $('.hero');
+  const heroFigure = $('.hero__figure');
+  if (heroPin && heroFigure && motion && innerWidth > 860) {
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: heroPin,
+        start: 'top top',
+        end: '+=2100',
+        pin: true,
+        pinSpacing: true,
+        scrub: .8,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (!heroSlides) return;
+          self.progress > .02 ? heroSlides.hold() : heroSlides.resume();
+        }
+      }
+    })
+      .fromTo(heroFigure,
+        { width: () => heroFigure.getBoundingClientRect().width,
+          height: () => heroFigure.getBoundingClientRect().height },
+        { width: () => innerWidth,
+          height: () => innerHeight,
+          ease: 'power2.inOut' }, 0)
+      .to($('.hero__mark'), { scale: 1.7, opacity: 0, ease: 'power1.in' }, 0)
+      .to($('.hero__aside'), { opacity: 0, y: 40, ease: 'none' }, 0)
+      .to($('.hero__caption'), { opacity: 0, ease: 'none' }, 0)
+      .to($('.hero__scroll'), { opacity: 0, ease: 'none' }, 0)
+      .fromTo($('.hero__reveal'),
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, ease: 'power2.out' }, .55);
   }
 
   /* ── Selected work ─────────────────────────────────────────────────
