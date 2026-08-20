@@ -17,6 +17,18 @@
 
   if (motion) gsap.registerPlugin(ScrollTrigger);
 
+  /* ── Smooth scroll ──────────────────────────────────────────────
+     Lenis drives scroll, and ScrollTrigger is told to update from its
+     tick rather than the native scroll event, so pins and scrubs stay
+     locked to the smoothed position instead of lagging a frame behind. */
+  let lenis = null;
+  if (motion && window.Lenis) {
+    lenis = new Lenis({ duration: 1.05, smoothWheel: true, touchMultiplier: 1.6 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
   /* ── Theme ─────────────────────────────────────────────────────────
      The inline script in <head> already applied the stored choice; this
      only wires the switch and keeps the label honest. */
@@ -62,6 +74,7 @@
     drawer?.classList.toggle('is-open', open);
     drawer?.setAttribute('aria-hidden', String(!open));
     body.classList.toggle('is-locked', open);
+    if (lenis) open ? lenis.stop() : lenis.start();
     $('#menu-open')?.setAttribute('aria-expanded', String(open));
   };
   $('#menu-open')?.addEventListener('click', () => setDrawer(true));
@@ -375,6 +388,250 @@
           scrollTrigger: { trigger: el, start: 'top 92%', once: true }
         });
       });
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════════
+     PINNED, SCRUBBED HERO
+     The hero holds while the plate opens out and the wordmark drifts
+     apart — the reference pins its hero image for ~2500px at scrub .8.
+     ═══════════════════════════════════════════════════════════════ */
+  const heroPin = $('.hero');
+  if (heroPin && motion) {
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: heroPin,
+        start: 'top top',
+        end: '+=2200',
+        pin: true,
+        scrub: .8,
+        invalidateOnRefresh: true
+      }
+    })
+      .to($('.hero__figure'), { scale: 1.5, ease: 'none' }, 0)
+      .to($('.hero__plate'), { yPercent: -6, ease: 'none' }, 0)
+      .to($('.hero__mark'), { scale: 1.28, opacity: 0, ease: 'none' }, 0)
+      .to($('.hero__aside'), { yPercent: 40, opacity: 0, ease: 'none' }, 0)
+      .to($('.hero__caption'), { opacity: 0, ease: 'none' }, 0)
+      .to($('.hero__scroll'), { opacity: 0, ease: 'none' }, 0);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SCROLL-SCRUBBED FRAME SEQUENCE
+     120 stills of a full turn, drawn to a canvas. The reference scrubs
+     a <video> playhead; a frame sequence seeks exactly instead of
+     depending on how far apart the encoder put its keyframes.
+     ═══════════════════════════════════════════════════════════════ */
+  const seqCanvas = $('#seq-canvas');
+  if (seqCanvas && motion) {
+    const FRAMES = 120;
+    const ctx = seqCanvas.getContext('2d');
+    const frames = new Array(FRAMES);
+    const frameOut = $('[data-seq-frame]');
+    const degOut = $('[data-seq-deg]');
+    const bar = $('[data-seq-bar]');
+    let loaded = 0;
+    let current = -1;
+
+    const paint = (index) => {
+      const i = Math.max(0, Math.min(FRAMES - 1, Math.round(index)));
+      const img = frames[i];
+      if (i === current || !img || !img.complete || !img.naturalWidth) return;
+      current = i;
+      ctx.drawImage(img, 0, 0, seqCanvas.width, seqCanvas.height);
+      if (frameOut) frameOut.textContent = String(i + 1).padStart(3, '0');
+      if (degOut) degOut.textContent = Math.round(i / FRAMES * 360) + '°';
+    };
+
+    // Nothing downloads until the section is near; the first frame to arrive
+    // is painted straight away so the canvas is never blank.
+    let started = false;
+    const load = () => {
+      if (started) return;
+      started = true;
+      for (let i = 0; i < FRAMES; i += 1) {
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = () => {
+          loaded += 1;
+          if (bar) bar.style.width = (loaded / FRAMES) * 100 + '%';
+          if (current < 0) paint(0);
+        };
+        img.src = 'assets/seq/turn-' + String(i).padStart(3, '0') + '.webp';
+        frames[i] = img;
+      }
+    };
+
+    new IntersectionObserver((entries, obs) => {
+      if (entries.some((e) => e.isIntersecting)) { load(); obs.disconnect(); }
+    }, { rootMargin: '150% 0px' }).observe(seqCanvas);
+
+    const state = { frame: 0 };
+    gsap.to(state, {
+      frame: FRAMES - 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#seq',
+        start: 'top top',
+        end: '+=2600',
+        pin: '#seq-pin',
+        scrub: .6,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          paint(state.frame);
+          if (bar && loaded === FRAMES) bar.style.width = self.progress * 100 + '%';
+        }
+      }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FLIP FEATURE CARD
+     First / last / invert / play by hand: measure the card closed and
+     open, then express the closed state as an inverting transform and
+     play the difference back under scroll.
+     ═══════════════════════════════════════════════════════════════ */
+  const flipCard = $('#flip-card');
+  if (flipCard && motion) {
+    const frame = $('.flip__frame', flipCard);
+    const contents = $$('.flip__body, .flip__frame img', flipCard);
+    let m = null;
+
+    const measure = () => {
+      gsap.set([flipCard, ...contents], { clearProps: 'transform' });
+      flipCard.classList.remove('is-open');
+      const closed = flipCard.getBoundingClientRect();
+      flipCard.classList.add('is-open');
+      const open = flipCard.getBoundingClientRect();
+      return {
+        scaleX: closed.width / open.width,
+        scaleY: closed.height / open.height,
+        x: closed.left - open.left,
+        y: closed.top - open.top
+      };
+    };
+
+    /* The card sits in its open state and is scaled down to look closed, so
+       the text reflows once at measure time rather than on every frame. */
+    const apply = (p) => {
+      if (!m) return;
+      const e = 1 - Math.pow(1 - p, 3);
+      const sx = m.scaleX + (1 - m.scaleX) * e;
+      const sy = m.scaleY + (1 - m.scaleY) * e;
+      gsap.set(flipCard, {
+        x: m.x * (1 - e), y: m.y * (1 - e),
+        scaleX: sx, scaleY: sy, transformOrigin: 'top left'
+      });
+      // Counter-scale the contents so type is never stretched.
+      gsap.set(contents, { scaleX: 1 / sx, scaleY: 1 / sy, transformOrigin: 'top left' });
+    };
+
+    m = measure();
+    apply(0);
+
+    ScrollTrigger.create({
+      trigger: '#flip',
+      start: 'top top',
+      end: '+=1400',
+      pin: '#flip-pin',
+      scrub: .7,
+      invalidateOnRefresh: true,
+      onRefresh: (self) => { m = measure(); apply(self.progress || 0); },
+      onUpdate: (self) => apply(self.progress)
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SCROLL-DRIVEN PROGRAMME CAROUSEL
+     The reference advances its Swiper from scroll position rather than
+     from a swipe; the pills and the plate move together.
+     ═══════════════════════════════════════════════════════════════ */
+  const progPin = $('#prog-pin');
+  if (progPin && motion) {
+    const slides = $$('.prog__slide', progPin);
+    const pills = $$('.prog__pill', progPin);
+    let shown = 0;
+
+    const show = (index) => {
+      const i = Math.max(0, Math.min(slides.length - 1, index));
+      if (i === shown) return;
+      shown = i;
+      slides.forEach((s, n) => s.classList.toggle('is-on', n === i));
+      pills.forEach((b, n) => {
+        b.classList.toggle('is-on', n === i);
+        b.setAttribute('aria-selected', String(n === i));
+      });
+    };
+
+    ScrollTrigger.create({
+      trigger: '#prog',
+      start: 'top top',
+      end: () => '+=' + slides.length * 62 + '%',
+      pin: progPin,
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => show(Math.floor(self.progress * slides.length * .999))
+    });
+
+    // The pills stay usable: clicking one scrolls to that slide's offset.
+    pills.forEach((pill, i) => pill.addEventListener('click', () => {
+      const st = ScrollTrigger.getAll().find((t) => t.trigger === $('#prog'));
+      if (!st) return;
+      const target = st.start + ((i + .5) / slides.length) * (st.end - st.start);
+      if (lenis) lenis.scrollTo(target);
+      else scrollTo({ top: target, behavior: 'smooth' });
+    }));
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     WORD REVEALS
+     A SplitText-style reveal without the plugin. Splitting innerHTML on
+     whitespace would tear inline elements in half — an <em> spanning
+     four words became one <em> word and three loose ones — so this walks
+     text nodes instead and leaves the surrounding markup intact.
+     ═══════════════════════════════════════════════════════════════ */
+  if (motion) {
+    const splitWords = (root) => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => (node.textContent.trim()
+          ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT)
+      });
+      const texts = [];
+      while (walker.nextNode()) texts.push(walker.currentNode);
+
+      const inners = [];
+      texts.forEach((node) => {
+        const fragment = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { fragment.append(document.createTextNode(part)); return; }
+          const outer = document.createElement('span');
+          const inner = document.createElement('span');
+          outer.className = 'line';
+          inner.className = 'line__inner';
+          inner.textContent = part;
+          outer.append(inner);
+          fragment.append(outer);
+          inners.push(inner);
+        });
+        node.replaceWith(fragment);
+      });
+      return inners;
+    };
+
+    $$('[data-split]').forEach((heading) => {
+      const inners = splitWords(heading);
+      if (!inners.length) return;
+      gsap.fromTo(inners,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          stagger: .045,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: heading, start: 'top 88%', once: true }
+        });
+    });
   }
 
   /* ── Floating corner note ──────────────────────────────────────── */

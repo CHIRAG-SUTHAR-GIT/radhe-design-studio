@@ -855,3 +855,167 @@ body.is-touring { overflow: hidden; }
 
 /* Footer secondary links. */
 .foot__row .foot__minor { color: var(--muted); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL SECTIONS
+   Ported from the Redgevity Master reference: a scrubbed frame
+   sequence, a FLIP feature card, and a scroll-driven carousel.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Scrubbed frame sequence ────────────────────────────────────── */
+.seq { position: relative; }
+.seq__pin {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--ink);
+}
+.seq__canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: var(--img-filter);
+}
+.seq__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12,10,8,.66) 0%, rgba(12,10,8,.18) 34%, rgba(12,10,8,.72) 100%),
+    linear-gradient(90deg, rgba(12,10,8,.62) 0%, rgba(12,10,8,0) 62%);
+}
+.seq__copy {
+  position: absolute;
+  left: var(--page-x); bottom: clamp(5rem, 12vh, 9rem);
+  display: grid; gap: 1.1rem; justify-items: start;
+  max-width: min(58rem, 82vw);
+}
+.seq__copy .tag { color: #f3ece2; }
+.seq__title {
+  color: #fdfaf5;
+  font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+.seq__title em { font-style: normal; color: var(--amber); }
+.seq__lead { max-width: 32rem; color: rgba(253,250,245,.72); line-height: 1.7; }
+
+.seq__meta {
+  position: absolute;
+  left: var(--page-x); right: var(--page-x); bottom: 2.4rem;
+  display: flex; justify-content: space-between; gap: 1rem;
+  color: rgba(253,250,245,.6);
+}
+.seq__meta b { color: var(--amber); }
+
+.seq__progress {
+  position: absolute; left: var(--page-x); right: var(--page-x); bottom: 1.6rem;
+  height: 1px; background: rgba(253,250,245,.18);
+}
+.seq__progress i { display: block; width: 0; height: 100%; background: var(--amber); }
+
+/* ── FLIP feature card ──────────────────────────────────────────── */
+.flip { position: relative; }
+.flip__pin { position: relative; height: 100svh; display: grid; place-items: center; overflow: hidden; }
+.flip__stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+
+.flip__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: min(30rem, 84vw);
+  background: var(--plate);
+  will-change: transform;
+}
+.flip__frame { position: relative; display: block; overflow: hidden; aspect-ratio: 4 / 3; }
+.flip__frame img { width: 100%; height: 100%; object-fit: cover; }
+.flip__body { display: grid; gap: .7rem; justify-items: start; padding: clamp(1.2rem, 2.4vw, 2rem); }
+.flip__title { color: var(--clay); font-size: clamp(1.4rem, 2.6vw, 2.2rem); font-weight: 500; letter-spacing: -.01em; }
+.flip__text { color: var(--muted); font-size: .92rem; line-height: 1.7; max-width: 34rem; }
+
+/* The open state the card FLIPs into. */
+.flip__card.is-open {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  width: min(84rem, calc(100vw - var(--page-x) * 2));
+  align-items: center;
+}
+.flip__card.is-open .flip__frame { aspect-ratio: 16 / 10; }
+.flip__card.is-open .flip__body { padding: clamp(1.5rem, 3vw, 3rem); }
+
+/* ── Scroll-driven programme carousel ───────────────────────────── */
+.prog { position: relative; }
+.prog__pin { position: relative; height: 100svh; overflow: hidden; background: var(--ink); }
+.prog__stage { position: absolute; inset: 0; }
+.prog__slide {
+  position: absolute; inset: 0; margin: 0;
+  opacity: 0;
+  transition: opacity .7s var(--ease);
+}
+.prog__slide.is-on { opacity: 1; }
+.prog__slide img { width: 100%; height: 100%; object-fit: cover; filter: var(--img-filter); }
+.prog__caption {
+  position: absolute; left: var(--page-x); bottom: clamp(9rem, 20vh, 13rem);
+  max-width: min(34rem, 76vw);
+  color: rgba(253,250,245,.94);
+  font-size: .92rem; line-height: 1.7;
+  text-shadow: 0 1px 18px rgba(12,10,8,.95), 0 0 6px rgba(12,10,8,.8);
+}
+.prog__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12,10,8,.74) 0%, rgba(12,10,8,.2) 40%, rgba(12,10,8,.62) 68%, rgba(12,10,8,.92) 100%),
+    linear-gradient(90deg, rgba(12,10,8,.5) 0%, rgba(12,10,8,0) 58%);
+}
+.prog__title {
+  position: absolute; left: var(--page-x); top: clamp(7rem, 18vh, 11rem);
+  max-width: min(40rem, 80vw);
+  color: #fdfaf5;
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+  font-weight: 400; line-height: 1.1; letter-spacing: -.02em;
+}
+.prog__title em { font-style: normal; color: var(--amber); }
+
+.prog__pills {
+  position: absolute; left: var(--page-x); right: var(--page-x);
+  bottom: clamp(5rem, 11vh, 8rem);
+  display: flex; flex-wrap: wrap; gap: .6rem;
+}
+.prog__pill {
+  padding: .7rem 1.2rem;
+  border: 1px solid rgba(253,250,245,.24);
+  border-radius: 999px;
+  color: rgba(253,250,245,.72);
+  font-size: .74rem; letter-spacing: .08em;
+  transition: background .45s var(--ease), color .45s var(--ease), border-color .45s;
+}
+.prog__pill.is-on { background: #fdfaf5; border-color: #fdfaf5; color: var(--ink); }
+
+.prog__foot {
+  position: absolute; left: var(--page-x); right: var(--page-x); bottom: 2rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.prog__foot .annot { color: rgba(253,250,245,.55); }
+.prog__foot .btn { color: #fdfaf5; }
+.prog__foot .btn .marks i { border-color: rgba(253,250,245,.3); }
+
+/* ── SplitText-style line reveal ────────────────────────────────── */
+/* Word-level clipping boxes. The padding/negative-margin pair keeps
+   descenders from being sheared off by the overflow. */
+.line {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding: .04em .02em .1em;
+  margin: -.04em -.02em -.1em;
+}
+.line__inner { display: inline-block; will-change: transform; }
+
+@media (max-width: 760px) {
+  .seq__copy { bottom: 7rem; }
+  .seq__lead { display: none; }
+  .prog__title { top: 6rem; }
+  .prog__caption { display: none; }
+  .prog__pills { bottom: 6.5rem; gap: .4rem; }
+  .prog__pill { padding: .55rem .9rem; font-size: .66rem; }
+  .prog__foot .annot { display: none; }
+  .flip__card.is-open { grid-template-columns: 1fr; }
+}
