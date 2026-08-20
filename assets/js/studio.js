@@ -82,7 +82,14 @@
 
   /* ── Header ────────────────────────────────────────────────────── */
   const nav = $('#nav');
-  const onScrollChrome = () => nav?.classList.toggle('is-solid', scrollY > 40);
+  const head = $('.head');
+  const onScrollChrome = () => {
+    const past = scrollY > 40;
+    nav?.classList.toggle('is-solid', past);
+    // The brand needs the same backing as the nav, or page content scrolls
+    // visibly through the wordmark.
+    head?.classList.toggle('is-solid', past);
+  };
   addEventListener('scroll', onScrollChrome, { passive: true });
   onScrollChrome();
 
