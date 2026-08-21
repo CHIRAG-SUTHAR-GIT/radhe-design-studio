@@ -280,6 +280,17 @@
     let filmSeek = null;
 
     if (film) {
+      /* The clip is 2.3MB. Left on preload="auto" it downloads before the
+         visitor has scrolled anywhere, which on a phone is 2.3MB of their
+         data spent on a section they may never reach. Fetch it only as the
+         section comes within a screen or so. */
+      new IntersectionObserver((entries, obs) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        obs.disconnect();
+        film.preload = 'auto';
+        film.load();
+      }, { rootMargin: '120% 0px' }).observe(film);
+
       film.addEventListener('loadedmetadata', () => {
         filmSpan = Math.max(0, film.duration - FILM_IN);
         film.currentTime = FILM_IN;

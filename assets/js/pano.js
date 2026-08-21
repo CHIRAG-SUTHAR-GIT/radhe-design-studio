@@ -223,7 +223,11 @@
       const look = (dx, dy) => {
         // Scale by field of view so the drag feels identical at every zoom.
         const k = this.fov / this.canvas.clientHeight;
-        if (this.gyro) { this.yawOffset -= dx * k; this.dirty = true; return; }
+        // Divert to the gyro's heading offset only once orientation data is
+        // actually arriving. Testing this.gyro alone means a device with no
+        // gyro — or one that silently denied permission — sends every drag
+        // into an offset that is never applied, and the viewer is dead.
+        if (this.quat) { this.yawOffset -= dx * k; this.dirty = true; return; }
         this.yaw -= dx * k;
         this.pitch = clamp(this.pitch - dy * k, -85 * DEG, 85 * DEG);
         this.velYaw = -dx * k;
@@ -232,7 +236,10 @@
       };
 
       el.addEventListener('pointerdown', (e) => {
-        el.setPointerCapture?.(e.pointerId);
+        // Optional chaining guards against the method being absent, not
+        // against it throwing. If it throws, the rest of this handler never
+        // runs and dragging silently stops working.
+        try { el.setPointerCapture?.(e.pointerId); } catch { /* capture is optional */ }
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         if (pointers.size === 1) {
           dragging = true;
