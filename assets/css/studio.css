@@ -1417,7 +1417,7 @@ body.is-touring { overflow: hidden; }
   position: sticky;
   /* clears the fixed header, then steps down per card to expose the edge
      of every card already on the pile */
-  top: calc(var(--head-h) + 2.5rem + var(--i) * 1.15rem);
+  top: calc(var(--head-h) + 2.5rem + var(--i) * 1.5rem);
 }
 
 .stack__card {

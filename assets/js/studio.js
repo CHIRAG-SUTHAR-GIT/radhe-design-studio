@@ -605,10 +605,10 @@
           // A card only starts shrinking once the scroll has reached it.
           const from = i / total;
           const t = Math.min(1, Math.max(0, (self.progress - from) / (1 - from || 1)));
-          // Capped: the reference stacks four or five cards, so a flat
-          // per-card factor is fine there. With eight it compounds to a
-          // 28% shrink on the first card, so the total is clamped instead.
-          const depth = Math.min((total - i) * 0.035, 0.14);
+          // The reference's own factor. The cap is inert at four cards and
+          // only bites if more are added, where a flat factor compounds
+          // into an unreadably small first card.
+          const depth = Math.min((total - i) * 0.04, 0.18);
           gsap.set(card, { scale: 1 - t * depth });
         });
       }
