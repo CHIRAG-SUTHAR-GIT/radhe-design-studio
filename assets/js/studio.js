@@ -594,7 +594,11 @@
         v: target,
         duration: 1.4,
         ease: 'power2.out',
-        onUpdate() { node.textContent = String(Math.round(box.v)).padStart(2, '0'); },
+        onUpdate() {
+          // data-suffix carries the +, % or unit so the figure can still count.
+          node.textContent = String(Math.round(box.v)).padStart(2, '0')
+            + (node.dataset.suffix || '');
+        },
         scrollTrigger: { trigger: node, start: 'top 90%', once: true }
       });
     });
