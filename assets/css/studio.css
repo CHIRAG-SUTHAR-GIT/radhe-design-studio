@@ -1460,3 +1460,37 @@ body.is-touring { overflow: hidden; }
   .stack__badge { justify-self: start; min-width: 0; padding: .7rem 1rem; }
   .stack__badge b { font-size: 1.5rem; }
 }
+
+
+/* ── Process film ────────────────────────────────────────────────────
+   A scroll-scrubbed clip in place of the drawn diagrams. object-fit
+   covers the stage so the frame stays square whatever the source is. */
+.proc__film {
+  position: absolute; z-index: 0; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  background: var(--plate);
+  filter: var(--img-filter);
+  opacity: 0;
+  transition: opacity .6s var(--ease);
+}
+.proc__film.is-ready { opacity: 1; }
+
+/* A scrim under the top labels: the clip is bright and the annotations
+   are small, so they need something to sit on. */
+.proc__stage::after {
+  content: '';
+  position: absolute; z-index: 1; inset: 0 0 auto; height: 5rem;
+  background: linear-gradient(rgba(0,0,0,.55), transparent);
+  pointer-events: none;
+}
+[data-theme='light'] .proc__stage::after {
+  background: linear-gradient(rgba(255,255,255,.6), transparent);
+}
+
+/* The sheet furniture stays above the film, or the clip swallows the
+   crop marks and the fig/scale labels. */
+.proc__stage .marks,
+.proc__fig,
+.proc__scale { z-index: 2; }
+.proc__grid-lines { z-index: 1; }

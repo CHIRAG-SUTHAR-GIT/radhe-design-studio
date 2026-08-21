@@ -260,138 +260,63 @@
   const pin = $('#process-pin');
   if (pin) {
     const panels = $$('.proc__panel', pin);
-    const diagrams = $$('.proc__diagram', pin);
     const ticks = $$('.proc__rail i', pin);
     const railFill = $('.proc__rail-fill', pin);
     const ticker = $$('.proc__ticker li', pin);
     const figOut = $('[data-step-fig]', pin);
     let active = -1;
 
-    const drawn = new Set();
+    /* ── Scroll-scrubbed film ──────────────────────────────────────
+       The drawn diagrams are replaced by one clip whose playhead is tied
+       to scroll position. The first two seconds are skipped, so the pin
+       maps onto the part of the clip that actually shows something.
 
-    /* Each diagram is built the way a drafter would make that particular
-       drawing: the site is set out before the envelope lands on it, the plan
-       gets its shell before its partitions and door swings, the wall detail
-       assembles layer by layer, the scaffold climbs the building, and the
-       finished room is furnished and then signed off. */
-    const SEQUENCES = {
-      // 01 · Discover — survey the plot, offset the setback, land the envelope,
-      // then orient the sheet.
-      0: (svg, tl) => {
-        ink(tl, svg, '[data-part=dim]', { duration: .6 });
-        ink(tl, svg, '[data-part=boundary]', { duration: 1.1, at: '-=.3' });
-        ink(tl, svg, '[data-part=setback]', { duration: .9, at: '-=.5' });
-        tl.from($$('[data-part=envelope]', svg), {
-          scale: .55, opacity: 0, transformOrigin: '50% 50%',
-          duration: .7, ease: 'back.out(1.6)'
-        }, '-=.4');
-        ink(tl, svg, '[data-part=envelope]', { duration: .6, at: '<' });
-        ink(tl, svg, '[data-part=feature]', { duration: .5, at: '-=.3' });
-        tl.from($$('[data-part=north]', svg), {
-          rotate: -170, opacity: 0, transformOrigin: '163px 163px',
-          duration: .9, ease: 'power3.out'
-        }, '-=.4');
-        ink(tl, svg, '[data-part=north]', { duration: .5, at: '<' });
-      },
+       Seeking needs HTTP Range on the host. GitHub Pages serves it; note
+       that python -m http.server does not, and without it currentTime
+       silently refuses to move. */
+    const film = $('#proc-film');
+    const FILM_IN = 2;
+    let filmSpan = 0;
+    let filmSeek = null;
 
-      // 02 · Compose — the shell is set out, openings are cut, the partitions
-      // go in, then every door swings open on its hinge.
-      1: (svg, tl) => {
-        ink(tl, svg, '[data-part=shell]', { duration: 1.1 });
-        ink(tl, svg, '[data-part=window]', { duration: .5, at: '-=.4' });
-        ink(tl, svg, '[data-part=partitions]', { duration: .9, stagger: .09, at: '-=.2' });
-        ink(tl, svg, '[data-part=stair]', { duration: .7, stagger: .04, at: '-=.4' });
-        ink(tl, svg, '[data-part=fix]', { duration: .5, at: '-=.5' });
+    if (film) {
+      film.addEventListener('loadedmetadata', () => {
+        filmSpan = Math.max(0, film.duration - FILM_IN);
+        film.currentTime = FILM_IN;
+      }, { once: true });
+      film.addEventListener('seeked', () => film.classList.add('is-ready'), { once: true });
 
-        // The leaf rotates on its hinge and the swing arc sweeps out behind it.
-        const swings = $$('[data-part=swings] path', svg);
-        const hinges = ['96px 128px', '96px 128px', '150px 116px', '150px 116px'];
-        swings.forEach((node, i) => {
-          tl.fromTo(node,
-            { rotate: i % 2 ? 0 : -88, transformOrigin: hinges[i], opacity: 0 },
-            { rotate: 0, opacity: 1, duration: .85, ease: 'power2.out' },
-            i < 2 ? '-=.35' : '-=.65');
-        });
-        ink(tl, svg, '[data-part=swings]', { duration: .8, at: '<' });
-        ink(tl, svg, '[data-part=dims]', { duration: .6, at: '-=.3' });
-      },
+      /* iOS will not paint a frame from a video that has never played, so a
+         seek alone leaves the element blank. One muted play/pause on the
+         first gesture is enough to wake the decoder. */
+      const nudge = () => {
+        const go = film.play();
+        if (go && go.then) go.then(() => film.pause()).catch(() => {});
+        else film.pause();
+        removeEventListener('pointerdown', nudge);
+        removeEventListener('touchstart', nudge);
+      };
+      addEventListener('pointerdown', nudge, { once: true, passive: true });
+      addEventListener('touchstart', nudge, { once: true, passive: true });
 
-      // 03 · Resolve — the build-up assembles layer by layer from the outside
-      // in, the insulation quilt fills, then the leaders annotate it.
-      2: (svg, tl) => {
-        $$('[data-part=layer]', svg).forEach((layer, i) => {
-          tl.fromTo(layer,
-            { x: -26, opacity: 0 },
-            { x: 0, opacity: 1, duration: .42, ease: 'power3.out' },
-            i ? '-=.28' : 0);
-          ink(tl, null, layer, { duration: .45, stagger: .02, at: '<' });
-        });
-        ink(tl, svg, '[data-part=quilt]', { duration: .85, ease: 'none', at: '-=.25' });
-        ink(tl, svg, '[data-part=leaders]', { duration: .5, stagger: .07, at: '-=.5' });
-        ink(tl, svg, '[data-part=dims]', { duration: .4, at: '-=.35' });
-      },
-
-      // 04 · Build — ground, then the building, then the scaffold climbs it one
-      // lift at a time and the braces go on.
-      3: (svg, tl) => {
-        ink(tl, svg, '[data-part=ground]', { duration: .5, stagger: .015 });
-        ink(tl, svg, '[data-part=building]', { duration: .8, stagger: .06, at: '-=.3' });
-        $$('[data-part=lift]', svg).forEach((lift, i) => {
-          tl.fromTo(lift,
-            { scaleY: 0, opacity: 0, transformOrigin: '50% 100%' },
-            { scaleY: 1, opacity: 1, duration: .34, ease: 'power2.out' },
-            i ? '-=.19' : '-=.4');
-          ink(tl, null, lift, { duration: .4, at: '<' });
-        });
-        ink(tl, svg, '[data-part=braces]', { duration: .55, stagger: .07, at: '-=.2' });
-      },
-
-      // 05 · Handover — the room is set out, the rug is laid, the furniture is
-      // walked into place, styling lands and the sheet is signed off.
-      4: (svg, tl) => {
-        ink(tl, svg, '[data-part=room]', { duration: 1, stagger: .12 });
-        ink(tl, svg, '[data-part=rug]', { duration: .8, at: '-=.4' });
-
-        // Each piece slides in from the wall it sits against.
-        const moves = [
-          ['[data-part=sofa]', { y: -30 }],
-          ['[data-part=seat]', { x: -26 }],
-          ['[data-part=table]', { scale: .5, transformOrigin: '100px 120px' }]
-        ];
-        moves.forEach(([sel, from], i) => {
-          const parts = $$(sel, svg);
-          tl.from(parts, {
-            ...from, opacity: 0, duration: .55, ease: 'power3.out'
-          }, i ? '-=.35' : '-=.45');
-          ink(tl, svg, sel, { duration: .55, stagger: .06, at: '<' });
-        });
-
-        tl.from($$('[data-part=dress]', svg), {
-          scale: .4, opacity: 0, transformOrigin: '50% 100%',
-          duration: .5, ease: 'back.out(2)'
-        }, '-=.25');
-        ink(tl, svg, '[data-part=dress]', { duration: .5, stagger: .06, at: '<' });
-
-        // The sign-off tick is drawn last, in one stroke.
-        ink(tl, svg, '[data-part=check]', { duration: .55, ease: 'power2.inOut', at: '-=.1' });
-        tl.from($$('[data-part=check]', svg), {
-          scale: .7, transformOrigin: '160px 20px', duration: .5, ease: 'back.out(2.4)'
-        }, '<');
-      }
-    };
-
-    const drawDiagram = (index) => {
-      if (drawn.has(index) || !motion) return;
-      drawn.add(index);
-      const svg = $('svg', diagrams[index]);
-      if (!svg) return;
-      // Each sequence is choreographed at a comfortable reading pace, then
-      // played back fast enough to finish while its stage is on screen.
-      const tl = gsap.timeline().timeScale(2.3);
-      const build = SEQUENCES[index];
-      if (build) build(svg, tl);
-      else ink(tl, null, svg);
-    };
+      // One seek in flight at a time; the newest target wins. Seeking on
+      // every scroll event floods the decoder and the picture stutters.
+      let seeking = false;
+      let want = -1;
+      const pump = () => {
+        if (seeking || want < 0 || !filmSpan) return;
+        seeking = true;
+        const t = want;
+        want = -1;
+        const done = () => { film.removeEventListener('seeked', done); seeking = false; pump(); };
+        film.addEventListener('seeked', done);
+        try { film.currentTime = t; } catch { seeking = false; }
+      };
+      filmSeek = (p) => {
+        want = FILM_IN + Math.min(1, Math.max(0, p)) * filmSpan;
+        pump();
+      };
+    }
 
     const activate = (index) => {
       if (index === active) return;
@@ -416,26 +341,15 @@
         }
       });
 
-      diagrams.forEach((diagram, i) => {
-        if (!motion) return;
-        gsap.to(diagram, { opacity: i === index ? 1 : 0, duration: .5, overwrite: true });
-        gsap.to(diagram, { scale: i === index ? 1 : .96, duration: .7, ease: 'power2.out' });
-      });
 
       ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
       ticker.forEach((item, i) => item.classList.toggle('is-on', i === index));
       if (figOut) figOut.textContent = String(index + 1).padStart(2, '0');
-      drawDiagram(index);
     };
 
     if (motion) {
       // Stack the panels so only the active one is visible.
       gsap.set(panels, { position: 'absolute', inset: 0, opacity: 0 });
-      gsap.set(diagrams, { opacity: 0 });
-
-      // Prime every diagram so it can draw itself on first view.
-      diagrams.forEach((diagram) => prime(strokes(diagram)));
-
       activate(0);
 
       ScrollTrigger.create({
@@ -448,6 +362,7 @@
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (railFill) railFill.style.height = `${self.progress * 100}%`;
+          if (filmSeek) filmSeek(self.progress);
           activate(Math.min(panels.length - 1,
             Math.floor(self.progress * panels.length * .999)));
         }
@@ -456,7 +371,6 @@
       // Without motion the stages simply stack as a readable list.
       pin.classList.add('is-static');
       panels.forEach((panel) => panel.setAttribute('aria-hidden', 'false'));
-      diagrams.forEach((d, i) => { if (i) d.style.display = 'none'; });
     }
   }
 
