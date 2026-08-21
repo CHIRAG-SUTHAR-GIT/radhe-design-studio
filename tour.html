@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>360° Tour — Radhe Design Studio</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000'/%3E%3Ctext x='32' y='46' font-family='Montserrat,sans-serif' font-size='42' font-weight='700' text-anchor='middle' fill='%23d2a781'%3ER%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%; overflow: hidden;
+      background: #000; color: #f5f2ec;
+      font: 400 16px/1.5 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overscroll-behavior: none;
+    }
+    body { position: fixed; inset: 0; }
+
+    /* The panorama fills everything; the chrome floats over it. */
+    #stage { position: absolute; inset: 0; }
+    #view { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+    #view:active { cursor: grabbing; }
+
+    .veil {
+      position: absolute; inset: 0; z-index: 5;
+      display: grid; place-items: center; gap: 1rem;
+      background: #000;
+      transition: opacity .6s ease, visibility .6s;
+    }
+    .veil.is-gone { opacity: 0; visibility: hidden; pointer-events: none; }
+    .veil__name { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 500; letter-spacing: -.01em; }
+    .veil__track { width: min(22rem, 62vw); height: 1px; background: rgba(245,242,236,.16); overflow: hidden; }
+    .veil__track i { display: block; width: 0; height: 100%; background: #f0a93c; transition: width .3s ease; }
+    .veil__hint { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(245,242,236,.5); }
+
+    /* ── Chrome ── */
+    .brand {
+      position: absolute; z-index: 6;
+      left: max(1rem, env(safe-area-inset-left)); top: max(1rem, env(safe-area-inset-top));
+      display: flex; align-items: center; gap: .6rem;
+      padding: .6rem .9rem;
+      border-radius: 10px;
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(12px);
+      color: #f5f2ec; text-decoration: none;
+      transition: background .35s ease;
+    }
+    .brand:hover { background: rgba(0,0,0,.68); }
+    .brand b { font-size: .95rem; font-weight: 700; letter-spacing: .06em; }
+    .brand b em { font-style: normal; color: #f0a93c; }
+    .brand span { font-size: .52rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(245,242,236,.6); }
+
+    .meta {
+      position: absolute; z-index: 6;
+      right: max(1rem, env(safe-area-inset-right)); top: max(1rem, env(safe-area-inset-top));
+      padding: .6rem .9rem;
+      border-radius: 10px;
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(12px);
+      text-align: right;
+    }
+    .meta b { display: block; font-size: .82rem; font-weight: 600; }
+    .meta span { font-size: .55rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(245,242,236,.55); }
+
+    /* Scene strip — the only control, and only when there is more than one. */
+    .strip {
+      position: absolute; z-index: 6;
+      left: 50%; bottom: max(1rem, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      display: flex; gap: .5rem;
+      max-width: min(94vw, 60rem);
+      padding: .5rem;
+      border-radius: 14px;
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(12px);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .strip::-webkit-scrollbar { display: none; }
+    .strip[hidden] { display: none; }
+    .strip button {
+      position: relative; flex: 0 0 auto;
+      width: 84px; height: 54px;
+      padding: 0; border: 1px solid transparent; border-radius: 9px;
+      background: #121215; cursor: pointer; overflow: hidden;
+      transition: border-color .3s ease, transform .3s ease;
+    }
+    .strip button img { width: 100%; height: 100%; object-fit: cover; opacity: .55; transition: opacity .3s ease; }
+    .strip button.is-on { border-color: #f0a93c; }
+    .strip button.is-on img, .strip button:hover img { opacity: 1; }
+    .strip button i {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: .22rem .3rem;
+      background: linear-gradient(transparent, rgba(0,0,0,.85));
+      font-size: .5rem; font-style: normal; letter-spacing: .1em;
+      text-transform: uppercase; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .hint {
+      position: absolute; z-index: 6;
+      left: 50%; bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.2rem);
+      transform: translateX(-50%);
+      padding: .5rem .9rem; border-radius: 999px;
+      background: rgba(0,0,0,.42); backdrop-filter: blur(12px);
+      font-size: .58rem; letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(245,242,236,.7); white-space: nowrap;
+      transition: opacity .6s ease;
+    }
+    .hint.is-gone { opacity: 0; }
+    .strip[hidden] ~ .hint { bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 1rem); }
+
+    /* iOS will not hand over motion data without a gesture, so this one
+       prompt is unavoidable. It appears only where it is required. */
+    .motion-ask {
+      position: absolute; z-index: 7;
+      left: 50%; bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.2rem);
+      transform: translateX(-50%);
+      padding: .7rem 1.2rem; border: 1px solid rgba(240,169,60,.5); border-radius: 999px;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(12px);
+      color: #f0a93c; font: 600 .62rem/1 'Montserrat', sans-serif;
+      letter-spacing: .18em; text-transform: uppercase; cursor: pointer;
+    }
+    .motion-ask[hidden] { display: none; }
+
+    .fail {
+      position: absolute; inset: 0; z-index: 8;
+      display: grid; place-items: center; gap: .8rem;
+      padding: 2rem; text-align: center; background: #000;
+    }
+    .fail[hidden] { display: none; }
+    .fail a { color: #f0a93c; }
+
+    @media (max-width: 560px) {
+      .meta { display: none; }
+      .strip button { width: 66px; height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <canvas id="view"></canvas>
+  </div>
+
+  <a class="brand" href="index.html" aria-label="Radhe Design Studio — visit the website">
+    <b>RA<em>DHE</em></b><span>Design Studio</span>
+  </a>
+
+  <div class="meta" id="meta" hidden><b id="meta-name"></b><span id="meta-count"></span></div>
+
+  <div class="strip" id="strip" hidden role="tablist" aria-label="Scenes"></div>
+  <p class="hint" id="hint">Drag to look · Scroll or pinch to zoom</p>
+  <button class="motion-ask" id="motion-ask" type="button" hidden>Enable motion</button>
+
+  <div class="veil" id="veil">
+    <p class="veil__name" id="veil-name">Loading</p>
+    <span class="veil__track"><i id="veil-bar"></i></span>
+    <p class="veil__hint">Preparing the 360° view</p>
+  </div>
+
+  <div class="fail" id="fail" hidden>
+    <p id="fail-msg">This tour link is not valid.</p>
+    <p><a href="index.html">Go to radhedesignstudio.com →</a></p>
+  </div>
+
+  <script src="assets/js/pano.js"></script>
+  <script>
+  (() => {
+    'use strict';
+    const $ = (s) => document.querySelector(s);
+    const params = new URLSearchParams(location.search);
+    const clientSlug = params.get('c') || params.get('client') || '';
+
+    const veil = $('#veil'), veilName = $('#veil-name'), veilBar = $('#veil-bar');
+    const strip = $('#strip'), hint = $('#hint'), fail = $('#fail');
+
+    const die = (msg) => {
+      $('#fail-msg').textContent = msg;
+      fail.hidden = false;
+      veil.classList.add('is-gone');
+    };
+
+    let pano;
+    try { pano = new RadhePano($('#view')); window.tour = pano; }
+    catch (e) { die('This browser cannot display 360° tours.'); return; }
+
+    // Serve the largest panorama this GPU takes without a main-thread rescale.
+    const max = RadhePano.maxTexture();
+    const slowLink = navigator.connection
+      && /^(slow-)?2g$|^3g$/.test(navigator.connection.effectiveType || '');
+    const tier = (max >= 8192 && !slowLink && innerWidth > 900) ? '8k' : '4k';
+
+    let scenes = [], index = -1;
+
+    const show = (i) => {
+      if (i === index || !scenes[i]) return;
+      index = i;
+      const scene = scenes[i];
+      veilName.textContent = scene.title;
+      veilBar.style.width = '8%';
+      veil.classList.remove('is-gone');
+      [...strip.children].forEach((b, n) => {
+        b.classList.toggle('is-on', n === i);
+        b.setAttribute('aria-selected', String(n === i));
+      });
+      const src = scene.src || `assets/pano/${scene.file}-${tier}.jpg`;
+      veilBar.style.width = '55%';
+      pano.load(src).then(() => {
+        veilBar.style.width = '100%';
+        setTimeout(() => veil.classList.add('is-gone'), 260);
+      }).catch(() => die('That scene could not be loaded.'));
+    };
+
+    const buildStrip = () => {
+      strip.replaceChildren();
+      if (scenes.length < 2) { strip.hidden = true; return; }
+      scenes.forEach((scene, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-label', scene.title);
+        b.innerHTML = `<img src="${scene.thumb || ''}" alt=""><i>${scene.title}</i>`;
+        b.addEventListener('click', () => show(i));
+        strip.append(b);
+      });
+      strip.hidden = false;
+    };
+
+    fetch('assets/data/tours.json', { cache: 'no-cache' })
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((data) => {
+        const client = data.clients && data.clients[clientSlug];
+        if (!clientSlug || !client) {
+          die(clientSlug ? 'This tour link is not valid or has been withdrawn.'
+                         : 'No tour was specified in this link.');
+          return;
+        }
+        scenes = client.scenes || [];
+        if (!scenes.length) { die('This tour has no scenes yet.'); return; }
+        document.title = `${client.name} — 360° Tour`;
+        $('#meta-name').textContent = client.name;
+        $('#meta-count').textContent = `${scenes.length} scene${scenes.length > 1 ? 's' : ''}`;
+        $('#meta').hidden = false;
+        buildStrip();
+        const want = params.get('s');
+        const at = want ? scenes.findIndex((sc) => sc.file === want) : -1;
+        show(at >= 0 ? at : 0);
+      })
+      .catch(() => die('The tour list could not be loaded.'));
+
+    /* Fullscreen cannot be requested without a gesture, so the page is laid
+       out edge to edge from the start and promoted to real fullscreen on the
+       first interaction. */
+    const goFull = () => {
+      const el = document.documentElement;
+      if (!document.fullscreenElement && el.requestFullscreen) {
+        el.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+      }
+      removeEventListener('pointerdown', goFull);
+    };
+    addEventListener('pointerdown', goFull, { once: true });
+
+    setTimeout(() => hint.classList.add('is-gone'), 5200);
+    addEventListener('pointerdown', () => hint.classList.add('is-gone'), { once: true });
+
+    /* Motion: granted straight away where no permission is needed, and behind
+       a single prompt on iOS, which requires a gesture by policy. */
+    const ask = $('#motion-ask');
+    const needsPermission = typeof DeviceOrientationEvent !== 'undefined'
+      && typeof DeviceOrientationEvent.requestPermission === 'function';
+
+    if (matchMedia('(pointer: coarse)').matches && 'DeviceOrientationEvent' in window) {
+      if (needsPermission) {
+        ask.hidden = false;
+        ask.addEventListener('click', async () => {
+          ask.hidden = true;
+          try {
+            if (await DeviceOrientationEvent.requestPermission() === 'granted') pano.startGyro();
+          } catch { /* declined — drag still works */ }
+        });
+      } else {
+        pano.startGyro();
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

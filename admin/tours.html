@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Tour manager — Radhe Design Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;background:#000;color:#f5f2ec;font:400 15px/1.6 'Montserrat',system-ui,sans-serif}
+    a{color:#f0a93c}
+    .wrap{max-width:64rem;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+    h1{margin:0;font-size:1.6rem;font-weight:600;letter-spacing:-.01em}
+    .sub{margin:.4rem 0 0;color:rgba(245,242,236,.55);font-size:.88rem}
+    .note{margin:1.6rem 0;padding:1rem 1.2rem;border-left:2px solid #f0a93c;background:#0d0d10;font-size:.85rem;line-height:1.7;color:rgba(245,242,236,.75)}
+    .note b{color:#f5f2ec}
+    .card{margin:1rem 0;padding:1.2rem;border:1px solid rgba(210,167,129,.18);border-radius:14px;background:#121215}
+    .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:end}
+    label{display:block;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,242,236,.5);margin-bottom:.3rem}
+    input{width:100%;padding:.6rem .7rem;border:1px solid rgba(210,167,129,.22);border-radius:8px;background:#08080a;color:#f5f2ec;font:inherit;font-size:.88rem}
+    input:focus{outline:0;border-color:#f0a93c}
+    .grow{flex:1 1 12rem}
+    button{padding:.6rem 1rem;border:1px solid rgba(210,167,129,.3);border-radius:8px;background:transparent;color:#f5f2ec;font:600 .68rem/1 'Montserrat',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+    button:hover{border-color:#f0a93c;color:#f0a93c}
+    button.go{background:#f0a93c;border-color:#f0a93c;color:#14110c}
+    button.go:hover{background:#ffc164;border-color:#ffc164;color:#14110c}
+    button.kill{border-color:rgba(220,90,70,.4);color:#e08070}
+    button.kill:hover{border-color:#e05a46;color:#e05a46}
+    .client{margin:1rem 0;padding:1.1rem;border:1px solid rgba(210,167,129,.16);border-radius:12px;background:#0d0d10}
+    .client h3{margin:0 0 .2rem;font-size:1.05rem;font-weight:600}
+    .slug{font-size:.66rem;letter-spacing:.1em;color:rgba(245,242,236,.45)}
+    .link{display:flex;gap:.5rem;align-items:center;margin:.7rem 0;padding:.55rem .7rem;border-radius:8px;background:#08080a;font-size:.78rem;word-break:break-all}
+    .scene{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.45rem 0;border-top:1px solid rgba(210,167,129,.1);font-size:.82rem}
+    .scene span{flex:1 1 8rem}
+    .scene code{color:rgba(245,242,236,.5);font-size:.72rem}
+    pre{max-height:20rem;overflow:auto;padding:1rem;border-radius:10px;background:#08080a;font-size:.72rem;line-height:1.6;color:#cfe6cf;white-space:pre-wrap;word-break:break-word}
+    .ok{color:#8fd18f}.bad{color:#e08070}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tour manager</h1>
+  <p class="sub">Build a client's 360° folder and get one link to send them.</p>
+
+  <div class="note">
+    <b>How this works.</b> The site is hosted as static files, so there is no server to
+    save to. This tool edits the tour list in your browser and gives you the finished
+    <code>assets/data/tours.json</code> to save over the existing one and commit.
+    <br><br>
+    <b>Before adding a scene</b>, put its panorama in <code>assets/pano/</code> as two
+    equirectangular JPEGs — <code>&lt;name&gt;-4k.jpg</code> (4096×2048) and
+    <code>&lt;name&gt;-8k.jpg</code> (8192×4096) — plus
+    <code>&lt;name&gt;-thumb.webp</code>. The viewer picks the tier the visitor's GPU can
+    take. <code>scripts/make-pano.py</code> produces all three from one source image.
+    <br><br>
+    <b>The link is the key.</b> Anyone holding it can view that client's scenes and no
+    others; there is no password. Treat it as unlisted, not private.
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div class="grow"><label for="cname">Client or project name</label>
+        <input id="cname" placeholder="Mr Chetan Bhai — Shilp Reventa"></div>
+      <div class="grow"><label for="cslug">Link slug</label>
+        <input id="cslug" placeholder="chetan-shilp-reventa"></div>
+      <button class="go" id="addClient">Add client</button>
+    </div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div><b style="font-size:.9rem">tours.json</b>
+        <span id="status" class="slug"></span></div>
+      <div style="display:flex;gap:.5rem">
+        <button id="copyJson">Copy</button>
+        <button class="go" id="dlJson">Download</button>
+      </div>
+    </div>
+    <pre id="out"></pre>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const slugify = (s) => s.toLowerCase().trim()
+    .replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+
+  let data = { clients: {} };
+
+  const base = () => location.origin
+    + location.pathname.replace(/admin\/tours\.html$/, '') + 'tour.html?c=';
+
+  const render = () => {
+    const list = $('#list');
+    list.replaceChildren();
+    const slugs = Object.keys(data.clients);
+    if (!slugs.length) {
+      list.innerHTML = '<p class="sub">No clients yet.</p>';
+    }
+    slugs.forEach((slug) => {
+      const c = data.clients[slug];
+      const el = document.createElement('div');
+      el.className = 'client';
+      const scenes = (c.scenes || []).map((s, i) => `
+        <div class="scene">
+          <span><b>${s.title}</b><br><code>assets/pano/${s.file}-{4k,8k}.jpg</code></span>
+          <button data-up="${slug}|${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button class="kill" data-rm="${slug}|${i}">Remove</button>
+        </div>`).join('');
+      el.innerHTML = `
+        <h3>${c.name}</h3><p class="slug">${slug} · ${(c.scenes||[]).length} scene(s)</p>
+        <div class="link"><span style="flex:1">${base()}${slug}</span>
+          <button data-copy="${slug}">Copy link</button>
+          <button data-open="${slug}">Open</button></div>
+        ${scenes}
+        <div class="row" style="margin-top:.8rem">
+          <div class="grow"><label>Scene title</label><input data-t="${slug}" placeholder="Living Room"></div>
+          <div class="grow"><label>File name (no suffix)</label><input data-f="${slug}" placeholder="living-room"></div>
+          <button data-add="${slug}">Add scene</button>
+          <button class="kill" data-delc="${slug}">Delete client</button>
+        </div>`;
+      list.append(el);
+    });
+    const json = JSON.stringify(data, null, 2);
+    $('#out').textContent = json;
+    $('#status').textContent = `${slugs.length} client(s)`;
+  };
+
+  $('#addClient').addEventListener('click', () => {
+    const name = $('#cname').value.trim();
+    const slug = slugify($('#cslug').value || name);
+    if (!name || !slug) return;
+    if (data.clients[slug] && !confirm(`"${slug}" already exists. Replace it?`)) return;
+    data.clients[slug] = { name, created: new Date().toISOString().slice(0, 10), scenes: [] };
+    $('#cname').value = ''; $('#cslug').value = '';
+    render();
+  });
+
+  $('#list').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    const { copy, open, add, delc, rm, up } = b.dataset;
+    if (copy) {
+      navigator.clipboard?.writeText(base() + copy);
+      b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy link'), 1400);
+    }
+    if (open) window.open(base() + open, '_blank');
+    if (add) {
+      const t = $(`input[data-t="${add}"]`).value.trim();
+      const f = slugify($(`input[data-f="${add}"]`).value || t);
+      if (!t || !f) return;
+      data.clients[add].scenes.push({ title: t, file: f, thumb: `assets/pano/${f}-thumb.webp` });
+      render();
+    }
+    if (delc && confirm(`Delete "${data.clients[delc].name}" and its link?`)) {
+      delete data.clients[delc]; render();
+    }
+    if (rm) { const [s, i] = rm.split('|'); data.clients[s].scenes.splice(+i, 1); render(); }
+    if (up) {
+      const [s, i] = up.split('|'); const arr = data.clients[s].scenes;
+      [arr[i - 1], arr[+i]] = [arr[+i], arr[i - 1]]; render();
+    }
+  });
+
+  $('#copyJson').addEventListener('click', () => {
+    navigator.clipboard?.writeText($('#out').textContent);
+    $('#copyJson').textContent = 'Copied';
+    setTimeout(() => ($('#copyJson').textContent = 'Copy'), 1400);
+  });
+
+  $('#dlJson').addEventListener('click', () => {
+    const blob = new Blob([$('#out').textContent], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tours.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  // Start from whatever is published, so edits are additive.
+  fetch('../assets/data/tours.json', { cache: 'no-cache' })
+    .then((r) => r.json())
+    .then((d) => { if (d && d.clients) data = { clients: d.clients }; render(); })
+    .catch(render);
+})();
+</script>
+</body>
+</html>

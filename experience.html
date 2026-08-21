@@ -49,16 +49,16 @@
     <div style="display:flex;align-items:center;gap:1rem">
       <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch colour scheme">
         <i class="theme-toggle__dot" aria-hidden="true"></i><span id="theme-label">Light</span>
-      </button>
+      </a>
       <nav class="nav" id="nav" aria-label="Primary"><a href="about.html">About</a><span class="nav__sep">|</span><a href="projects.html">Projects</a><span class="nav__sep">|</span><a href="services.html">Services</a><span class="nav__sep">|</span><a href="experience.html" aria-current="page">360</a><span class="nav__sep">|</span><a href="contact.html">Contact</a></nav>
       <button class="menu-btn" type="button" id="menu-open" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span>
-      </button>
+      </a>
     </div>
   </header>
 
   <div class="drawer" id="drawer" aria-hidden="true">
-    <button class="menu-btn" type="button" id="menu-close" aria-label="Close menu"><span></span><span></span></button>
+    <button class="menu-btn" type="button" id="menu-close" aria-label="Close menu"><span></span><span></span></a>
     <a href="about.html"><span>01</span>About</a><a href="projects.html"><span>02</span>Projects</a><a href="services.html"><span>03</span>Services</a><a href="experience.html"><span>04</span>360</a><a href="contact.html"><span>05</span>Contact</a>
   </div>
 
@@ -69,8 +69,7 @@
       <h1 class="page-title">Step inside the drawing.</h1>
       <p class="page-lead">Two rooms rendered as full spherical panoramas. Drag to look around,
         scroll to zoom, or turn on motion control and move your phone.</p>
-      <div class="scene-grid"><button class="scene" id="scene-kitchen" type="button" data-scene="assets/pano/kitchen"
-          aria-label="Open the Kitchen 360 degree view">
+      <div class="scene-grid"><a class="scene" id="scene-kitchen" href="tour.html?c=demo&s=kitchen" aria-label="Open the Kitchen 360 degree view">
           <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <span class="scene__frame"><img src="assets/pano/kitchen-thumb.webp" alt="Kitchen panorama preview" width="1200" height="600" loading="eager" decoding="async"></span>
           <span class="scene__body">
@@ -80,8 +79,7 @@
             <span class="scene__cta">Enter 360° view <b aria-hidden="true">→</b></span>
           </span>
           <span class="scene__badge annot" aria-hidden="true">360°</span>
-        </button><button class="scene" id="scene-living" type="button" data-scene="assets/pano/living-area"
-          aria-label="Open the Living Area 360 degree view">
+        </a><a class="scene" id="scene-living" href="tour.html?c=demo&s=living-area" aria-label="Open the Living Area 360 degree view">
           <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <span class="scene__frame"><img src="assets/pano/living-area-thumb.webp" alt="Living Area panorama preview" width="1200" height="600" loading="eager" decoding="async"></span>
           <span class="scene__body">
@@ -91,130 +89,10 @@
             <span class="scene__cta">Enter 360° view <b aria-hidden="true">→</b></span>
           </span>
           <span class="scene__badge annot" aria-hidden="true">360°</span>
-        </button></div>
+        </a></div>
     </section>
 
-    <section class="viewer" id="tour-viewer" aria-label="360 degree panorama viewer" hidden>
-      <iframe class="viewer__frame" id="tour-frame" src="" title="Radhe 360 Studio interactive panorama"
-        allow="accelerometer; gyroscope; fullscreen" allowfullscreen></iframe>
-
-      <button class="viewer__back" id="change-view-btn" type="button">
-        <span aria-hidden="true">←</span> Change view
-      </button>
-      <div class="viewer__name annot" id="viewer-scene-name" aria-live="polite"></div>
-      <p class="viewer__hint annot" id="tour-identity" hidden>
-        Drag or swipe to look · Scroll to zoom · Motion enabled on supported devices</p>
-
-      <div class="viewer__loading" id="tour-loading" role="status" aria-live="polite">
-        <div>
-          <p class="viewer__loading-name" id="tour-loading-label">Loading panorama</p>
-          <span class="viewer__track"><i id="tour-loading-bar"></i></span>
-          <p class="annot" style="margin-top:.8rem">Preparing the 360° view</p>
-        </div>
-      </div>
-    </section>
-
-    <script>
-      (() => {
-        'use strict';
-        const sceneSelect = document.getElementById('scene-select');
-        const tourViewer = document.getElementById('tour-viewer');
-        const tourFrame = document.getElementById('tour-frame');
-        const changeBtn = document.getElementById('change-view-btn');
-        const sceneName = document.getElementById('viewer-scene-name');
-        const tourIdentity = document.getElementById('tour-identity');
-        const loadingEl = document.getElementById('tour-loading');
-        const loadingBar = document.getElementById('tour-loading-bar');
-        const loadingLabel = document.getElementById('tour-loading-label');
-        const VIEWER_BASE = 'PANO%20TO%203D/dist/index.html';
-        let loaderTimeout = 0;
-
-        /* Pick a panorama the GPU can take without a main-thread resize:
-           a texture wider than MAX_TEXTURE_SIZE has to be rescaled by the
-           browser, which is what made large scenes stutter. */
-        const panoTier = (() => {
-          try {
-            const probe = document.createElement('canvas');
-            const gl = probe.getContext('webgl2') || probe.getContext('webgl');
-            if (!gl) return '4k';
-            const roomy = gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 8192
-              && matchMedia('(pointer: fine)').matches
-              && !matchMedia('(max-width: 900px)').matches;
-            const slowLink = navigator.connection
-              && /^(slow-)?2g$|^3g$/.test(navigator.connection.effectiveType || '');
-            return roomy && !slowLink ? '8k' : '4k';
-          } catch { return '4k'; }
-        })();
-
-        const showLoader = (name) => {
-          loadingLabel.textContent = name;
-          loadingBar.style.width = '4%';
-          loadingEl.classList.add('is-active');
-          clearTimeout(loaderTimeout);
-          loaderTimeout = setTimeout(hideLoader, 20000);
-        };
-        const setProgress = (v) => { loadingBar.style.width = Math.max(4, Math.min(100, v)) + '%'; };
-        function hideLoader() { clearTimeout(loaderTimeout); loadingEl.classList.remove('is-active'); }
-
-        const openScene = (sceneUrl, name) => {
-          tourFrame.src = VIEWER_BASE + '?scene=' + encodeURIComponent(`../../${sceneUrl}-${panoTier}.jpg`);
-          sceneName.textContent = name;
-          showLoader(name);
-          sceneSelect.hidden = true;
-          tourViewer.hidden = false;
-          tourIdentity.hidden = false;
-          document.body.classList.add('is-touring');
-        };
-
-        const goBack = () => {
-          hideLoader();
-          if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-          tourViewer.hidden = true;
-          tourFrame.src = '';
-          tourIdentity.hidden = true;
-          sceneSelect.hidden = false;
-          document.body.classList.remove('is-touring');
-        };
-
-        document.querySelectorAll('.scene').forEach((card) => {
-          card.addEventListener('click', () => openScene(
-            card.dataset.scene, card.querySelector('.scene__name').textContent));
-        });
-        changeBtn.addEventListener('click', goBack);
-
-        /* Full screen is owned by this page. A requestFullscreen() from inside
-           the iframe promotes the iframe into this document's top layer, which
-           hides the header and the way back out of the viewer. */
-        const toggleFullscreen = () => {
-          if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-          else document.documentElement.requestFullscreen().catch(() => {});
-        };
-
-        addEventListener('message', (event) => {
-          if (event.source !== tourFrame.contentWindow) return;
-          const data = event.data;
-          if (!data || data.type !== 'radhe-360') return;
-          if (data.action === 'toggle-fullscreen') toggleFullscreen();
-          if (data.action === 'scene-progress') setProgress(data.value);
-          if (data.action === 'scene-ready') { setProgress(100); setTimeout(hideLoader, 320); }
-          if (data.action === 'scene-error') {
-            loadingLabel.textContent = 'Could not load this scene';
-            setTimeout(hideLoader, 2600);
-          }
-        });
-
-        document.addEventListener('fullscreenchange', () => {
-          tourFrame.contentWindow?.postMessage({
-            type: 'radhe-360-host', action: 'fullscreen-state',
-            active: Boolean(document.fullscreenElement)
-          }, '*');
-        });
-
-        addEventListener('keydown', (event) => {
-          if (event.key === 'Escape' && !tourViewer.hidden && !document.fullscreenElement) goBack();
-        });
-      })();
-    </script>
+    
   </main>
 
   <footer class="foot">
