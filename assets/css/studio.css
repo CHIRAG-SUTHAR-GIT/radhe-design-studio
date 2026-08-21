@@ -8,39 +8,52 @@
 /* ── Tokens ─────────────────────────────────────────────────────────── */
 :root,
 [data-theme='light'] {
-  --sheet:        #ececec;
-  --sheet-2:      #e4e1da;
-  --sheet-warm:   #e6ded2;
-  --plate:        #f3f5f1;
-  --ink:          #171717;
-  --clay:         #9d7460;
-  --clay-strong:  #8a6250;
-  --amber:        #d98e36;
-  --muted:        rgba(23, 23, 23, .52);
-  --hair:         rgba(157, 116, 96, .38);
-  --hair-soft:    rgba(157, 116, 96, .16);
-  --hair-faint:   rgba(157, 116, 96, .08);
-  --nav-pill:     rgba(255, 255, 255, .82);
-  --shadow:       0 30px 70px -40px rgba(23, 23, 23, .5);
+  /* Surfaces step from the page up to the card, so elevation reads as
+     elevation instead of everything sitting in one flat mid-tone. */
+  --sheet:        #f2f0ec;
+  --sheet-2:      #e7e3db;
+  --sheet-warm:   #ece4d7;
+  --plate:        #ffffff;
+  --plate-2:      #f8f6f2;
+  --ink:          #14130f;
+  /* A deeper terracotta and a deeper gold: the old pair sat so close in
+     value that headings, rules and accents all read as one colour. */
+  --clay:         #8a5f47;
+  --clay-strong:  #6d4835;
+  --amber:        #bd7a1c;
+  --amber-lift:   #d99a35;
+  --cool:         #5a7183;
+  --muted:        rgba(20, 19, 15, .56);
+  --hair:         rgba(138, 95, 71, .30);
+  --hair-soft:    rgba(138, 95, 71, .14);
+  --hair-faint:   rgba(138, 95, 71, .07);
+  --nav-pill:     rgba(255, 255, 255, .90);
+  --shadow:       0 26px 60px -34px rgba(20, 19, 15, .38);
+  --shadow-card:  0 2px 4px -2px rgba(20,19,15,.08), 0 14px 34px -22px rgba(20,19,15,.24);
   --img-filter:   none;
 }
 
 [data-theme='dark'] {
-  --sheet:        #16130f;
-  --sheet-2:      #1c1814;
-  --sheet-warm:   #1f1a15;
-  --plate:        #201c17;
-  --ink:          #ece5da;
-  --clay:         #c79a80;
-  --clay-strong:  #d9ae94;
-  --amber:        #e0a44f;
-  --muted:        rgba(236, 229, 218, .56);
-  --hair:         rgba(199, 154, 128, .34);
-  --hair-soft:    rgba(199, 154, 128, .16);
-  --hair-faint:   rgba(199, 154, 128, .08);
-  --nav-pill:     rgba(28, 24, 20, .84);
-  --shadow:       0 30px 70px -40px rgba(0, 0, 0, .8);
-  --img-filter:   brightness(.92) saturate(.96);
+  /* Pure black ground, with the surfaces above it lifting in clear steps. */
+  --sheet:        #000000;
+  --sheet-2:      #08080a;
+  --sheet-warm:   #0c0b09;
+  --plate:        #121215;
+  --plate-2:      #1a1a1e;
+  --ink:          #f5f2ec;
+  --clay:         #d2a781;
+  --clay-strong:  #e8c6a3;
+  --amber:        #f0a93c;
+  --amber-lift:   #ffc164;
+  --cool:         #8098ac;
+  --muted:        rgba(245, 242, 236, .58);
+  --hair:         rgba(210, 167, 129, .26);
+  --hair-soft:    rgba(210, 167, 129, .13);
+  --hair-faint:   rgba(210, 167, 129, .07);
+  --nav-pill:     rgba(10, 10, 12, .86);
+  --shadow:       0 30px 70px -40px rgba(0, 0, 0, .9);
+  --shadow-card:  0 1px 0 0 rgba(255,255,255,.03), 0 20px 50px -30px rgba(0,0,0,.9);
+  --img-filter:   brightness(.94) saturate(1.02);
 }
 
 :root {
@@ -1362,4 +1375,88 @@ body.is-touring { overflow: hidden; }
   padding: .6rem .95rem;
   margin: -.6rem -.95rem;
   border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ELEVATION
+   Cards sit on a surface a step above the page and carry a shadow, so
+   the eye reads depth rather than a field of identically toned boxes.
+   ═══════════════════════════════════════════════════════════════════ */
+.facts__cell,
+.svc__row,
+.note,
+.scene,
+.svc-row {
+  background: var(--plate);
+  box-shadow: var(--shadow-card);
+}
+
+.facts__cell { border-color: var(--hair-soft); }
+.facts__cell:hover { border-color: var(--hair); background: var(--plate-2); }
+
+/* Annotations pick up the cool accent so the sheet is not uniformly warm. */
+.annot { color: var(--cool); }
+.annot--amber { color: var(--amber); }
+.dim__label { background: var(--sheet); }
+
+/* The figure and its unit no longer share a tone. */
+.facts__fig { color: var(--amber); }
+.facts__fig i { color: var(--cool); }
+.facts__name { color: var(--clay-strong); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL STACK
+   Each card sticks at a slightly lower offset than the one before, so
+   they gather into a visible deck; the cards underneath scale down as
+   the ones above settle onto them. Sticky does the stacking, the scrub
+   only does the scale.
+   ═══════════════════════════════════════════════════════════════════ */
+.stack { position: relative; margin-top: clamp(2rem, 4vw, 3rem); }
+
+.stack__slot {
+  position: sticky;
+  /* clears the fixed header, then steps down per card to expose the edge
+     of every card already on the pile */
+  top: calc(var(--head-h) + 2.5rem + var(--i) * 1.15rem);
+}
+
+.stack__card {
+  transform-origin: top center;
+  margin: 0 auto clamp(1rem, 1.6vw, 1.5rem);
+  max-width: 62rem;
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+  border: 1px solid var(--hair-soft);
+  border-radius: 18px;
+  background: var(--plate);
+  box-shadow: var(--shadow-card);
+  will-change: transform;
+}
+
+.stack__row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(1.2rem, 2.4vw, 2rem); align-items: start; }
+
+.stack__badge {
+  display: grid; place-items: center; gap: .1rem;
+  min-width: clamp(5rem, 8vw, 6.5rem);
+  padding: clamp(.9rem, 1.6vw, 1.2rem) clamp(.7rem, 1.2vw, 1rem);
+  border-radius: 14px;
+  background: linear-gradient(160deg, var(--amber-lift), var(--amber));
+  color: #fff;
+  box-shadow: 0 14px 30px -16px rgba(189, 122, 28, .7);
+}
+[data-theme='dark'] .stack__badge { color: #14110c; }
+.stack__badge b { font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+.stack__badge i {
+  font-style: normal; font-size: .52rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; opacity: .85;
+}
+
+.stack__no { color: var(--amber); font-size: .62rem; font-weight: 700; letter-spacing: .2em; }
+.stack__title { margin-top: .3rem; color: var(--clay-strong); font-size: clamp(1.15rem, 2.1vw, 1.65rem); font-weight: 600; letter-spacing: -.01em; }
+.stack__text { margin-top: .55rem; max-width: 48ch; color: var(--muted); font-size: clamp(.86rem, 1vw, .95rem); line-height: 1.7; }
+
+@media (max-width: 760px) {
+  .stack__slot { top: calc(var(--head-h) + 1rem + var(--i) * .7rem); }
+  .stack__row { grid-template-columns: 1fr; gap: .9rem; }
+  .stack__badge { justify-self: start; min-width: 0; padding: .7rem 1rem; }
+  .stack__badge b { font-size: 1.5rem; }
 }

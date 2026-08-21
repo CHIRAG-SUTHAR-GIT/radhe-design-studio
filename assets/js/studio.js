@@ -584,6 +584,37 @@
     }));
   }
 
+  /* ── Scroll stack ────────────────────────────────────────────────
+     Sticky positioning does the stacking on its own; this only scales
+     each card down as the cards above settle onto it, so the pile reads
+     as depth rather than a flat overlap. */
+  $$('.stack').forEach((stack) => {
+    const slots = $$('.stack__slot', stack);
+    const cards = slots.map((slot) => $('.stack__card', slot));
+    if (!cards.length || !motion) return;
+
+    const total = cards.length;
+    ScrollTrigger.create({
+      trigger: stack,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: .5,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        cards.forEach((card, i) => {
+          // A card only starts shrinking once the scroll has reached it.
+          const from = i / total;
+          const t = Math.min(1, Math.max(0, (self.progress - from) / (1 - from || 1)));
+          // Capped: the reference stacks four or five cards, so a flat
+          // per-card factor is fine there. With eight it compounds to a
+          // 28% shrink on the first card, so the total is clamped instead.
+          const depth = Math.min((total - i) * 0.035, 0.14);
+          gsap.set(card, { scale: 1 - t * depth });
+        });
+      }
+    });
+  });
+
   /* ── Counting figures ──────────────────────────────────────────── */
   const counters = $$('[data-count]');
   if (counters.length && motion) {
