@@ -55,6 +55,16 @@
   }
   .folio, .statement, .facts { background: var(--sheet-warm); }
 
+  /* The process panel gets pinned, and a pin sizes the element to its
+     spacer while leaving the horizontal margin in place — the panel came
+     out a full viewport wide with a 13px offset, so its right edge hung
+     past the screen while every other panel sat at the correct 674.
+     An explicit width with auto margins measures the same either way. */
+  .proc {
+    width: calc(100% - var(--panel-x) * 2);
+    margin-inline: auto;
+  }
+
   /* Sticky cards need a visible overflow chain. Keeping the mobile facts
      panel clipped prevents its scroll stack from behaving like desktop. */
   .facts { overflow: visible; }
