@@ -2316,44 +2316,51 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 }
 
 
-/* ═══ Services — six on one sheet ══════════════════════════════════
-   All six read at a glance, three across and two down, at every width.
-   Nothing scrolls: a reader should not have to discover that a service
-   exists by swiping for it. */
+
+/* ═══ Services — six names on one sheet ════════════════════════════
+   The names and nothing else, three across and two down, all six on one
+   screen at every width. Nothing scrolls and nothing is hidden. */
 .svc__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(.55rem, 1.4vw, 1.1rem);
+  gap: clamp(.5rem, 1.2vw, .9rem);
   margin-top: clamp(2rem, 4vw, 3rem);
   border: 0;
 }
 .svc__card {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(6.5rem, 22vw, 11rem);
+  padding: clamp(.9rem, 2.4vw, 1.6rem);
   border: 1px solid var(--hair-soft);
   border-radius: var(--r-card);
-  padding: clamp(.85rem, 2.4vw, 1.6rem);
-  /* Each cell lifts on its own timing, so the grid settles rather than
-     snapping as one block. */
-  transition: transform .5s var(--ease), border-color .5s var(--ease), background .5s var(--ease);
+  overflow: hidden;
+  text-align: center;
+  transition: transform .55s var(--ease), border-color .55s var(--ease);
 }
-.svc__card:hover,
-.svc__card:focus-within {
-  transform: translateY(-4px);
-  border-color: var(--hair);
-  background: var(--plate-2);
+/* The wash rises through the tile rather than switching on, so a row of
+   six settles instead of flashing. */
+.svc__card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, var(--violet-tint), transparent 62%);
+  opacity: 0;
+  transition: opacity .55s var(--ease);
 }
-.svc__card:active { transform: translateY(-1px) scale(.995); }
+.svc__card > * { position: relative; z-index: 1; }
+.svc__card:hover, .svc__card:focus-within { transform: translateY(-5px); border-color: var(--violet); }
+.svc__card:hover::before, .svc__card:focus-within::before { opacity: 1; }
+.svc__card:active { transform: translateY(-2px) scale(.99); }
 
-@media (max-width: 760px) {
-  /* Three across on a phone leaves room for the mark and the name only;
-     the sentence would set two words to a line. It stays in the markup
-     for anyone reading the page with a screen reader. */
-  .svc__desc {
-    position: absolute; width: 1px; height: 1px;
-    padding: 0; margin: -1px; overflow: hidden;
-    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
-  .svc__card { padding: .85rem .7rem 1.1rem; }
-  .svc__glyph { width: clamp(26px, 8vw, 34px); margin: .45rem 0 .55rem; }
-  .svc__name { font-size: clamp(.72rem, 3.1vw, .86rem); line-height: 1.3; letter-spacing: -.01em; }
-  .svc__no { font-size: .5rem; }
+.svc__name {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(.78rem, 3vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+  transition: color .45s var(--ease);
 }
+.svc__card:hover .svc__name { color: var(--violet-lift); }

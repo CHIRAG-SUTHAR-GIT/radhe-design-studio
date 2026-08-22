@@ -238,23 +238,11 @@
      schedule reads as it is being written out. */
   const schedule = $('.svc__grid');
   if (schedule && motion) {
-    const cards = $$('.svc__card', schedule);
-    cards.forEach((card, index) => {
-      const glyph = strokes(card.querySelector('.svc__glyph') || card);
-      prime(glyph);
-
+    $$('.svc__card', schedule).forEach((card, index) => {
       gsap.fromTo(card, { opacity: 0, y: 26, filter: 'blur(7px)' }, {
         opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out',
-        delay: (index % 3) * .07,
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 92%',
-          once: true,
-          onEnter: () => {
-            ink(gsap.timeline({ delay: .2 + (index % 3) * .07 }).timeScale(1.6),
-              null, card, { duration: .7, stagger: .06 });
-          }
-        }
+        delay: (index % 3) * .08 + Math.floor(index / 3) * .05,
+        scrollTrigger: { trigger: card, start: 'top 92%', once: true }
       });
     });
   }
