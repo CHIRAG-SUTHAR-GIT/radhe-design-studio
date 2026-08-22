@@ -63,6 +63,11 @@
      inside them inverts without being restyled one by one. */
   .svc, .proc, .cta {
     --ink:        #ffffff;
+    /* The swept type resolves into --ink-strong, not --ink, so a lacquer
+       panel that re-scoped everything except this one token rendered its
+       heading in near-black on near-black while the page was in light
+       mode. */
+    --ink-strong: #ffffff;
     --clay:       #ffffff;
     --clay-strong:#ffffff;
     --muted:      rgba(255, 255, 255, .72);
@@ -77,6 +82,30 @@
   [data-theme='dark'] .proc,
   [data-theme='dark'] .cta { background: linear-gradient(176deg, #060608 0%, #0d0d12 46%, #14121d 100%); }
 
+  /* The same hairline that sits above and below the wordmark in the footer,
+     carried around every panel: 1px, violet into gold, at the same opacity.
+     A gradient cannot be a border directly, so the panel is drawn with a
+     gradient-filled pseudo-element and the middle is masked out, leaving
+     exactly the 1px edge — which follows the rounded corner properly,
+     unlike a border-image. */
+  .folio, .statement, .facts, .svc, .proc, .cta { position: relative; }
+  .folio::before, .statement::before, .facts::before,
+  .svc::before, .proc::before, .cta::before {
+    content: '';
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--violet), var(--amber));
+    opacity: .8;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
   /* A soft wash bleeding out of one corner, the reference's signature. */
   .svc::after, .cta::after {
     content: '';
@@ -88,7 +117,6 @@
     filter: blur(28px);
     pointer-events: none;
   }
-  .svc, .cta { position: relative; }
   .svc > *, .cta > * { position: relative; z-index: 1; }
 
   /* ── Type: centred and larger, as the reference sets it ───────── */
