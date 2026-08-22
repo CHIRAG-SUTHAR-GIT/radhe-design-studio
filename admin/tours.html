@@ -7,35 +7,35 @@
   <title>Tour manager — Radhe Design Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geologica:wght@400;500;600;700&display=swap">
   <style>
     *,*::before,*::after{box-sizing:border-box}
-    body{margin:0;background:#000;color:#f5f2ec;font:400 15px/1.6 'Montserrat',system-ui,sans-serif}
-    a{color:#f0a93c}
+    body{margin:0;background:#000;color:#d6d2cf;font:400 15px/1.6 'Inter',system-ui,sans-serif}
+    a{color:#a78bfa}
     .wrap{max-width:64rem;margin:0 auto;padding:2.5rem 1.5rem 5rem}
-    h1{margin:0;font-size:1.6rem;font-weight:600;letter-spacing:-.01em}
-    .sub{margin:.4rem 0 0;color:rgba(245,242,236,.55);font-size:.88rem}
-    .note{margin:1.6rem 0;padding:1rem 1.2rem;border-left:2px solid #f0a93c;background:#0d0d10;font-size:.85rem;line-height:1.7;color:rgba(245,242,236,.75)}
-    .note b{color:#f5f2ec}
-    .card{margin:1rem 0;padding:1.2rem;border:1px solid rgba(210,167,129,.18);border-radius:14px;background:#121215}
+    h1{margin:0;font-family:'Geologica','Inter',sans-serif;font-size:1.6rem;font-weight:600;letter-spacing:-.02em}
+    .sub{margin:.4rem 0 0;color:rgba(214,210,207,.55);font-size:.88rem}
+    .note{margin:1.6rem 0;padding:1rem 1.2rem;border-left:2px solid #a78bfa;background:#0d0d10;font-size:.85rem;line-height:1.7;color:rgba(214,210,207,.75)}
+    .note b{color:#d6d2cf}
+    .card{margin:1rem 0;padding:1.2rem;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:#111113}
     .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:end}
-    label{display:block;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,242,236,.5);margin-bottom:.3rem}
-    input{width:100%;padding:.6rem .7rem;border:1px solid rgba(210,167,129,.22);border-radius:8px;background:#08080a;color:#f5f2ec;font:inherit;font-size:.88rem}
-    input:focus{outline:0;border-color:#f0a93c}
+    label{display:block;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(214,210,207,.5);margin-bottom:.3rem}
+    input{width:100%;padding:.6rem .7rem;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:#08080a;color:#d6d2cf;font:inherit;font-size:.88rem}
+    input:focus{outline:0;border-color:#a78bfa}
     .grow{flex:1 1 12rem}
-    button{padding:.6rem 1rem;border:1px solid rgba(210,167,129,.3);border-radius:8px;background:transparent;color:#f5f2ec;font:600 .68rem/1 'Montserrat',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .3s,border-color .3s,color .3s}
-    button:hover{border-color:#f0a93c;color:#f0a93c}
-    button.go{background:#f0a93c;border-color:#f0a93c;color:#14110c}
-    button.go:hover{background:#ffc164;border-color:#ffc164;color:#14110c}
+    button{padding:.6rem 1rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:transparent;color:#d6d2cf;font:500 .78rem/1 'Inter',sans-serif;letter-spacing:0;cursor:pointer;transition:background .3s,border-color .3s,color .3s}
+    button:hover{border-color:#a78bfa;color:#a78bfa}
+    button.go{background:linear-gradient(135deg,#a78bfa,#e879f9);border-color:transparent;color:#fff}
+    button.go:hover{background:linear-gradient(135deg,#c4b5fd,#f0abfc);border-color:transparent;color:#fff}
     button.kill{border-color:rgba(220,90,70,.4);color:#e08070}
     button.kill:hover{border-color:#e05a46;color:#e05a46}
-    .client{margin:1rem 0;padding:1.1rem;border:1px solid rgba(210,167,129,.16);border-radius:12px;background:#0d0d10}
+    .client{margin:1rem 0;padding:1.1rem;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:#0d0d10}
     .client h3{margin:0 0 .2rem;font-size:1.05rem;font-weight:600}
-    .slug{font-size:.66rem;letter-spacing:.1em;color:rgba(245,242,236,.45)}
+    .slug{font-size:.66rem;letter-spacing:.1em;color:rgba(214,210,207,.45)}
     .link{display:flex;gap:.5rem;align-items:center;margin:.7rem 0;padding:.55rem .7rem;border-radius:8px;background:#08080a;font-size:.78rem;word-break:break-all}
-    .scene{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.45rem 0;border-top:1px solid rgba(210,167,129,.1);font-size:.82rem}
+    .scene{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.45rem 0;border-top:1px solid rgba(255,255,255,.05);font-size:.82rem}
     .scene span{flex:1 1 8rem}
-    .scene code{color:rgba(245,242,236,.5);font-size:.72rem}
+    .scene code{color:rgba(214,210,207,.5);font-size:.72rem}
     pre{max-height:20rem;overflow:auto;padding:1rem;border-radius:10px;background:#08080a;font-size:.72rem;line-height:1.6;color:#cfe6cf;white-space:pre-wrap;word-break:break-word}
     .ok{color:#8fd18f}.bad{color:#e08070}
   </style>

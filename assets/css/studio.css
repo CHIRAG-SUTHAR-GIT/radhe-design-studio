@@ -247,7 +247,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .brand { display: block; width: clamp(150px, 14vw, 210px); }
 .brand svg { width: 100%; height: auto; display: block; }
 
-/* The wordmark is real Montserrat set in SVG, so letters can be filled or
+/* The wordmark is real type set in SVG, so letters can be filled or
    left as outlines that a photograph reads straight through. */
 .wm-type {
   font-family: var(--sans);
@@ -1494,3 +1494,241 @@ body.is-touring { overflow: hidden; }
 .proc__fig,
 .proc__scale { z-index: 2; }
 .proc__grid-lines { z-index: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PALETTE + TYPE, after spellar.ai
+
+   Extracted from the live site rather than eyeballed. The structural
+   difference from what was here before:
+
+   · surfaces are translucent white (4–6%), not solid warm greys. Layers
+     read as layers because they let the black through
+   · borders are neutral hairlines (7–12% white), not warm-tinted. Warm
+     borders over warm greys under warm text is what collapsed everything
+     into a single colour
+   · one ink colour at four opacity steps (1 / .7 / .5 / .35) instead of
+     two separate greys
+   · violet leads, and their palette already carries an orange, so the
+     studio's amber stays as a second accent rather than being invented
+
+   Type is their pairing: Geologica for display, Inter for everything else.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme='light'] {
+  --sheet:        #ffffff;
+  --sheet-2:      #f6f6f7;
+  --sheet-warm:   #f4f3f1;
+  --plate:        rgba(10, 10, 12, .03);
+  --plate-2:      rgba(10, 10, 12, .05);
+  --plate-solid:  #ffffff;
+
+  --ink:          #16161a;
+  --ink-strong:   #000000;
+  --muted:        rgba(22, 22, 26, .68);
+  --muted-2:      rgba(22, 22, 26, .48);
+  --muted-3:      rgba(22, 22, 26, .34);
+
+  --violet:       #7c5cf0;
+  --violet-lift:  #6544d8;
+  --violet-tint:  rgba(124, 92, 240, .10);
+  --amber:        #c2740a;
+  --amber-lift:   #a35f05;
+  --amber-tint:   rgba(194, 116, 10, .14);
+
+  --clay:         #16161a;
+  --clay-strong:  #000000;
+  --cool:         rgba(22, 22, 26, .48);
+
+  --hair:         rgba(10, 10, 12, .14);
+  --hair-soft:    rgba(10, 10, 12, .08);
+  --hair-faint:   rgba(10, 10, 12, .05);
+  --nav-pill:     rgba(255, 255, 255, .82);
+  --shadow-card:  0 1px 2px -1px rgba(10,10,12,.06), 0 18px 44px -28px rgba(10,10,12,.22);
+  --img-filter:   none;
+}
+
+[data-theme='dark'] {
+  --sheet:        #000000;
+  --sheet-2:      #0a0a0c;
+  --sheet-warm:   #08080a;
+  --plate:        rgba(255, 255, 255, .04);
+  --plate-2:      rgba(255, 255, 255, .06);
+  --plate-solid:  #111113;
+
+  --ink:          #d6d2cf;
+  --ink-strong:   #ffffff;
+  --muted:        rgba(214, 210, 207, .70);
+  --muted-2:      rgba(214, 210, 207, .50);
+  --muted-3:      rgba(214, 210, 207, .35);
+
+  --violet:       #a78bfa;
+  --violet-lift:  #c4b5fd;
+  --violet-tint:  rgba(167, 139, 250, .10);
+  --amber:        #ff9f0a;
+  --amber-lift:   #ffd60a;
+  --amber-tint:   rgba(255, 159, 10, .18);
+
+  --clay:         #d6d2cf;
+  --clay-strong:  #ffffff;
+  --cool:         rgba(214, 210, 207, .50);
+
+  --hair:         rgba(255, 255, 255, .12);
+  --hair-soft:    rgba(255, 255, 255, .07);
+  --hair-faint:   rgba(255, 255, 255, .04);
+  --nav-pill:     rgba(255, 255, 255, .05);
+  --shadow-card:  0 1px 0 0 rgba(255,255,255,.03), 0 24px 60px -34px rgba(0,0,0,.95);
+  --img-filter:   brightness(.95) saturate(1.02);
+}
+
+
+:root {
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --display: 'Geologica', 'Inter', -apple-system, sans-serif;
+  --r-pill: 999px;
+  --r-card: 14px;
+  --r-sm: 6px;
+}
+
+body { font-family: var(--sans); color: var(--ink); }
+
+/* Display face on everything that reads as a heading. */
+.page-title, .contact__lead, .project__title, .seq__title, .prog__title,
+.stack__title, .facts__name, .svc__title, .proc__title, .cta h2,
+.folio__name, .statement__text, .hero__studio, .veil__name,
+h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
+
+.annot, .tag, .slug, .stack__no, .proc__kicker { font-family: var(--sans); }
+
+/* ── Ink steps ─────────────────────────────────────────────────────── */
+.facts__note, .stack__text, .prose p, .page-lead, .svc__lead, .proc__body,
+.note__blurb, .scene__desc, .lux-lead, .cta p { color: var(--muted); }
+.annot, .slug, .titleblock dt, .credentials dt { color: var(--muted-2); }
+.foot__row span, .proc__ticker li { color: var(--muted-3); }
+
+/* ── Frames ────────────────────────────────────────────────────────── */
+.facts__cell, .stack__card, .note, .scene, .svc-row, .journal-card,
+.about__frame, .proc__stage, .services__stage, .plate__frame,
+.folio__item .plate__frame, .rail__item .plate__frame {
+  border-radius: var(--r-card);
+  border-color: var(--hair-soft);
+}
+.facts__cell, .note, .scene { background: var(--plate); }
+.facts__cell:hover, .note:hover { background: var(--plate-2); border-color: var(--hair); }
+
+/* The stack is the one place a translucent surface is wrong: the cards
+   overlap by design, so anything less than opaque lets all four read
+   through each other at once. */
+.stack__card { background: var(--plate-solid); }
+.stack__card:hover { border-color: var(--hair); }
+
+.proc__stage, .services__stage, .seq__pin, .prog__pin { overflow: hidden; }
+.proc__film, .seq__canvas { border-radius: var(--r-card); }
+
+/* ── Buttons: a filled violet pill and an outlined pill ────────────── */
+.btn, .lux-link, .form__send, .prog__pill, .chips button, .theme-toggle {
+  border-radius: var(--r-pill);
+}
+
+.btn {
+  gap: .7rem;
+  padding: .85rem 1.5rem;
+  border: 1px solid var(--hair);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: .8rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: background .35s var(--ease), border-color .35s, color .35s;
+}
+.btn:hover { background: var(--plate-2); border-color: var(--hair); color: var(--ink-strong); }
+.btn .marks { display: none; }
+
+/* The one filled action per view. */
+.btn--go, .form__send, .cta .btn {
+  border: 0;
+  background: linear-gradient(135deg, var(--violet), #e879f9);
+  color: #fff;
+  box-shadow: 0 14px 34px -16px rgba(167, 139, 250, .6);
+}
+.btn--go:hover, .form__send:hover, .cta .btn:hover {
+  background: linear-gradient(135deg, var(--violet-lift), #f0abfc);
+  color: #fff;
+}
+.btn__arrow {
+  width: 20px; height: 20px;
+  border: 0; background: none; color: currentColor;
+  font-size: .8rem;
+}
+
+.theme-toggle { border-color: var(--hair-soft); color: var(--muted); font-family: var(--sans); }
+.theme-toggle:hover { border-color: var(--hair); color: var(--ink); }
+.theme-toggle__dot { background: var(--violet); }
+
+.nav { border-radius: var(--r-pill); }
+.nav.is-solid, .head.is-solid .brand {
+  background: var(--nav-pill);
+  border: 1px solid var(--hair-soft);
+  backdrop-filter: blur(14px);
+}
+.head.is-solid .brand { border-radius: var(--r-pill); }
+.nav a { font-family: var(--sans); font-size: .78rem; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.nav a:hover, .nav a[aria-current='page'] { color: var(--ink-strong); }
+.nav a::after { background: var(--violet); }
+.nav__sep { display: none; }
+
+/* Chips and pills read as tinted violet, the way their category chips do. */
+.chips button, .proc__chips span, .svc__points li, .prog__pill {
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hair-soft);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.chips button.is-on, .prog__pill.is-on {
+  background: var(--violet-tint);
+  border-color: rgba(167, 139, 250, .35);
+  color: var(--violet-lift);
+}
+
+/* ── Accents ───────────────────────────────────────────────────────── */
+.tag { color: var(--violet); }
+.tag::before, .tag::after, .tag > i::before, .tag > i::after { border-color: var(--violet); }
+.marks i { border-color: var(--hair); }
+.stack__no, .proc__kicker, .svc__no { color: var(--violet); }
+.stack__badge {
+  border-radius: var(--r-card);
+  background: linear-gradient(160deg, var(--violet-lift), var(--violet));
+  color: #fff;
+  box-shadow: 0 14px 30px -16px rgba(167, 139, 250, .65);
+}
+[data-theme='dark'] .stack__badge { color: #14101f; }
+.facts__fig, .foot__mark .wm-amber, .wm-amber { fill: var(--violet); color: var(--violet); }
+.facts__fig i { color: var(--muted-2); }
+.hero__studio { color: var(--violet); }
+.seq__title em, .prog__title em, .display em, .lux-display em { color: var(--violet); }
+
+/* The drafting furniture keeps the amber, which their palette also carries. */
+.proc__fig, .proc__scale, .services__fig, .dim__label,
+.proc__rail-fill, .seq__progress i { color: var(--amber); }
+.proc__rail-fill, .seq__progress i { background: var(--amber); }
+.foot__rule { background: linear-gradient(90deg, var(--violet), var(--amber)); opacity: .8; }
+
+/* ── Fields ────────────────────────────────────────────────────────── */
+.field input, .field textarea, .field select {
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hair-soft);
+  background: var(--plate);
+  color: var(--ink);
+  font-family: var(--sans);
+  padding: .8rem .9rem;
+}
+.field input:focus, .field textarea:focus { border-color: var(--violet); background: var(--plate-2); }
+.field label { color: var(--muted-2); font-family: var(--sans); }
+
+.wm-solid, .wm-light, .wm-heavy { fill: var(--ink); }
+.wm-stroke { stroke: var(--ink); }
