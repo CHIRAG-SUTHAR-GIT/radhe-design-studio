@@ -349,7 +349,9 @@
 
       ScrollTrigger.create({
         trigger: '#process',
-        start: 'top top',
+        // A card the height of its content is held centred rather than
+        // stuck to the top of the screen under the header.
+        start: 'center center',
         /* 55vh per stage, not 90. A comfortable phone swipe covers roughly
            half a screen, so one swipe should be one stage; at 90 it took
            two or three, which is what made the block feel stuck. */
