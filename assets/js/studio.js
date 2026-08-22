@@ -259,143 +259,6 @@
     });
   }
 
-  /* ── Process: pinned, one stage at a time ──────────────────────── */
-  const pin = $('#process-pin');
-  if (pin) {
-    const panels = $$('.proc__panel', pin);
-    const ticks = $$('.proc__rail i', pin);
-    const railFill = $('.proc__rail-fill', pin);
-    const ticker = $$('.proc__ticker li', pin);
-    const figOut = $('[data-step-fig]', pin);
-    const diagrams = $$('.proc__diagram', pin);
-    let active = -1;
-
-    /* Painting the stage is separate from animating into it. `animate` is
-       false when the state simply has to be correct — entering the section,
-       or after a refresh — and true when a stage is genuinely changing.
-
-       The panel tweens are killed before the active one is set visible.
-       Without that, a fast reversal sets the panel to opacity 1 while its
-       own fade-out is still running, and the old tween carries on pulling
-       it back to 0: the photograph stays up while the note underneath it
-       never appears, which is what happens at the first and last stage,
-       where a reversal is most likely. */
-    const paint = (index, animate, forward) => {
-      panels.forEach((panel, i) => {
-        const on = i === index;
-        panel.setAttribute('aria-hidden', String(!on));
-        if (!motion) return;
-        const kids = $$(':scope > *, .proc__chips li', panel);
-        if (on) {
-          gsap.killTweensOf(panel);
-          gsap.set(panel, { opacity: 1, y: 0, pointerEvents: 'auto' });
-          if (animate) {
-            // The note is re-typed line by line rather than faded as a block.
-            gsap.fromTo(kids,
-              { opacity: 0, y: forward ? 26 : -26 },
-              { opacity: 1, y: 0, duration: .5, stagger: .055, ease: 'power3.out', overwrite: true });
-          } else {
-            gsap.killTweensOf(kids);
-            gsap.set(kids, { opacity: 1, y: 0 });
-          }
-        } else if (animate) {
-          gsap.to(panel, {
-            opacity: 0, y: forward ? -22 : 22,
-            duration: .4, ease: 'power2.in', pointerEvents: 'none', overwrite: true
-          });
-        } else {
-          gsap.killTweensOf(panel);
-          gsap.set(panel, { opacity: 0, pointerEvents: 'none' });
-        }
-      });
-
-      // Each photograph settles out of a slight push-in and a little blur.
-      diagrams.forEach((diagram, i) => {
-        if (!motion) return;
-        if (i === index) {
-          if (animate) {
-            gsap.fromTo(diagram,
-              { opacity: 0, scale: 1.07, filter: 'blur(7px)' },
-              { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .85, ease: 'power2.out', overwrite: true });
-          } else {
-            gsap.killTweensOf(diagram);
-            gsap.set(diagram, { opacity: 1, scale: 1, filter: 'blur(0px)' });
-          }
-        } else if (animate) {
-          gsap.to(diagram, { opacity: 0, scale: 1.02, duration: .45, ease: 'power2.in', overwrite: true });
-        } else {
-          gsap.killTweensOf(diagram);
-          gsap.set(diagram, { opacity: 0 });
-        }
-      });
-
-      ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
-      ticker.forEach((item, i) => item.classList.toggle('is-on', i === index));
-      if (figOut) figOut.textContent = String(index + 1).padStart(2, '0');
-    };
-
-    const activate = (index) => {
-      if (index === active) return;
-      const forward = index > active;
-      active = index;
-      paint(index, true, forward);
-    };
-
-    if (motion) {
-      // Stack the panels so only the active one is visible.
-      gsap.set(panels, { position: 'absolute', inset: 0, opacity: 0 });
-      gsap.set(diagrams, { opacity: 0 });
-      activate(0);
-
-      ScrollTrigger.create({
-        trigger: '#process',
-        // A card the height of its content is held centred rather than
-        // stuck to the top of the screen under the header.
-        start: 'center center',
-        /* 55vh per stage, not 90. A comfortable phone swipe covers roughly
-           half a screen, so one swipe should be one stage; at 90 it took
-           two or three, which is what made the block feel stuck. */
-        end: () => `+=${panels.length * 55}%`,
-        pin: '#process-pin',
-        pinSpacing: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        /* Settle onto a stage once scrolling stops. The points are the
-           quarters of the range, which land inside stages 1 to 5 rather
-           than on the boundaries between them, and 0 and 1 are included so
-           the section can still be entered and left cleanly.
-
-           directional and inertia are both off on purpose: with them on, a
-           fast flick projects its momentum forward and carries past a
-           stage, which is the skipping this is meant to stop. Off, the
-           nearest stage wins however hard the flick was. */
-        snap: {
-          snapTo: 1 / (panels.length - 1),
-          duration: { min: .15, max: .45 },
-          delay: .05,
-          ease: 'power2.inOut',
-          directional: false,
-          inertia: false
-        },
-        onUpdate: (self) => {
-          if (railFill) railFill.style.height = `${self.progress * 100}%`;
-            activate(Math.min(panels.length - 1,
-            Math.floor(self.progress * panels.length * .999)));
-        },
-        /* Entering the section must leave the current stage correct
-           whatever happened on the way in — a stranded child tween can
-           otherwise leave the note invisible under a visible photograph. */
-        onEnter: () => paint(active, false),
-        onEnterBack: () => paint(active, false),
-        onRefresh: () => paint(active, false)
-      });
-    } else {
-      // Without motion the stages simply stack as a readable list.
-      pin.classList.add('is-static');
-      panels.forEach((panel) => panel.setAttribute('aria-hidden', 'false'));
-    }
-  }
-
   /* ── Horizontal project rail ───────────────────────────────────── */
   const rail = $('#rail');
   if (rail) {
@@ -601,42 +464,39 @@
     });
   }
 
-  /* ── Services carousel ─────────────────────────────────────────────
-     Only ever a carousel while the CSS says so, so the desktop schedule
-     is never driven by this. It advances on its own, but stops the moment
-     a reader touches it — an auto-rotating strip you cannot pause is a
-     genuine accessibility failure, not a flourish. */
-  const svcRail = $('.svc__grid');
-  const svcNav = $('.svc__nav');
-  if (svcRail && svcNav) {
-    const cards = $$('.svc__card', svcRail);
-    const bar = $('.svc__bar i', svcNav);
-    const prev = $('[data-svc-prev]', svcNav);
-    const next = $('[data-svc-next]', svcNav);
-    const isRail = () => getComputedStyle(svcRail).overflowX !== 'visible';
+  /* ── Card carousels ────────────────────────────────────────────────
+     Shared by the services schedule and the process stages. Only ever a
+     carousel while the CSS says so, so the desktop grids are never driven
+     by this. It advances on its own, but stops the moment a reader
+     touches it — an auto-rotating strip you cannot pause is a genuine
+     accessibility failure, not a flourish. */
+  const carousel = (railSel, navSel, cardSel, prevSel, nextSel) => {
+    const rail = $(railSel);
+    const nav = $(navSel);
+    if (!rail || !nav) return;
+
+    const cards = $$(cardSel, rail);
+    const bar = $('.svc__bar i', nav);
+    const prev = $(prevSel, nav);
+    const next = $(nextSel, nav);
+    const isRail = () => getComputedStyle(rail).overflowX !== 'visible';
     let timer = 0;
     let idle = 0;
 
-    const index = () => {
-      const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
-      return Math.round(svcRail.scrollLeft / step);
-    };
+    const stepWidth = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : rail.clientWidth);
+    const atEnd = () => rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 2;
 
     const paint = () => {
-      const i = Math.min(cards.length - 1, Math.max(0, index()));
+      const i = Math.min(cards.length - 1, Math.max(0, Math.round(rail.scrollLeft / stepWidth())));
       if (bar) {
         bar.style.width = `${100 / cards.length}%`;
         bar.style.left = `${(100 / cards.length) * i}%`;
       }
-      const end = svcRail.scrollLeft >= svcRail.scrollWidth - svcRail.clientWidth - 2;
-      if (prev) prev.disabled = svcRail.scrollLeft <= 2;
-      if (next) next.disabled = end;
+      if (prev) prev.disabled = rail.scrollLeft <= 2;
+      if (next) next.disabled = atEnd();
     };
 
-    const go = (dir) => {
-      const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : svcRail.clientWidth;
-      svcRail.scrollBy({ left: step * dir, behavior: 'smooth' });
-    };
+    const go = (dir) => rail.scrollBy({ left: stepWidth() * dir, behavior: 'smooth' });
 
     const stop = () => { clearInterval(timer); timer = 0; };
     const play = () => {
@@ -644,8 +504,7 @@
       if (reduced || !isRail()) return;
       timer = setInterval(() => {
         if (document.hidden) return;
-        const end = svcRail.scrollLeft >= svcRail.scrollWidth - svcRail.clientWidth - 2;
-        if (end) svcRail.scrollTo({ left: 0, behavior: 'smooth' });
+        if (atEnd()) rail.scrollTo({ left: 0, behavior: 'smooth' });
         else go(1);
       }, 3600);
     };
@@ -660,20 +519,23 @@
 
     prev?.addEventListener('click', () => { go(-1); hold(); });
     next?.addEventListener('click', () => { go(1); hold(); });
-    svcRail.addEventListener('scroll', paint, { passive: true });
+    rail.addEventListener('scroll', paint, { passive: true });
     ['pointerdown', 'touchstart', 'wheel', 'focusin'].forEach((ev) =>
-      svcRail.addEventListener(ev, hold, { passive: true }));
-    svcNav.addEventListener('mouseenter', stop);
-    svcNav.addEventListener('mouseleave', () => { clearTimeout(idle); play(); });
+      rail.addEventListener(ev, hold, { passive: true }));
+    nav.addEventListener('mouseenter', stop);
+    nav.addEventListener('mouseleave', () => { clearTimeout(idle); play(); });
 
-    // Nothing runs while the schedule is off screen.
+    // Nothing runs while the rail is off screen.
     new IntersectionObserver((entries) => {
       entries.forEach((entry) => (entry.isIntersecting ? play() : stop()));
-    }, { threshold: .25 }).observe(svcRail);
+    }, { threshold: .25 }).observe(rail);
 
     addEventListener('resize', () => { paint(); isRail() ? play() : stop(); });
     paint();
-  }
+  };
+
+  carousel('.svc__grid', '.svc__nav', '.svc__card', '[data-svc-prev]', '[data-svc-next]');
+  carousel('.proc__track', '.proc__nav', '.proc__card', '[data-proc-prev]', '[data-proc-next]');
 
   /* ── Accordion ─────────────────────────────────────────────────── */
   $$('.acc__head').forEach((head) => {

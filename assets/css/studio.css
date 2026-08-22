@@ -2250,3 +2250,85 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
   -webkit-text-fill-color: var(--gold);
   color: var(--gold);
 }
+
+
+/* ═══ Process — a card per stage ═══════════════════════════════════
+   Same shape as the services schedule: the copy reads first, and the
+   photograph sits under it inside the same card. */
+/* The section carried no padding of its own while the pinned box handled
+   its own insets; as a plain card section it needs the page gutter back. */
+.proc { position: relative; padding: clamp(4rem, 8vw, 8rem) var(--page-x); }
+.proc__head { display: grid; gap: 1.1rem; }
+.proc__heading {
+  max-width: 20ch;
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -.02em;
+}
+.proc__nav { display: none; }
+
+.proc__track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(.8rem, 1.6vw, 1.2rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.proc__card {
+  display: grid;
+  align-content: start;
+  gap: .55rem;
+  padding: clamp(1.1rem, 1.8vw, 1.5rem);
+  border-radius: var(--r-card);
+  background: var(--plate);
+}
+.proc__no { color: var(--muted-2); }
+.proc__card .proc__kicker { margin-top: .35rem; }
+.proc__card .proc__title {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -.01em;
+}
+.proc__card .proc__chips { margin: .5rem 0 .2rem; }
+.proc__card .proc__chips li { padding: .35rem .6rem; font-size: .55rem; }
+
+/* The photograph closes the card, under the copy. */
+.proc__shot {
+  margin: .7rem 0 0;
+  border-radius: calc(var(--r-card) - 4px);
+  overflow: hidden;
+  background: var(--plate-2);
+}
+.proc__shot picture { display: block; }
+.proc__shot img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: var(--img-filter);
+  transition: scale 1.4s var(--ease);
+}
+.proc__card:hover .proc__shot img { scale: 1.04; }
+
+@media (max-width: 900px) {
+  .proc__card .proc__title { font-size: clamp(1.15rem, 4.6vw, 1.45rem); }
+  .proc__shot img { aspect-ratio: 3 / 2; }
+}
+
+/* The stages ride the same rail as the schedule. This has to follow the
+   grid above it: both are single-class rules, so the later one wins. */
+@media (max-width: 760px) {
+  .proc__nav { display: flex; align-items: center; gap: 1rem; margin: 1.8rem 0 1.2rem; }
+  .proc__track {
+    display: flex;
+    margin-top: 1.2rem;
+    gap: .9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .proc__track::-webkit-scrollbar { display: none; }
+  .proc__card { flex: 0 0 84%; scroll-snap-align: center; }
+}

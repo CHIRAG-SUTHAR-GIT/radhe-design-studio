@@ -383,69 +383,54 @@
 
     <!-- ══ 06 · Process ══ -->
     <section class="proc" id="process" aria-label="How we work">
-      <div class="proc__pin" id="process-pin">
-
-        <div class="proc__stage">
-          <span class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span class="proc__fig annot">fig. <span data-step-fig>01</span></span>
-          <span class="proc__scale annot">esc 1:50</span>
-          <span class="proc__grid-lines" aria-hidden="true"></span>
-          <figure class="proc__diagram" data-diagram="0"><picture><source srcset="assets/images/process/1.webp" type="image/webp"><img src="assets/images/process/1.png" alt="An empty room being surveyed — floor plans, paint fans, samples and a tape measure laid out on the boards" decoding="async"></picture></figure>
-          <figure class="proc__diagram" data-diagram="1"><picture><source srcset="assets/images/process/2.webp" type="image/webp"><img src="assets/images/process/2.png" alt="A detail checklist, finish schedule, lighting plan and stone and timber samples" loading="lazy" decoding="async"></picture></figure>
-          <figure class="proc__diagram" data-diagram="2"><picture><source srcset="assets/images/process/5.webp" type="image/webp"><img src="assets/images/process/5.png" alt="Concept sketches, a mood board and material swatches spread across a studio desk" loading="lazy" decoding="async"></picture></figure>
-          <figure class="proc__diagram" data-diagram="3"><picture><source srcset="assets/images/process/3.webp" type="image/webp"><img src="assets/images/process/3.png" alt="A site under construction with a programme on screen and a quality checklist on the boards" loading="lazy" decoding="async"></picture></figure>
-          <figure class="proc__diagram" data-diagram="4"><picture><source srcset="assets/images/process/4.webp" type="image/webp"><img src="assets/images/process/4.png" alt="The finished living room, styled and lit, ready for handover" loading="lazy" decoding="async"></picture></figure>
-        </div>
-
-        <div class="proc__col">
-          <span class="tag">process<i></i></span>
-          <div class="proc__stack">
-            <article class="proc__panel" data-step="0" aria-hidden="false">
-              <p class="proc__num">01</p>
-              <p class="proc__kicker">Discover</p>
-              <h3 class="proc__title">Understand the home</h3>
-              <ul class="proc__chips"><li>Site Survey</li><li>Brief Lock</li></ul>
-            </article>
-            <article class="proc__panel" data-step="1" aria-hidden="true">
-              <p class="proc__num">02</p>
-              <p class="proc__kicker">Compose</p>
-              <h3 class="proc__title">Shape the idea</h3>
-              <ul class="proc__chips"><li>Plan</li><li>Mood</li><li>Material Direction</li></ul>
-            </article>
-            <article class="proc__panel" data-step="2" aria-hidden="true">
-              <p class="proc__num">03</p>
-              <p class="proc__kicker">Resolve</p>
-              <h3 class="proc__title">Lock the details</h3>
-              <ul class="proc__chips"><li>Drawings</li><li>Specifications</li><li>Cost Lock</li></ul>
-            </article>
-            <article class="proc__panel" data-step="3" aria-hidden="true">
-              <p class="proc__num">04</p>
-              <p class="proc__kicker">Build</p>
-              <h3 class="proc__title">Execute with control</h3>
-              <ul class="proc__chips"><li>Procurement</li><li>Site</li><li>Quality</li></ul>
-            </article>
-            <article class="proc__panel" data-step="4" aria-hidden="true">
-              <p class="proc__num">05</p>
-              <p class="proc__kicker">Handover</p>
-              <h3 class="proc__title">Make it yours</h3>
-              <ul class="proc__chips"><li>Styling</li><li>Snag Close</li><li>Walkthrough</li></ul>
-            </article>
-          </div>
-
-          <ol class="proc__ticker" aria-hidden="true">
-            <li data-tick="0"><span>01</span>Discover</li>
-            <li data-tick="1"><span>02</span>Compose</li>
-            <li data-tick="2"><span>03</span>Resolve</li>
-            <li data-tick="3"><span>04</span>Build</li>
-            <li data-tick="4"><span>05</span>Handover</li>
-          </ol>
-        </div>
-
-        <div class="proc__rail" aria-hidden="true">
-          <span class="proc__rail-fill"></span>
-          <i style="top:0%"></i><i style="top:25%"></i><i style="top:50%"></i><i style="top:75%"></i><i style="top:100%"></i>
-        </div>
+      <div class="proc__head">
+        <span class="tag">process<i></i></span>
+        <h2 class="proc__heading sweep">From the first survey to the final walkthrough.</h2>
       </div>
+
+      <div class="proc__nav" aria-hidden="true">
+        <button class="svc__arrow" type="button" data-proc-prev aria-label="Previous stage">←</button>
+        <span class="svc__bar"><i></i></span>
+        <button class="svc__arrow" type="button" data-proc-next aria-label="Next stage">→</button>
+      </div>
+
+      <ol class="proc__track">
+        <li class="proc__card">
+          <span class="proc__no annot">01 / 05</span>
+          <p class="proc__kicker">Discover</p>
+          <h3 class="proc__title">Understand the home</h3>
+          <ul class="proc__chips"><li>Site Survey</li><li>Brief Lock</li></ul>
+          <figure class="proc__shot"><picture><source srcset="assets/images/process/1.webp" type="image/webp"><img src="assets/images/process/1.png" alt="An empty room being surveyed — floor plans, paint fans, samples and a tape measure laid out on the boards" decoding="async"></picture></figure>
+        </li>
+        <li class="proc__card">
+          <span class="proc__no annot">02 / 05</span>
+          <p class="proc__kicker">Compose</p>
+          <h3 class="proc__title">Shape the idea</h3>
+          <ul class="proc__chips"><li>Plan</li><li>Mood</li><li>Material Direction</li></ul>
+          <figure class="proc__shot"><picture><source srcset="assets/images/process/2.webp" type="image/webp"><img src="assets/images/process/2.png" alt="A detail checklist, finish schedule, lighting plan and stone and timber samples" loading="lazy" decoding="async"></picture></figure>
+        </li>
+        <li class="proc__card">
+          <span class="proc__no annot">03 / 05</span>
+          <p class="proc__kicker">Resolve</p>
+          <h3 class="proc__title">Lock the details</h3>
+          <ul class="proc__chips"><li>Drawings</li><li>Specifications</li><li>Cost Lock</li></ul>
+          <figure class="proc__shot"><picture><source srcset="assets/images/process/5.webp" type="image/webp"><img src="assets/images/process/5.png" alt="Concept sketches, a mood board and material swatches spread across a studio desk" loading="lazy" decoding="async"></picture></figure>
+        </li>
+        <li class="proc__card">
+          <span class="proc__no annot">04 / 05</span>
+          <p class="proc__kicker">Build</p>
+          <h3 class="proc__title">Execute with control</h3>
+          <ul class="proc__chips"><li>Procurement</li><li>Site</li><li>Quality</li></ul>
+          <figure class="proc__shot"><picture><source srcset="assets/images/process/3.webp" type="image/webp"><img src="assets/images/process/3.png" alt="A site under construction with a programme on screen and a quality checklist on the boards" loading="lazy" decoding="async"></picture></figure>
+        </li>
+        <li class="proc__card">
+          <span class="proc__no annot">05 / 05</span>
+          <p class="proc__kicker">Handover</p>
+          <h3 class="proc__title">Make it yours</h3>
+          <ul class="proc__chips"><li>Styling</li><li>Snag Close</li><li>Walkthrough</li></ul>
+          <figure class="proc__shot"><picture><source srcset="assets/images/process/4.webp" type="image/webp"><img src="assets/images/process/4.png" alt="The finished living room, styled and lit, ready for handover" loading="lazy" decoding="async"></picture></figure>
+        </li>
+      </ol>
     </section>
 
     <!-- ══ 07 · Enquiry ══ -->

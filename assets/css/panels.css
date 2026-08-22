@@ -107,52 +107,6 @@
   }
 
 
-  /* ── The process card is the pinned box, not the section ──────────
-     ScrollTrigger's spacer sits inside the section, so a background on
-     the section stretches the whole scroll distance: measured at 3242px
-     against the services card's 626px, which is where all that empty
-     card came from. The section keeps the tokens and the margin; every
-     visual moves onto the element that is actually one card tall, and
-     the card is sized by its content rather than by the viewport. */
-  .proc {
-    margin-block: 0;
-    padding: 0;
-    background: none;
-    border-radius: 0;
-    overflow: visible;
-  }
-  .proc::before { display: none; }
-
-  .proc__pin {
-    position: relative;
-    height: auto;
-    min-height: 0;
-    margin: var(--panel-gap) 0;
-    padding: clamp(1.9rem, 6.5vw, 2.6rem) clamp(1.15rem, 4.6vw, 1.6rem);
-    border-radius: var(--panel-r);
-    background: linear-gradient(176deg, #101014 0%, #16161c 46%, #1d1a28 100%);
-    overflow: hidden;
-    align-content: start;
-    gap: 1.15rem;
-  }
-  [data-theme='dark'] .proc__pin {
-    background: linear-gradient(176deg, #0a0a0d 0%, #101015 44%, #17141f 100%);
-  }
-  .proc__pin::before {
-    content: '';
-    position: absolute;
-    z-index: 4;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--violet), var(--amber));
-    opacity: .8;
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    pointer-events: none;
-  }
 
   /* A soft wash bleeding out of one corner, the reference's signature. */
   .svc::after, .cta::after {
