@@ -2317,50 +2317,74 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 
 
 
-/* ═══ Services — six names on one sheet ════════════════════════════
-   The names and nothing else, three across and two down, all six on one
-   screen at every width. Nothing scrolls and nothing is hidden. */
+
+/* ═══ Services — a ruled schedule ══════════════════════════════════
+   No boxes. Six names set as a drawing schedule: three down the first
+   column, three down the second, each on its own rule. The whole set
+   reads at one glance and nothing scrolls.
+
+   grid-auto-flow is column, not row — with row flow the names would run
+   across the pair and read 1,2 / 3,4 / 5,6 rather than 1,2,3 down one
+   side and 4,5,6 down the other. */
 .svc__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(.5rem, 1.2vw, .9rem);
+  grid-auto-flow: column;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, auto);
+  column-gap: clamp(1.1rem, 5vw, 4rem);
   margin-top: clamp(2rem, 4vw, 3rem);
   border: 0;
 }
+
 .svc__card {
   position: relative;
-  display: grid;
-  place-items: center;
-  min-height: clamp(6.5rem, 22vw, 11rem);
-  padding: clamp(.9rem, 2.4vw, 1.6rem);
-  border: 1px solid var(--hair-soft);
-  border-radius: var(--r-card);
-  overflow: hidden;
-  text-align: center;
-  transition: transform .55s var(--ease), border-color .55s var(--ease);
+  display: flex;
+  align-items: center;
+  min-height: clamp(4.4rem, 15vw, 6.5rem);
+  padding: .85rem 2rem .85rem 0;
+  border: 0;
+  border-top: 1px solid var(--hair-soft);
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+  text-align: left;
 }
-/* The wash rises through the tile rather than switching on, so a row of
-   six settles instead of flashing. */
-.svc__card::before {
+.svc__card:nth-child(3), .svc__card:nth-child(6) { border-bottom: 1px solid var(--hair-soft); }
+
+/* The rule under the name draws itself across on hover, the way the
+   underlines elsewhere on the sheet do. */
+.svc__card::after {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(160deg, var(--violet-tint), transparent 62%);
-  opacity: 0;
-  transition: opacity .55s var(--ease);
+  position: absolute; left: 0; bottom: -1px;
+  width: 100%; height: 1px;
+  background: var(--violet);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .6s var(--ease);
 }
-.svc__card > * { position: relative; z-index: 1; }
-.svc__card:hover, .svc__card:focus-within { transform: translateY(-5px); border-color: var(--violet); }
-.svc__card:hover::before, .svc__card:focus-within::before { opacity: 1; }
-.svc__card:active { transform: translateY(-2px) scale(.99); }
+.svc__card:hover::after, .svc__card:focus-within::after { transform: scaleX(1); }
+
+/* An arrow waits at the end of the rule. */
+.svc__card::before {
+  content: '↗';
+  position: absolute; right: .1rem; top: 50%;
+  transform: translate(-6px, -50%);
+  color: var(--violet);
+  font-size: .85rem;
+  opacity: 0;
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.svc__card:hover::before, .svc__card:focus-within::before { opacity: 1; transform: translate(0, -50%); }
 
 .svc__name {
   margin: 0;
-  max-width: 12ch;
-  font-size: clamp(.78rem, 3vw, 1.15rem);
+  font-size: clamp(.82rem, 3.3vw, 1.3rem);
   font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -.01em;
+  line-height: 1.28;
+  letter-spacing: -.015em;
   text-wrap: balance;
-  transition: color .45s var(--ease);
+  transition: transform .5s var(--ease), color .45s var(--ease);
 }
-.svc__card:hover .svc__name { color: var(--violet-lift); }
+.svc__card:hover .svc__name, .svc__card:focus-within .svc__name {
+  transform: translateX(8px);
+  color: var(--violet-lift);
+}

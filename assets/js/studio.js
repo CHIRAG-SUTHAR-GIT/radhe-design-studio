@@ -241,7 +241,9 @@
     $$('.svc__card', schedule).forEach((card, index) => {
       gsap.fromTo(card, { opacity: 0, y: 26, filter: 'blur(7px)' }, {
         opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out',
-        delay: (index % 3) * .08 + Math.floor(index / 3) * .05,
+        // Three per column, so the delay runs down a column and the
+        // second follows the first.
+        delay: (index % 3) * .09 + Math.floor(index / 3) * .12,
         scrollTrigger: { trigger: card, start: 'top 92%', once: true }
       });
     });

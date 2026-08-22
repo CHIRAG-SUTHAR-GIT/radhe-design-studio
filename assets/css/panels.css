@@ -210,14 +210,17 @@
   .facts__cell[data-tone='warm']::before { display: none; }
   .facts__fig { font-size: clamp(2.4rem, 11vw, 3rem); }
 
-  /* ── Services schedule ───────────────────────────────────────── */
+  /* ── Services schedule ─────────────────────────────────────────
+     The services are ruled rows now, not filled tiles, so the panel skin
+     must not put its card back underneath them. */
   .svc__card {
     border: 0;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .055);
-    padding: 1.6rem 1.4rem;
+    border-top: 1px solid var(--hair-soft);
+    border-radius: 0;
+    background: none;
+    padding: .85rem 1.6rem .85rem 0;
   }
-  .svc__card::before { display: none; }
+  .svc__card:nth-child(3), .svc__card:nth-child(6) { border-bottom: 1px solid var(--hair-soft); }
   .svc__card .marks { display: none; }
   .svc__arrow { border-radius: 50%; border-color: var(--hair); }
   .svc__ref { display: none; }
