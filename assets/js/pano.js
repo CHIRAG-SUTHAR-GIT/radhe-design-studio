@@ -95,6 +95,29 @@
     ]);
   }
 
+  /* Column-major 3x3 multiplication, matching WebGL's matrix layout. */
+  function multiplyMat3(a, b) {
+    const out = new Float32Array(9);
+    for (let col = 0; col < 3; col++) {
+      for (let row = 0; row < 3; row++) {
+        out[col * 3 + row] = a[row] * b[col * 3]
+                           + a[3 + row] * b[col * 3 + 1]
+                           + a[6 + row] * b[col * 3 + 2];
+      }
+    }
+    return out;
+  }
+
+  function applyGyroOffsets(matrix, yaw, pitch) {
+    let out = matrix;
+    // Heading remains around world-up, as before.
+    if (yaw) out = multiplyMat3(rotation(yaw, 0), out);
+    // Pitch is local to the camera so dragging vertically always feels natural,
+    // regardless of how the phone is currently tilted.
+    if (pitch) out = multiplyMat3(out, rotation(0, pitch));
+    return out;
+  }
+
   class Pano {
     constructor(canvas) {
       this.canvas = canvas;
@@ -113,6 +136,7 @@
       this.gyro = null;
       this.quat = null;
       this.yawOffset = 0;
+      this.pitchOffset = 0;
 
       this._initGL();
       this._initInput();
@@ -220,18 +244,23 @@
       this.velYaw = 0;
       this.velPitch = 0;
 
-      const look = (dx, dy) => {
+      const look = (dx, dy, direction) => {
         // Scale by field of view so the drag feels identical at every zoom.
         const k = this.fov / this.canvas.clientHeight;
         // Divert to the gyro's heading offset only once orientation data is
         // actually arriving. Testing this.gyro alone means a device with no
         // gyro — or one that silently denied permission — sends every drag
         // into an offset that is never applied, and the viewer is dead.
-        if (this.quat) { this.yawOffset -= dx * k; this.dirty = true; return; }
-        this.yaw -= dx * k;
-        this.pitch = clamp(this.pitch - dy * k, -85 * DEG, 85 * DEG);
-        this.velYaw = -dx * k;
-        this.velPitch = -dy * k;
+        if (this.quat) {
+          this.yawOffset += direction * dx * k;
+          this.pitchOffset = clamp(this.pitchOffset + direction * dy * k, -85 * DEG, 85 * DEG);
+          this.dirty = true;
+          return;
+        }
+        this.yaw += direction * dx * k;
+        this.pitch = clamp(this.pitch + direction * dy * k, -85 * DEG, 85 * DEG);
+        this.velYaw = direction * dx * k;
+        this.velPitch = direction * dy * k;
         this.dirty = true;
       };
 
@@ -264,7 +293,10 @@
           return;
         }
         if (!dragging) return;
-        look(e.clientX - lastX, e.clientY - lastY);
+        // Touch content follows the finger; mouse dragging keeps its familiar
+        // click-and-look direction on desktop.
+        const direction = e.pointerType === 'touch' ? 1 : -1;
+        look(e.clientX - lastX, e.clientY - lastY, direction);
         lastX = e.clientX; lastY = e.clientY;
       }, { passive: true });
 
@@ -361,12 +393,13 @@
       this.gyro = null;
       // Hand the current view back to the pointer without a jump.
       if (this.quat) {
-        const m = matFromQuat(this.quat);
+        const m = applyGyroOffsets(matFromQuat(this.quat), this.yawOffset, this.pitchOffset);
         const fx = -m[6], fy = -m[7], fz = -m[8];   // camera looks down -Z
-        this.yaw = Math.atan2(fx, -fz) + this.yawOffset;
+        this.yaw = Math.atan2(fx, -fz);
         this.pitch = clamp(Math.asin(clamp(fy, -1, 1)), -85 * DEG, 85 * DEG);
         this.quat = null;
         this.yawOffset = 0;
+        this.pitchOffset = 0;
       }
     }
 
@@ -389,18 +422,7 @@
       const gl = this.gl;
       let m;
       if (this.quat) {
-        m = matFromQuat(this.quat);
-        if (this.yawOffset) {
-          // Spin the device orientation about world up by the dragged offset.
-          const c = Math.cos(this.yawOffset), s2 = Math.sin(this.yawOffset);
-          const y = new Float32Array([c, 0, -s2, 0, 1, 0, s2, 0, c]);
-          const o = new Float32Array(9);
-          for (let col = 0; col < 3; col++)
-            for (let row = 0; row < 3; row++)
-              o[col * 3 + row] = y[row] * m[col * 3] + y[3 + row] * m[col * 3 + 1]
-                               + y[6 + row] * m[col * 3 + 2];
-          m = o;
-        }
+        m = applyGyroOffsets(matFromQuat(this.quat), this.yawOffset, this.pitchOffset);
       } else {
         m = rotation(this.yaw, this.pitch);
       }
