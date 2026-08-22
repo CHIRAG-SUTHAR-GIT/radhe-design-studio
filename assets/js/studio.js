@@ -350,11 +350,31 @@
       ScrollTrigger.create({
         trigger: '#process',
         start: 'top top',
-        end: () => `+=${panels.length * 90}%`,
+        /* 55vh per stage, not 90. A comfortable phone swipe covers roughly
+           half a screen, so one swipe should be one stage; at 90 it took
+           two or three, which is what made the block feel stuck. */
+        end: () => `+=${panels.length * 55}%`,
         pin: '#process-pin',
         pinSpacing: true,
         scrub: true,
         invalidateOnRefresh: true,
+        /* Settle onto a stage once scrolling stops. The points are the
+           quarters of the range, which land inside stages 1 to 5 rather
+           than on the boundaries between them, and 0 and 1 are included so
+           the section can still be entered and left cleanly.
+
+           directional and inertia are both off on purpose: with them on, a
+           fast flick projects its momentum forward and carries past a
+           stage, which is the skipping this is meant to stop. Off, the
+           nearest stage wins however hard the flick was. */
+        snap: {
+          snapTo: 1 / (panels.length - 1),
+          duration: { min: .15, max: .45 },
+          delay: .05,
+          ease: 'power2.inOut',
+          directional: false,
+          inertia: false
+        },
         onUpdate: (self) => {
           if (railFill) railFill.style.height = `${self.progress * 100}%`;
             activate(Math.min(panels.length - 1,
