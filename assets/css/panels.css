@@ -55,6 +55,10 @@
   }
   .folio, .statement, .facts { background: var(--sheet-warm); }
 
+  /* Sticky cards need a visible overflow chain. Keeping the mobile facts
+     panel clipped prevents its scroll stack from behaving like desktop. */
+  .facts { overflow: visible; }
+
   /* Dark lacquer panels, with the tokens re-scoped so every component
      inside them inverts without being restyled one by one. */
   .svc, .proc, .cta {

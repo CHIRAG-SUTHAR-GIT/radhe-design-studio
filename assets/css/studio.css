@@ -1456,7 +1456,8 @@ body.is-touring { overflow: hidden; }
 .stack__text { margin-top: .55rem; max-width: 48ch; color: var(--muted); font-size: clamp(.86rem, 1vw, .95rem); line-height: 1.7; }
 
 @media (max-width: 760px) {
-  .stack__slot { top: calc(var(--head-h) + 1rem + var(--i) * .7rem); }
+  /* Use the same stepped sticky deck as desktop on phones. */
+  .stack__slot { top: calc(var(--head-h) + 2.5rem + var(--i) * 1.5rem); }
   .stack__row { grid-template-columns: 1fr; gap: .9rem; }
   .stack__badge { justify-self: start; min-width: 0; padding: .7rem 1rem; }
   .stack__badge b { font-size: 1.5rem; }

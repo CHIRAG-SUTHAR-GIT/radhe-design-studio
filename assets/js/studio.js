@@ -283,6 +283,8 @@
     let filmSeek = null;
 
     if (film) {
+      const loopOnly = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+
       /* The clip is 2.3MB. Left on preload="auto" it downloads before the
          visitor has scrolled anywhere, which on a phone is 2.3MB of their
          data spent on a section they may never reach. Fetch it only as the
@@ -294,27 +296,38 @@
         film.load();
       }, { rootMargin: '120% 0px' }).observe(film);
 
-      /* Scrubbing a video from scroll is a desktop technique. On a phone
-         the decoder cannot keep up with touch-momentum scrolling and the
-         picture lurches between keyframes, so the clip simply loops there
-         instead — same footage, read as a moving image rather than a
-         scrubbable one. */
-      const loopOnly = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+      const revealFilm = () => film.classList.add('is-ready');
+      film.addEventListener('loadeddata', revealFilm, { once: true });
+      film.addEventListener('playing', revealFilm, { once: true });
 
       film.addEventListener('loadedmetadata', () => {
         filmSpan = Math.max(0, film.duration - FILM_IN);
-        film.currentTime = FILM_IN;
         if (loopOnly) {
-          film.loop = true;
-          // Keep the skipped opening out of the loop.
+          /* Mobile reads the film like a GIF: it plays continuously instead
+             of being forced through lots of tiny scroll seeks. Loop only the
+             useful part of the clip, skipping its empty opening frames. */
+          film.loop = false;
+          film.autoplay = true;
+          film.muted = true;
+          film.defaultMuted = true;
+          film.setAttribute('autoplay', '');
+          film.setAttribute('playsinline', '');
+          film.setAttribute('webkit-playsinline', '');
+
+          const restartLoop = () => {
+            try { film.currentTime = FILM_IN; } catch { /* metadata can race on iOS */ }
+            const playing = film.play();
+            if (playing?.catch) playing.catch(() => { /* first gesture retries below */ });
+          };
+
           film.addEventListener('timeupdate', () => {
-            if (film.currentTime < FILM_IN - .05) film.currentTime = FILM_IN;
+            if (film.duration && film.currentTime >= film.duration - .08) restartLoop();
           });
-          const go = film.play();
-          if (go && go.catch) go.catch(() => { /* blocked until a gesture */ });
-        }
+          film.addEventListener('ended', restartLoop);
+          restartLoop();
+        } else film.currentTime = FILM_IN;
       }, { once: true });
-      film.addEventListener('seeked', () => film.classList.add('is-ready'), { once: true });
+      film.addEventListener('seeked', revealFilm, { once: true });
 
       /* iOS will not paint a frame from a video that has never played, so a
          seek alone leaves the element blank. One muted play/pause on the
