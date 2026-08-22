@@ -1120,14 +1120,17 @@ body.is-touring { overflow: hidden; }
 
 /* Swept type — a diagonal gradient is clipped to the glyphs and its
    position is dragged across the block as it rises, so a sentence
-   resolves from amber through grey into ink, mid-word rather than
-   word by word. Guarded: without background-clip the text must stay
-   visible, so the transparent fill is only applied where it works. */
+   resolves from dim into full ink, mid-word rather than word by word.
+   Guarded: without background-clip the text must stay visible, so the
+   transparent fill is only applied where it works. */
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .sweep {
-    --sweep-ink: var(--clay);
-    --sweep-mid: var(--hair);
-    --sweep-far: var(--amber);
+    /* Resolves into the brightest ink, out of a dimmed version of the
+       same colour. The tail used to be amber, which now fights the
+       accent rather than reading as unresolved text. */
+    --sweep-ink: var(--ink-strong);
+    --sweep-mid: var(--muted-2);
+    --sweep-far: var(--muted-3);
     background-image: linear-gradient(101deg,
       var(--sweep-ink) 0%,
       var(--sweep-ink) 28%,
@@ -1142,10 +1145,9 @@ body.is-touring { overflow: hidden; }
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
-  /* Body copy resolves into ink; headings into clay. */
   .sweep--body { --sweep-ink: var(--ink); --sweep-mid: var(--muted); }
   /* Emphasis holds the accent instead of resolving. */
-  .sweep b, .sweep strong { -webkit-text-fill-color: var(--amber); color: var(--amber); }
+  .sweep b, .sweep strong { -webkit-text-fill-color: var(--violet); color: var(--violet); }
 }
 
 /* Blurred rise — a block arrives out of focus and settles as it crosses
@@ -1358,12 +1360,11 @@ body.is-touring { overflow: hidden; }
 }
 .hero__reveal-line {
   max-width: 24ch;
-  color: #fdfaf5;
+  color: #fff;
   font-size: clamp(1.5rem, 3.4vw, 3rem);
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -.02em;
-  text-shadow: 0 2px 30px rgba(12, 10, 8, .6);
 }
 
 /* The brand carries the same pill as the nav once the page is scrolled,
@@ -1556,11 +1557,13 @@ body.is-touring { overflow: hidden; }
   --plate-2:      rgba(255, 255, 255, .06);
   --plate-solid:  #111113;
 
-  --ink:          #d6d2cf;
+  /* Pure white, not an off-white. On a true-black ground a warm grey
+     reads as dulled rather than soft, so the steps run down from #fff. */
+  --ink:          #ffffff;
   --ink-strong:   #ffffff;
-  --muted:        rgba(214, 210, 207, .70);
-  --muted-2:      rgba(214, 210, 207, .50);
-  --muted-3:      rgba(214, 210, 207, .35);
+  --muted:        rgba(255, 255, 255, .78);
+  --muted-2:      rgba(255, 255, 255, .60);
+  --muted-3:      rgba(255, 255, 255, .42);
 
   --violet:       #a78bfa;
   --violet-lift:  #c4b5fd;
@@ -1569,9 +1572,9 @@ body.is-touring { overflow: hidden; }
   --amber-lift:   #ffd60a;
   --amber-tint:   rgba(255, 159, 10, .18);
 
-  --clay:         #d6d2cf;
+  --clay:         #ffffff;
   --clay-strong:  #ffffff;
-  --cool:         rgba(214, 210, 207, .50);
+  --cool:         rgba(255, 255, 255, .62);
 
   --hair:         rgba(255, 255, 255, .12);
   --hair-soft:    rgba(255, 255, 255, .07);
