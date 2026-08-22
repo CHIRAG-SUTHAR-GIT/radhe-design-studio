@@ -58,7 +58,10 @@
     if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
     if (themeButton) themeButton.setAttribute('aria-label',
       `Switch to ${theme === 'dark' ? 'light' : 'dark'} colour scheme`);
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#16130f' : '#ececec');
+    // This paints the browser's own chrome on a phone. Left warm, the bar
+    // above and below the page reads as an orange-black next to a pure
+    // black document.
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
   };
 
   paintTheme(root.getAttribute('data-theme') || 'light');
@@ -291,9 +294,25 @@
         film.load();
       }, { rootMargin: '120% 0px' }).observe(film);
 
+      /* Scrubbing a video from scroll is a desktop technique. On a phone
+         the decoder cannot keep up with touch-momentum scrolling and the
+         picture lurches between keyframes, so the clip simply loops there
+         instead — same footage, read as a moving image rather than a
+         scrubbable one. */
+      const loopOnly = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+
       film.addEventListener('loadedmetadata', () => {
         filmSpan = Math.max(0, film.duration - FILM_IN);
         film.currentTime = FILM_IN;
+        if (loopOnly) {
+          film.loop = true;
+          // Keep the skipped opening out of the loop.
+          film.addEventListener('timeupdate', () => {
+            if (film.currentTime < FILM_IN - .05) film.currentTime = FILM_IN;
+          });
+          const go = film.play();
+          if (go && go.catch) go.catch(() => { /* blocked until a gesture */ });
+        }
       }, { once: true });
       film.addEventListener('seeked', () => film.classList.add('is-ready'), { once: true });
 
@@ -302,7 +321,8 @@
          first gesture is enough to wake the decoder. */
       const nudge = () => {
         const go = film.play();
-        if (go && go.then) go.then(() => film.pause()).catch(() => {});
+        if (loopOnly) { if (go && go.catch) go.catch(() => {}); }
+        else if (go && go.then) go.then(() => film.pause()).catch(() => {});
         else film.pause();
         removeEventListener('pointerdown', nudge);
         removeEventListener('touchstart', nudge);
@@ -324,6 +344,7 @@
         try { film.currentTime = t; } catch { seeking = false; }
       };
       filmSeek = (p) => {
+        if (loopOnly) return;              // it is playing, not scrubbing
         want = FILM_IN + Math.min(1, Math.max(0, p)) * filmSpan;
         pump();
       };
@@ -387,36 +408,48 @@
 
   /* ── Horizontal project rail ───────────────────────────────────── */
   const rail = $('#rail');
-  if (rail && motion) {
+  if (rail) {
     const track = $('.rail__track', rail);
     const bar = $('.rail__bar i', rail);
     const figOut = $('[data-rail-fig]', rail);
-    const items = $$('.rail__item', track);
+    const totalOut = $('[data-rail-total]', rail);
+    const allItems = $$('.rail__item', track);
+    const requested = new URLSearchParams(location.search).get('filter');
+    const validFilter = allItems.some((item) => item.dataset.cat === requested);
+
+    allItems.forEach((item) => {
+      item.classList.toggle('is-out', validFilter && item.dataset.cat !== requested);
+    });
+
+    const items = allItems.filter((item) => !item.classList.contains('is-out'));
+    if (totalOut) totalOut.textContent = String(items.length).padStart(2, '0');
     const distance = () => Math.max(0, track.scrollWidth - innerWidth + 32);
 
-    gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: rail,
-        start: 'top top',
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: .6,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (bar) bar.style.width = `${Math.max(4, self.progress * 100)}%`;
-          if (figOut) {
-            const index = Math.min(items.length, Math.floor(self.progress * items.length) + 1);
-            figOut.textContent = String(index).padStart(2, '0');
+    if (motion && distance() > 0) {
+      gsap.to(track, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: rail,
+          start: 'top top',
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: .6,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (bar) bar.style.width = `${Math.max(4, self.progress * 100)}%`;
+            if (figOut) {
+              const index = Math.min(items.length, Math.floor(self.progress * items.length) + 1);
+              figOut.textContent = String(index).padStart(2, '0');
+            }
           }
         }
-      }
-    });
-  } else if (rail) {
-    // Fall back to a normal swipeable strip.
-    const track = $('.rail__track', rail);
-    if (track) { track.style.overflowX = 'auto'; rail.style.overflow = 'visible'; }
+      });
+    } else if (track) {
+      // Fall back to a normal swipeable strip.
+      track.style.overflowX = 'auto';
+      rail.style.overflow = 'visible';
+    }
   }
 
   /* ── Quiet reveals for everything else ─────────────────────────── */
@@ -507,6 +540,7 @@
       });
       apply(chip.dataset.filter);
     }));
+
   }
 
   /* ── Scroll stack ────────────────────────────────────────────────
