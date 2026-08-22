@@ -245,13 +245,13 @@
 
       gsap.fromTo(card, { opacity: 0, y: 26, filter: 'blur(7px)' }, {
         opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out',
-        delay: (index % 4) * .07,
+        delay: (index % 3) * .07,
         scrollTrigger: {
           trigger: card,
           start: 'top 92%',
           once: true,
           onEnter: () => {
-            ink(gsap.timeline({ delay: .2 + (index % 4) * .07 }).timeScale(1.6),
+            ink(gsap.timeline({ delay: .2 + (index % 3) * .07 }).timeScale(1.6),
               null, card, { duration: .7, stagger: .06 });
           }
         }
@@ -534,7 +534,6 @@
     paint();
   };
 
-  carousel('.svc__grid', '.svc__nav', '.svc__card', '[data-svc-prev]', '[data-svc-next]');
   carousel('.proc__track', '.proc__nav', '.proc__card', '[data-proc-prev]', '[data-proc-next]');
 
   /* ── Accordion ─────────────────────────────────────────────────── */
