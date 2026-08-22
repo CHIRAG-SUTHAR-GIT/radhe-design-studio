@@ -47,13 +47,13 @@
   .tag > i::before, .tag > i::after { display: none; }
 
   /* ── The panel itself ─────────────────────────────────────────── */
-  .folio, .statement, .facts, .svc, .proc, .cta {
+  .folio, .statement, .facts, .svc, .proc, .cta, .map {
     margin: var(--panel-gap) var(--panel-x);
     padding: clamp(2.4rem, 8vw, 3.2rem) clamp(1.15rem, 4.6vw, 1.6rem);
     border-radius: var(--panel-r);
     overflow: hidden;
   }
-  .folio, .statement, .facts { background: var(--sheet-warm); }
+  .folio, .statement, .facts, .map { background: var(--sheet-warm); }
 
   /* The process panel gets pinned, and a pin sizes the element to its
      spacer while leaving the horizontal margin in place — the panel came
@@ -98,9 +98,9 @@
      gradient-filled pseudo-element and the middle is masked out, leaving
      exactly the 1px edge — which follows the rounded corner properly,
      unlike a border-image. */
-  .folio, .statement, .facts, .svc, .proc, .cta { position: relative; }
+  .folio, .statement, .facts, .svc, .proc, .cta, .map { position: relative; }
   .folio::before, .statement::before, .facts::before,
-  .svc::before, .proc::before, .cta::before {
+  .svc::before, .proc::before, .cta::before, .map::before {
     content: '';
     position: absolute;
     z-index: 4;
@@ -132,7 +132,7 @@
   .svc > *, .cta > * { position: relative; z-index: 1; }
 
   /* ── Type: centred and larger, as the reference sets it ───────── */
-  .folio__head, .facts__head, .svc__head, .cta {
+  .folio__head, .facts__head, .svc__head, .map__head, .cta {
     text-align: center;
     justify-items: center;
   }
@@ -305,4 +305,15 @@
   .proc__ticker { display: none; }
   .proc__stage { max-width: min(100%, 38vh); }
   .proc__num { font-size: 2.6rem; }
+}
+
+
+/* On a phone the pill is near-black. That reads on paper panels in light
+   mode, but in dark mode the panels are near-black too and the button
+   disappeared into them — it was only findable by its text. Dark mode
+   flips the pill instead, which also matches the lacquer panels. */
+@media (max-width: 900px) {
+  [data-theme='dark'] .btn { background: #ffffff; color: #0a0a0c; }
+  [data-theme='dark'] .btn__arrow { border-color: rgba(10, 10, 12, .35); color: #0a0a0c; }
+  [data-theme='dark'] .btn:hover .btn__arrow { background: #0a0a0c; color: #ffffff; border-color: #0a0a0c; }
 }
