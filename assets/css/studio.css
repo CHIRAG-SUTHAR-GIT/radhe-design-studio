@@ -2195,3 +2195,53 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
   .portfolio-category__half img,
   .portfolio-category__label { transition: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE — type colour only
+   Two changes, and only in dark mode: the white is a true #ffffff carrying
+   no shadow, and every accent that is *type* is a real gold rather than an
+   orange or a violet.
+
+   Gold is #e3c05b: hue 45°, where the previous accents sat at 36° (orange)
+   and 258° (violet). It holds 10.6:1 on the card surface and 12:1 on the
+   black ground, so it clears AA at any size it is used.
+
+   Scope is deliberate. Only rules whose sole job is to colour text are
+   listed. Accents that paint a border, a pill, a focus ring, a badge or an
+   SVG fill keep the palette they had — nothing outside type moves, and
+   light mode is untouched.
+   ═══════════════════════════════════════════════════════════════════════ */
+[data-theme='dark'] {
+  --gold: #e3c05b;
+}
+
+/* The white the display type is set in: no shadow, no warm cast, no
+   softening — the brightest white there is. */
+[data-theme='dark'] :is(h1, h2, h3, h4, .proc__title, .svc__name, .folio__name,
+  .facts__name, .statement__text, .cta h2, .page-title, .project__title,
+  .acc__title, .scene__name, .note h3) {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+/* Accent type — gold, not orange, not violet. */
+[data-theme='dark'] :is(.tag, .annot--amber, .drawer a span, .hero__studio,
+  .folio__no, .folio__arrow, .svc__no, .proc__kicker, .proc__ticker li.is-on span,
+  .cta p b, .credentials div:first-child dd, .prose p b, .prose h4,
+  .rail__progress .annot b, .project__sub, .scene__cta, .chip.is-on span,
+  .facts__fig, .acc__no, .stack__no, .statement-stat__figure,
+  .proc__fig, .proc__scale, .services__fig, .dim__label,
+  .seq__title em, .prog__title em, .display em, .lux-display em) {
+  color: var(--gold);
+}
+[data-theme='dark'] .acc__head:hover .acc__title { color: var(--gold); }
+
+/* The scroll-swept type resolves out of gold into that same pure white. */
+[data-theme='dark'] .sweep {
+  --sweep-ink: #ffffff;
+  --sweep-far: var(--gold);
+}
+[data-theme='dark'] :is(.sweep b, .sweep strong) {
+  -webkit-text-fill-color: var(--gold);
+  color: var(--gold);
+}
