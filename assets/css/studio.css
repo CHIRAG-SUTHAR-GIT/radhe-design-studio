@@ -74,7 +74,15 @@ body {
   background: var(--sheet);
   color: var(--ink);
   font: 400 16px/1.6 var(--sans);
+  /* `hidden` on an axis makes the body a scroll container, and a scroll
+     container breaks position:fixed pinning — ScrollTrigger's document
+     coordinates stop matching where things actually render, which put the
+     enquiry block 1849px away from where the page said it was and left it
+     blank. `clip` suppresses the same overflow without becoming a
+     scroller. The first line stays as a fallback for browsers that do not
+     know `clip`. */
   overflow-x: hidden;
+  overflow-x: clip;
   transition: background .6s var(--ease), color .6s var(--ease);
 }
 

@@ -66,7 +66,12 @@
   .svc::before, .proc::before, .cta::before, .map::before,
   .svc::after, .cta::after { display: none; }
 
-  .page > section + section { border-top: 1px solid var(--hair); }
+  /* A pinned section is wrapped in a spacer div, so `section + section`
+     silently stops matching it and its neighbour. Ruling the top of each
+     section instead survives the wrapper. */
+  .page > section:not(.hero),
+  .page > .pin-spacer + section,
+  .page > .pin-spacer > section { border-top: 1px solid var(--hair); }
 
   /* ── Drafting furniture, back on ──────────────────────────────── */
   .folio__index .dim,

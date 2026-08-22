@@ -15,7 +15,13 @@
   const hasGSAP = Boolean(window.gsap && window.ScrollTrigger);
   const motion = hasGSAP && !reduced;
 
-  if (motion) gsap.registerPlugin(ScrollTrigger);
+  if (motion) {
+    gsap.registerPlugin(ScrollTrigger);
+    /* A phone changes innerHeight every time its address bar hides. Left
+       alone, ScrollTrigger treats each of those as a resize and refreshes,
+       which recomputes every pin mid-scroll and throws the page around. */
+    ScrollTrigger.config({ ignoreMobileResize: true });
+  }
 
   /* ── Ink helpers ───────────────────────────────────────────────────
      Every line drawing on the site is animated the same way: measure each
@@ -295,15 +301,33 @@
     }
   }
 
-  /* ── Quiet reveals for everything else ─────────────────────────── */
-  if (motion) {
-    $$('[data-reveal], .prose > *, .project__figures figure, .credentials, .contact__grid > *, .svc__intro > *, .svc__ref > *, .folio__head > *, .folio__foot > *')
-      .forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, y: 20 }, {
-          opacity: 1, y: 0, duration: .8, ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 92%', once: true }
-        });
+  const revealed = new WeakSet();
+  const observe = (els, play) => {
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (revealed.has(entry.target)) return;
+        /* Reveal when it comes into view — or immediately if it is already
+           above the viewport, which happens on a deep link or a fast flick
+           that carries the reader straight past it. Without that second
+           case an element scrolled past unseen would stay hidden until the
+           reader happened to scroll back up to it. */
+        const passed = entry.boundingClientRect.bottom <= 0;
+        if (!entry.isIntersecting && !passed) return;
+        revealed.add(entry.target);
+        play(entry.target, passed);
+        io.unobserve(entry.target);
       });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
+    els.forEach((el) => io.observe(el));
+  };
+
+  /* ── Quiet reveals for everything else ───────────────────────────
+     Same observer, same reason. */
+  if (motion) {
+    const quiet = $$('[data-reveal], .prose > *, .project__figures figure, .credentials, .contact__grid > *, .svc__intro > *, .svc__ref > *, .folio__head > *, .folio__foot > *');
+    gsap.set(quiet, { opacity: 0, y: 20 });
+    observe(quiet, (el, passed) => gsap.to(el, { opacity: 1, y: 0, duration: passed ? 0 : .8, ease: 'power2.out' }));
   }
 
   /* ── Swept type ────────────────────────────────────────────────────
@@ -332,23 +356,30 @@
     swept.forEach((el) => { el.style.backgroundPosition = '0% 0'; });
   }
 
-  /* ── Blurred rise ──────────────────────────────────────────────────
-     Blur is the expensive part, so it is scrubbed over a short band and
-     dropped entirely on the smallest screens, where it costs the most
-     and reads the least. */
+  /* ── Reveals ───────────────────────────────────────────────────────
+     These are driven by IntersectionObserver, not by ScrollTrigger.
+
+     ScrollTrigger keeps its own model of the scroll position, and a pin
+     rewrites the document underneath it — a 1986px spacer appears where
+     the process section was. Reveals created below that pin ended up
+     measuring against offsets that no longer existed: the enquiry button
+     reported progress 0, and therefore opacity 0, while the page was
+     scrolled 2500px past it. A blank block showing only its label.
+
+     An observer asks the browser one question — is this on screen — and
+     the browser answers from real layout. It cannot be desynced by a pin,
+     an address bar, or a late image. */
   const risers = $$('[data-rise]');
   if (risers.length && motion) {
     const soft = innerWidth > 520 ? 9 : 6;
-    risers.forEach((el) => {
-      gsap.fromTo(el,
-        { y: 34, opacity: 0, filter: `blur(${soft}px)` },
-        {
-          y: 0, opacity: 1, filter: 'blur(0px)',
-          ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 64%', scrub: .5 },
-          onComplete() { el.style.willChange = 'auto'; }
-        });
-    });
+    gsap.set(risers, { y: 34, opacity: 0, filter: `blur(${soft}px)` });
+    observe(risers, (el, passed) => gsap.to(el, {
+      y: 0, opacity: 1, filter: 'blur(0px)',
+      duration: passed ? 0 : .9, ease: 'power2.out',
+      onComplete() { el.style.willChange = 'auto'; }
+    }));
+  } else {
+    risers.forEach((el) => { el.style.opacity = '1'; el.style.filter = 'none'; });
   }
 
   /* ── Index filter chips ────────────────────────────────────────────
@@ -640,5 +671,7 @@
   if (motion) {
     requestAnimationFrame(() => ScrollTrigger.refresh());
     if (document.fonts?.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+    // Late-arriving images change the height of everything below them.
+    addEventListener('load', () => ScrollTrigger.refresh());
   }
 })();
