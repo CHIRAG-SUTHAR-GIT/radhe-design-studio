@@ -58,7 +58,10 @@
     if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
     if (themeButton) themeButton.setAttribute('aria-label',
       `Switch to ${theme === 'dark' ? 'light' : 'dark'} colour scheme`);
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#16130f' : '#ececec');
+    // This paints the browser's own chrome on a phone. Left warm, the bar
+    // above and below the page reads as an orange-black next to a pure
+    // black document.
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
   };
 
   paintTheme(root.getAttribute('data-theme') || 'light');
@@ -82,7 +85,14 @@
 
   /* ── Header ────────────────────────────────────────────────────── */
   const nav = $('#nav');
-  const onScrollChrome = () => nav?.classList.toggle('is-solid', scrollY > 40);
+  const head = $('.head');
+  const onScrollChrome = () => {
+    const past = scrollY > 40;
+    nav?.classList.toggle('is-solid', past);
+    // The brand needs the same backing as the nav, or page content scrolls
+    // visibly through the wordmark.
+    head?.classList.toggle('is-solid', past);
+  };
   addEventListener('scroll', onScrollChrome, { passive: true });
   onScrollChrome();
 
@@ -98,6 +108,7 @@
   addEventListener('keydown', (e) => { if (e.key === 'Escape') setDrawer(false); });
 
   /* ── Hero plate slideshow ──────────────────────────────────────── */
+  let heroSlides = null;
   const figure = $('#hero-figure');
   if (figure) {
     const plates = $$('img', figure);
@@ -133,6 +144,54 @@
     }, { threshold: .1 }).observe(figure);
 
     if (!playing && toggle) toggle.innerHTML = '&#9654;';
+
+    /* Held while the hero is scrubbing open — a crossfade part-way through
+       the pin leaves two rooms visible through each other. */
+    heroSlides = {
+      hold: () => clearInterval(timer),
+      resume: () => start()
+    };
+  }
+
+  /* ── Cinematic hero: pinned, scrubbed ────────────────────────────
+     The reference holds its hero for ~2520px at scrub .8 while the image
+     opens out to fill the viewport. Same idea here: the plate grows to
+     full bleed, the wordmark scales past the viewer and a line rides in.
+
+     Width and height are tweened in explicit pixels rather than CSS
+     units — GSAP cannot interpolate a min() expression, and a silent
+     no-op there is what stops the pin from ever being built. */
+  const heroPin = $('.hero');
+  const heroFigure = $('.hero__figure');
+  if (heroPin && heroFigure && motion && innerWidth > 860) {
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: heroPin,
+        start: 'top top',
+        end: '+=2100',
+        pin: true,
+        pinSpacing: true,
+        scrub: .8,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (!heroSlides) return;
+          self.progress > .02 ? heroSlides.hold() : heroSlides.resume();
+        }
+      }
+    })
+      .fromTo(heroFigure,
+        { width: () => heroFigure.getBoundingClientRect().width,
+          height: () => heroFigure.getBoundingClientRect().height },
+        { width: () => innerWidth,
+          height: () => innerHeight,
+          ease: 'power2.inOut' }, 0)
+      .to($('.hero__mark'), { scale: 1.7, opacity: 0, ease: 'power1.in' }, 0)
+      .to($('.hero__aside'), { opacity: 0, y: 40, ease: 'none' }, 0)
+      .to($('.hero__caption'), { opacity: 0, ease: 'none' }, 0)
+      .to($('.hero__scroll'), { opacity: 0, ease: 'none' }, 0)
+      .fromTo($('.hero__reveal'),
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, ease: 'power2.out' }, .55);
   }
 
   /* ── Selected work ─────────────────────────────────────────────────
@@ -204,12 +263,105 @@
   const pin = $('#process-pin');
   if (pin) {
     const panels = $$('.proc__panel', pin);
-    const diagrams = $$('.proc__diagram', pin);
     const ticks = $$('.proc__rail i', pin);
     const railFill = $('.proc__rail-fill', pin);
     const ticker = $$('.proc__ticker li', pin);
     const figOut = $('[data-step-fig]', pin);
     let active = -1;
+
+    /* ── Scroll-scrubbed film ──────────────────────────────────────
+       The drawn diagrams are replaced by one clip whose playhead is tied
+       to scroll position. The first two seconds are skipped, so the pin
+       maps onto the part of the clip that actually shows something.
+
+       Seeking needs HTTP Range on the host. GitHub Pages serves it; note
+       that python -m http.server does not, and without it currentTime
+       silently refuses to move. */
+    const film = $('#proc-film');
+    const FILM_IN = 2;
+    let filmSpan = 0;
+    let filmSeek = null;
+
+    if (film) {
+      const loopOnly = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+
+      /* The clip is 2.3MB. Left on preload="auto" it downloads before the
+         visitor has scrolled anywhere, which on a phone is 2.3MB of their
+         data spent on a section they may never reach. Fetch it only as the
+         section comes within a screen or so. */
+      new IntersectionObserver((entries, obs) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        obs.disconnect();
+        film.preload = 'auto';
+        film.load();
+      }, { rootMargin: '120% 0px' }).observe(film);
+
+      const revealFilm = () => film.classList.add('is-ready');
+      film.addEventListener('loadeddata', revealFilm, { once: true });
+      film.addEventListener('playing', revealFilm, { once: true });
+
+      film.addEventListener('loadedmetadata', () => {
+        filmSpan = Math.max(0, film.duration - FILM_IN);
+        if (loopOnly) {
+          /* Mobile reads the film like a GIF: it plays continuously instead
+             of being forced through lots of tiny scroll seeks. Loop only the
+             useful part of the clip, skipping its empty opening frames. */
+          film.loop = false;
+          film.autoplay = true;
+          film.muted = true;
+          film.defaultMuted = true;
+          film.setAttribute('autoplay', '');
+          film.setAttribute('playsinline', '');
+          film.setAttribute('webkit-playsinline', '');
+
+          const restartLoop = () => {
+            try { film.currentTime = FILM_IN; } catch { /* metadata can race on iOS */ }
+            const playing = film.play();
+            if (playing?.catch) playing.catch(() => { /* first gesture retries below */ });
+          };
+
+          film.addEventListener('timeupdate', () => {
+            if (film.duration && film.currentTime >= film.duration - .08) restartLoop();
+          });
+          film.addEventListener('ended', restartLoop);
+          restartLoop();
+        } else film.currentTime = FILM_IN;
+      }, { once: true });
+      film.addEventListener('seeked', revealFilm, { once: true });
+
+      /* iOS will not paint a frame from a video that has never played, so a
+         seek alone leaves the element blank. One muted play/pause on the
+         first gesture is enough to wake the decoder. */
+      const nudge = () => {
+        const go = film.play();
+        if (loopOnly) { if (go && go.catch) go.catch(() => {}); }
+        else if (go && go.then) go.then(() => film.pause()).catch(() => {});
+        else film.pause();
+        removeEventListener('pointerdown', nudge);
+        removeEventListener('touchstart', nudge);
+      };
+      addEventListener('pointerdown', nudge, { once: true, passive: true });
+      addEventListener('touchstart', nudge, { once: true, passive: true });
+
+      // One seek in flight at a time; the newest target wins. Seeking on
+      // every scroll event floods the decoder and the picture stutters.
+      let seeking = false;
+      let want = -1;
+      const pump = () => {
+        if (seeking || want < 0 || !filmSpan) return;
+        seeking = true;
+        const t = want;
+        want = -1;
+        const done = () => { film.removeEventListener('seeked', done); seeking = false; pump(); };
+        film.addEventListener('seeked', done);
+        try { film.currentTime = t; } catch { seeking = false; }
+      };
+      filmSeek = (p) => {
+        if (loopOnly) return;              // it is playing, not scrubbing
+        want = FILM_IN + Math.min(1, Math.max(0, p)) * filmSpan;
+        pump();
+      };
+    }
 
     const activate = (index) => {
       if (index === active) return;
@@ -234,18 +386,6 @@
         }
       });
 
-      // Each photograph settles out of a slight push-in and a little blur,
-      // which is how the reference lands its imagery.
-      diagrams.forEach((diagram, i) => {
-        if (!motion) return;
-        if (i === index) {
-          gsap.fromTo(diagram,
-            { opacity: 0, scale: 1.07, filter: 'blur(7px)' },
-            { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .85, ease: 'power2.out', overwrite: true });
-        } else {
-          gsap.to(diagram, { opacity: 0, scale: 1.02, duration: .45, ease: 'power2.in', overwrite: true });
-        }
-      });
 
       ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
       ticker.forEach((item, i) => item.classList.toggle('is-on', i === index));
@@ -255,8 +395,6 @@
     if (motion) {
       // Stack the panels so only the active one is visible.
       gsap.set(panels, { position: 'absolute', inset: 0, opacity: 0 });
-      gsap.set(diagrams, { opacity: 0 });
-
       activate(0);
 
       ScrollTrigger.create({
@@ -269,6 +407,7 @@
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (railFill) railFill.style.height = `${self.progress * 100}%`;
+          if (filmSeek) filmSeek(self.progress);
           activate(Math.min(panels.length - 1,
             Math.floor(self.progress * panels.length * .999)));
         }
@@ -277,42 +416,53 @@
       // Without motion the stages simply stack as a readable list.
       pin.classList.add('is-static');
       panels.forEach((panel) => panel.setAttribute('aria-hidden', 'false'));
-      diagrams.forEach((d, i) => { if (i) d.style.display = 'none'; });
     }
   }
 
   /* ── Horizontal project rail ───────────────────────────────────── */
   const rail = $('#rail');
-  if (rail && motion) {
+  if (rail) {
     const track = $('.rail__track', rail);
     const bar = $('.rail__bar i', rail);
     const figOut = $('[data-rail-fig]', rail);
-    const items = $$('.rail__item', track);
+    const totalOut = $('[data-rail-total]', rail);
+    const allItems = $$('.rail__item', track);
+    const requested = new URLSearchParams(location.search).get('filter');
+    const validFilter = allItems.some((item) => item.dataset.cat === requested);
+
+    allItems.forEach((item) => {
+      item.classList.toggle('is-out', validFilter && item.dataset.cat !== requested);
+    });
+
+    const items = allItems.filter((item) => !item.classList.contains('is-out'));
+    if (totalOut) totalOut.textContent = String(items.length).padStart(2, '0');
     const distance = () => Math.max(0, track.scrollWidth - innerWidth + 32);
 
-    gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: rail,
-        start: 'top top',
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: .6,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (bar) bar.style.width = `${Math.max(4, self.progress * 100)}%`;
-          if (figOut) {
-            const index = Math.min(items.length, Math.floor(self.progress * items.length) + 1);
-            figOut.textContent = String(index).padStart(2, '0');
+    if (motion && distance() > 0) {
+      gsap.to(track, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: rail,
+          start: 'top top',
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: .6,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (bar) bar.style.width = `${Math.max(4, self.progress * 100)}%`;
+            if (figOut) {
+              const index = Math.min(items.length, Math.floor(self.progress * items.length) + 1);
+              figOut.textContent = String(index).padStart(2, '0');
+            }
           }
         }
-      }
-    });
-  } else if (rail) {
-    // Fall back to a normal swipeable strip.
-    const track = $('.rail__track', rail);
-    if (track) { track.style.overflowX = 'auto'; rail.style.overflow = 'visible'; }
+      });
+    } else if (track) {
+      // Fall back to a normal swipeable strip.
+      track.style.overflowX = 'auto';
+      rail.style.overflow = 'visible';
+    }
   }
 
   /* ── Quiet reveals for everything else ─────────────────────────── */
@@ -403,7 +553,39 @@
       });
       apply(chip.dataset.filter);
     }));
+
   }
+
+  /* ── Scroll stack ────────────────────────────────────────────────
+     Sticky positioning does the stacking on its own; this only scales
+     each card down as the cards above settle onto it, so the pile reads
+     as depth rather than a flat overlap. */
+  $$('.stack').forEach((stack) => {
+    const slots = $$('.stack__slot', stack);
+    const cards = slots.map((slot) => $('.stack__card', slot));
+    if (!cards.length || !motion) return;
+
+    const total = cards.length;
+    ScrollTrigger.create({
+      trigger: stack,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: .5,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        cards.forEach((card, i) => {
+          // A card only starts shrinking once the scroll has reached it.
+          const from = i / total;
+          const t = Math.min(1, Math.max(0, (self.progress - from) / (1 - from || 1)));
+          // The reference's own factor. The cap is inert at four cards and
+          // only bites if more are added, where a flat factor compounds
+          // into an unreadably small first card.
+          const depth = Math.min((total - i) * 0.04, 0.18);
+          gsap.set(card, { scale: 1 - t * depth });
+        });
+      }
+    });
+  });
 
   /* ── Counting figures ──────────────────────────────────────────── */
   const counters = $$('[data-count]');
@@ -415,12 +597,18 @@
         v: target,
         duration: 1.4,
         ease: 'power2.out',
-        onUpdate() { node.textContent = String(Math.round(box.v)).padStart(2, '0'); },
+        onUpdate() {
+          // data-suffix carries the +, % or unit so the figure can still count.
+          node.textContent = String(Math.round(box.v)).padStart(2, '0')
+            + (node.dataset.suffix || '');
+        },
         scrollTrigger: { trigger: node, start: 'top 90%', once: true }
       });
     });
   } else {
-    counters.forEach((n) => { n.textContent = String(n.dataset.count).padStart(2, '0'); });
+    counters.forEach((n) => {
+      n.textContent = String(n.dataset.count).padStart(2, '0') + (n.dataset.suffix || '');
+    });
   }
 
   /* ── Services carousel ─────────────────────────────────────────────

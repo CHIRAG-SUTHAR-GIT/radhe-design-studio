@@ -1,0 +1,13 @@
+{
+  "_note": "One entry per client. The slug is the share link: tour.html?c=<slug>. Anyone with the link can view that client's scenes and nothing else.",
+  "clients": {
+    "demo": {
+      "name": "Radhe Studio — Demo",
+      "created": "2026-08-21",
+      "scenes": [
+        { "title": "Kitchen",     "file": "kitchen",     "thumb": "assets/pano/kitchen-thumb.webp" },
+        { "title": "Living Area", "file": "living-area", "thumb": "assets/pano/living-area-thumb.webp" }
+      ]
+    }
+  }
+}
