@@ -634,23 +634,29 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   background: var(--plate);
 }
 .proc__grid-lines {
-  position: absolute; inset: 0;
+  position: absolute; z-index: 2; inset: 0;
+  opacity: .3;
   background-image:
     linear-gradient(var(--hair-faint) 1px, transparent 1px),
     linear-gradient(90deg, var(--hair-faint) 1px, transparent 1px);
   background-size: 12.5% 12.5%;
 }
-.proc__diagram { position: absolute; inset: 0; display: grid; place-items: center; }
-.proc__diagram svg { width: 62%; height: auto; overflow: visible; }
-/* No non-scaling-stroke here: it makes the browser measure dash patterns in
-   screen pixels while getTotalLength() reports user units, so a draw-on
-   animation would only ever cover part of each path. */
-.proc__diagram :is(path, line, circle, rect, polyline) {
-  fill: none; stroke: var(--amber); stroke-width: 1.5;
-  stroke-linecap: square; stroke-linejoin: miter;
+.proc__diagram {
+  position: absolute; inset: 0;
+  margin: 0;
+  overflow: hidden;
+  will-change: transform, filter, opacity;
 }
-.proc__fig { position: absolute; left: 1rem; top: .8rem; }
-.proc__scale { position: absolute; right: 1rem; top: .8rem; }
+.proc__diagram picture { display: block; width: 100%; height: 100%; }
+.proc__diagram img { width: 100%; height: 100%; object-fit: cover; }
+/* A soft floor under the corner labels so they stay legible on any photograph. */
+.proc__diagram::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .38) 0%, transparent 26%, transparent 74%, rgba(0, 0, 0, .24) 100%);
+}
+.proc__fig { position: absolute; z-index: 3; left: 1rem; top: .8rem; color: rgba(255,255,255,.86); }
+.proc__scale { position: absolute; z-index: 3; right: 1rem; top: .8rem; color: rgba(255,255,255,.86); }
 
 .proc__col { display: grid; align-content: center; gap: clamp(1.2rem, 2.4vw, 1.9rem); }
 .proc__stack { position: relative; min-height: clamp(19rem, 32vh, 25rem); }
