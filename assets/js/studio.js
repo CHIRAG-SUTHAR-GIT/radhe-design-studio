@@ -506,22 +506,35 @@
     });
   });
 
-  /* ── Counting figures ──────────────────────────────────────────── */
+  /* ── Counting figures ────────────────────────────────────────────
+     The count runs again every time the block is entered — scrolling down
+     onto it or back up onto it — rather than once per page load. Leaving
+     the block resets the figure so the next entry has somewhere to count
+     from. */
   const counters = $$('[data-count]');
   if (counters.length && motion) {
     counters.forEach((node) => {
       const target = Number(node.dataset.count) || 0;
+      const suffix = node.dataset.suffix || '';
       const box = { v: 0 };
-      gsap.to(box, {
+      const print = (n) => { node.textContent = String(n).padStart(2, '0') + suffix; };
+
+      const run = gsap.fromTo(box, { v: 0 }, {
         v: target,
         duration: 1.4,
         ease: 'power2.out',
-        onUpdate() {
-          // data-suffix carries the +, % or unit so the figure can still count.
-          node.textContent = String(Math.round(box.v)).padStart(2, '0')
-            + (node.dataset.suffix || '');
-        },
-        scrollTrigger: { trigger: node, start: 'top 90%', once: true }
+        paused: true,
+        onUpdate() { print(Math.round(box.v)); }
+      });
+
+      ScrollTrigger.create({
+        trigger: node,
+        start: 'top 92%',
+        end: 'bottom 8%',
+        onEnter: () => run.restart(),
+        onEnterBack: () => run.restart(),
+        onLeave: () => print(0),
+        onLeaveBack: () => print(0)
       });
     });
   } else {

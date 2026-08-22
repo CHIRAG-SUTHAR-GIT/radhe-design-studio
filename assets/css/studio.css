@@ -592,7 +592,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   align-self: center;
   display: flex;
   align-items: baseline;
-  gap: .45rem;
+  flex-wrap: wrap;
+  gap: 0 .45rem;
   color: var(--violet);
 }
 .statement-stat__figure strong {
@@ -607,6 +608,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .statement-stat:nth-child(3) strong { animation-delay: -1.6s; }
 .statement-stat:nth-child(4) strong { animation-delay: -2.4s; }
 .statement-stat__figure i {
+  /* A long unit — "satisfied" against a four-character figure — cannot sit
+     beside the number in half a phone screen, so it takes its own line
+     rather than being clipped by the cell. */
+  min-width: 0;
   color: var(--muted);
   font-size: .55rem;
   font-style: normal;
