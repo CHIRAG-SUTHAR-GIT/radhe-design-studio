@@ -2045,6 +2045,56 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
   .folio-category-stage .portfolio-category--workplace { grid-column: 2; grid-row: 2; }
   .folio-category-stage .portfolio-category--detail { grid-column: 1; grid-row: 3; }
   .folio-category-stage .portfolio-category--tour { grid-column: 2; grid-row: 3; }
+
+  /* Phones have no hover: keep category names visible and horizontal. */
+  .folio-category-stage .portfolio-category::after {
+    content: attr(data-mobile-label) '  ↗';
+    position: absolute;
+    z-index: 6;
+    left: .55rem;
+    bottom: .55rem;
+    max-width: calc(100% - 1.1rem);
+    padding: .42rem .55rem;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 2px;
+    background: rgba(6, 6, 6, .82);
+    color: #fff;
+    font-family: var(--sans);
+    font-size: clamp(.5rem, 2vw, .62rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    pointer-events: none;
+  }
+  .folio-category-stage .portfolio-category__label { display: none; }
+  .folio-category-stage .portfolio-category:hover,
+  .folio-category-stage .portfolio-category:focus-visible { transform: none; }
+  .folio-category-stage .split-vertical:hover .portfolio-category__half--first,
+  .folio-category-stage .split-vertical:hover .portfolio-category__half--second,
+  .folio-category-stage .split-horizontal:hover .portfolio-category__half--first,
+  .folio-category-stage .split-horizontal:hover .portfolio-category__half--second,
+  .folio-category-stage .split-vertical:focus-visible .portfolio-category__half--first,
+  .folio-category-stage .split-vertical:focus-visible .portfolio-category__half--second,
+  .folio-category-stage .split-horizontal:focus-visible .portfolio-category__half--first,
+  .folio-category-stage .split-horizontal:focus-visible .portfolio-category__half--second { transform: none; }
+  .folio-category-stage .portfolio-category:hover .portfolio-category__half img {
+    filter: grayscale(1) contrast(1.06);
+    transform: none;
+  }
+  .folio-category-stage .portfolio-category:active .portfolio-category__half img,
+  .folio-category-stage .portfolio-category:focus-visible .portfolio-category__half img {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.015);
+  }
+  .portfolio-category--residence img { object-position: 50% 50%; }
+  .portfolio-category--hospitality img { object-position: 56% 50%; }
+  .portfolio-category--workplace img { object-position: 52% 50%; }
+  .portfolio-category--detail img { object-position: 45% 55%; }
+  .portfolio-category--tour img { object-position: 50% 50%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
