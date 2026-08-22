@@ -270,45 +270,75 @@
     const diagrams = $$('.proc__diagram', pin);
     let active = -1;
 
-    const activate = (index) => {
-      if (index === active) return;
-      const forward = index > active;
-      active = index;
+    /* Painting the stage is separate from animating into it. `animate` is
+       false when the state simply has to be correct — entering the section,
+       or after a refresh — and true when a stage is genuinely changing.
 
+       The panel tweens are killed before the active one is set visible.
+       Without that, a fast reversal sets the panel to opacity 1 while its
+       own fade-out is still running, and the old tween carries on pulling
+       it back to 0: the photograph stays up while the note underneath it
+       never appears, which is what happens at the first and last stage,
+       where a reversal is most likely. */
+    const paint = (index, animate, forward) => {
       panels.forEach((panel, i) => {
         const on = i === index;
         panel.setAttribute('aria-hidden', String(!on));
         if (!motion) return;
+        const kids = $$(':scope > *, .proc__chips li', panel);
         if (on) {
-          gsap.set(panel, { pointerEvents: 'auto', opacity: 1, y: 0 });
-          // The note is re-typed line by line rather than faded as a block.
-          gsap.fromTo($$(':scope > *, .proc__chips li', panel),
-            { opacity: 0, y: forward ? 26 : -26 },
-            { opacity: 1, y: 0, duration: .5, stagger: .055, ease: 'power3.out', overwrite: true });
-        } else {
+          gsap.killTweensOf(panel);
+          gsap.set(panel, { opacity: 1, y: 0, pointerEvents: 'auto' });
+          if (animate) {
+            // The note is re-typed line by line rather than faded as a block.
+            gsap.fromTo(kids,
+              { opacity: 0, y: forward ? 26 : -26 },
+              { opacity: 1, y: 0, duration: .5, stagger: .055, ease: 'power3.out', overwrite: true });
+          } else {
+            gsap.killTweensOf(kids);
+            gsap.set(kids, { opacity: 1, y: 0 });
+          }
+        } else if (animate) {
           gsap.to(panel, {
             opacity: 0, y: forward ? -22 : 22,
             duration: .4, ease: 'power2.in', pointerEvents: 'none', overwrite: true
           });
+        } else {
+          gsap.killTweensOf(panel);
+          gsap.set(panel, { opacity: 0, pointerEvents: 'none' });
         }
       });
-
 
       // Each photograph settles out of a slight push-in and a little blur.
       diagrams.forEach((diagram, i) => {
         if (!motion) return;
         if (i === index) {
-          gsap.fromTo(diagram,
-            { opacity: 0, scale: 1.07, filter: 'blur(7px)' },
-            { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .85, ease: 'power2.out', overwrite: true });
-        } else {
+          if (animate) {
+            gsap.fromTo(diagram,
+              { opacity: 0, scale: 1.07, filter: 'blur(7px)' },
+              { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .85, ease: 'power2.out', overwrite: true });
+          } else {
+            gsap.killTweensOf(diagram);
+            gsap.set(diagram, { opacity: 1, scale: 1, filter: 'blur(0px)' });
+          }
+        } else if (animate) {
           gsap.to(diagram, { opacity: 0, scale: 1.02, duration: .45, ease: 'power2.in', overwrite: true });
+        } else {
+          gsap.killTweensOf(diagram);
+          gsap.set(diagram, { opacity: 0 });
         }
       });
 
       ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
       ticker.forEach((item, i) => item.classList.toggle('is-on', i === index));
       if (figOut) figOut.textContent = String(index + 1).padStart(2, '0');
+    };
+
+    const activate = (index) => {
+      if (index === active) return;
+      const forward = index > active;
+      active = index;
+      paint(index, true, forward);
     };
 
     if (motion) {
@@ -329,7 +359,13 @@
           if (railFill) railFill.style.height = `${self.progress * 100}%`;
             activate(Math.min(panels.length - 1,
             Math.floor(self.progress * panels.length * .999)));
-        }
+        },
+        /* Entering the section must leave the current stage correct
+           whatever happened on the way in — a stranded child tween can
+           otherwise leave the note invisible under a visible photograph. */
+        onEnter: () => paint(active, false),
+        onEnterBack: () => paint(active, false),
+        onRefresh: () => paint(active, false)
       });
     } else {
       // Without motion the stages simply stack as a readable list.
