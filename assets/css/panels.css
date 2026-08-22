@@ -1,265 +1,267 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   RADHE DESIGN STUDIO — mobile panel skin
-   The drafting sheet is a desktop idea: it needs width for its margins,
-   dimension strings and title blocks. On a phone the page is rebuilt as a
-   stack of near-full-bleed rounded panels alternating warm paper and dark
-   lacquer, which is how the reference carries the same kind of content.
-   Colour comes from the site palette, not from this file: the warm paper
-   and maroon panels it used to carry are what made dark mode read as an
-   orange-black on a phone while the desktop was pure black.
-   Desktop is untouched — everything here lives inside one media query.
+   RADHE DESIGN STUDIO — mobile sheet
+   The phone reads as one continuous drawing sheet, not a stack of cards.
+   Sections are divided by a rule rather than boxed; photographs run to
+   both screen edges; corners are square; the drafting furniture — corner
+   ticks, dimension strings, crop marks, the title block — is back, and
+   the accent is clay and amber rather than violet.
+
+   Desktop is untouched: everything here lives inside media queries.
    ═══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
 
+  /* ── Palette ──────────────────────────────────────────────────────
+     The accent is redefined at the token rather than rule by rule, so
+     every violet on the page turns warm in one place. Clay and amber
+     have material referents — terracotta, sandstone, brass — which is
+     what the practice actually builds in. */
   :root, [data-theme='light'] {
-    --sheet:      #ffffff;
-    --sheet-2:    #f6f6f7;
-    --sheet-warm: #f4f3f1;
-    --plate:      rgba(10, 10, 12, .04);
-    --panel-r:    26px;
-    --panel-x:    13px;
-    --panel-gap:  10px;
+    --sheet:        #ececec;
+    --sheet-2:      #e4e1da;
+    --sheet-warm:   #ececec;
+    --plate:        #e0dcd4;
+    --plate-2:      #d9d4cb;
+    --violet:       #8a5f47;
+    --violet-lift:  #6f4a37;
+    --violet-tint:  rgba(138, 95, 71, .10);
+    --amber:        #b5761d;
+    --amber-lift:   #94600f;
+    --clay:         #171717;
+    --clay-strong:  #000000;
+    --hair:         rgba(138, 95, 71, .34);
+    --hair-soft:    rgba(138, 95, 71, .17);
+    --hair-faint:   rgba(138, 95, 71, .08);
+    --page-x:       20px;
   }
   [data-theme='dark'] {
-    --sheet:      #000000;
-    --sheet-2:    #08080a;
-    --sheet-warm: #0a0a0c;
-    --plate:      rgba(255, 255, 255, .05);
+    --sheet:        #111111;
+    --sheet-2:      #171717;
+    --sheet-warm:   #111111;
+    --plate:        #1c1c1c;
+    --plate-2:      #232323;
+    --violet:       #d2a781;
+    --violet-lift:  #e8c6a3;
+    --violet-tint:  rgba(210, 167, 129, .10);
+    --amber:        #d98e36;
+    --amber-lift:   #ebae63;
+    --clay:         #ffffff;
+    --clay-strong:  #ffffff;
+    --hair:         rgba(210, 167, 129, .30);
+    --hair-soft:    rgba(210, 167, 129, .15);
+    --hair-faint:   rgba(210, 167, 129, .07);
   }
 
-  /* The construction grid and the drawing furniture are desktop
-     apparatus; at this width they only add noise. */
-  .blueprint,
-  .statement__dim,
+  /* ── The sheet ────────────────────────────────────────────────────
+     No panel: no margin, no radius, no fill, no gradient edge. Sections
+     are separated by a rule, which is how a drawing sheet divides. */
+  .folio, .statement, .facts, .svc, .proc, .cta, .map {
+    margin: 0;
+    padding: clamp(3rem, 11vw, 4.5rem) var(--page-x);
+    border-radius: 0;
+    background: none;
+    overflow: visible;
+    width: auto;
+  }
+  .folio::before, .statement::before, .facts::before,
+  .svc::before, .proc::before, .cta::before, .map::before,
+  .svc::after, .cta::after { display: none; }
+
+  .page > section + section { border-top: 1px solid var(--hair); }
+
+  /* ── Drafting furniture, back on ──────────────────────────────── */
   .folio__index .dim,
-  .hero__scroll,
-  .titleblock { display: none; }
+  .titleblock { display: revert; }
+  .blueprint, .hero__scroll { display: none; }
 
   .tag {
-    padding: 0;
-    color: var(--muted);
-    font-size: .68rem;
+    position: relative;
+    display: inline-block;
+    padding: .35rem .7rem;
+    color: var(--violet);
+    font-size: .62rem;
     font-weight: 600;
-    letter-spacing: .18em;
+    letter-spacing: .2em;
     text-transform: uppercase;
   }
   .tag::before, .tag::after,
-  .tag > i::before, .tag > i::after { display: none; }
-
-  /* ── The panel itself ─────────────────────────────────────────── */
-  .folio, .statement, .facts, .svc, .proc, .cta, .map {
-    margin: var(--panel-gap) var(--panel-x);
-    padding: clamp(2.4rem, 8vw, 3.2rem) clamp(1.15rem, 4.6vw, 1.6rem);
-    border-radius: var(--panel-r);
-    overflow: hidden;
+  .tag > i::before, .tag > i::after {
+    content: ''; position: absolute;
+    width: 8px; height: 8px;
+    border: 0 solid var(--amber);
+    display: block;
   }
-  .folio, .statement, .facts, .map { background: var(--sheet-warm); }
+  .tag::before { left: 0; top: 0; border-top-width: 1px; border-left-width: 1px; }
+  .tag::after  { right: 0; top: 0; border-top-width: 1px; border-right-width: 1px; }
+  .tag > i::before { left: 0; bottom: 0; border-bottom-width: 1px; border-left-width: 1px; }
+  .tag > i::after  { right: 0; bottom: 0; border-bottom-width: 1px; border-right-width: 1px; }
 
-  /* The process panel gets pinned, and a pin sizes the element to its
-     spacer while leaving the horizontal margin in place — the panel came
-     out a full viewport wide with a 13px offset, so its right edge hung
-     past the screen while every other panel sat at the correct 674.
-     An explicit width with auto margins measures the same either way. */
-  .proc {
-    width: calc(100% - var(--panel-x) * 2);
-    margin-inline: auto;
-  }
-
-  /* Sticky cards need a visible overflow chain. Keeping the mobile facts
-     panel clipped prevents its scroll stack from behaving like desktop. */
-  .facts { overflow: visible; }
-
-  /* Dark lacquer panels, with the tokens re-scoped so every component
-     inside them inverts without being restyled one by one. */
-  .svc, .proc, .cta {
-    --ink:        #ffffff;
-    /* The swept type resolves into --ink-strong, not --ink, so a lacquer
-       panel that re-scoped everything except this one token rendered its
-       heading in near-black on near-black while the page was in light
-       mode. */
-    --ink-strong: #ffffff;
-    --clay:       #ffffff;
-    --clay-strong:#ffffff;
-    --muted:      rgba(255, 255, 255, .72);
-    --hair:       rgba(255, 255, 255, .16);
-    --hair-soft:  rgba(255, 255, 255, .09);
-    --hair-faint: rgba(255, 255, 255, .05);
-    --plate:      rgba(255, 255, 255, .05);
-    background: linear-gradient(176deg, #101014 0%, #16161c 46%, #1d1a28 100%);
-    color: var(--ink);
-  }
-  [data-theme='dark'] .svc,
-  [data-theme='dark'] .proc,
-  [data-theme='dark'] .cta { background: linear-gradient(176deg, #060608 0%, #0d0d12 46%, #14121d 100%); }
-
-  /* The same hairline that sits above and below the wordmark in the footer,
-     carried around every panel: 1px, violet into gold, at the same opacity.
-     A gradient cannot be a border directly, so the panel is drawn with a
-     gradient-filled pseudo-element and the middle is masked out, leaving
-     exactly the 1px edge — which follows the rounded corner properly,
-     unlike a border-image. */
-  .folio, .statement, .facts, .svc, .proc, .cta, .map { position: relative; }
-  .folio::before, .statement::before, .facts::before,
-  .svc::before, .proc::before, .cta::before, .map::before {
-    content: '';
-    position: absolute;
-    z-index: 4;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--violet), var(--amber));
-    opacity: .8;
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    pointer-events: none;
-  }
-
-
-
-  /* A soft wash bleeding out of one corner, the reference's signature. */
-  .svc::after, .cta::after {
-    content: '';
-    position: absolute; z-index: 0;
-    left: -25%; bottom: -35%;
-    width: 88%; aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(167, 139, 250, .42), rgba(232, 121, 249, .16) 45%, transparent 70%);
-    filter: blur(28px);
-    pointer-events: none;
-  }
-  .svc > *, .cta > * { position: relative; z-index: 1; }
-
-  /* ── Type: centred and larger, as the reference sets it ───────── */
+  /* ── Type ─────────────────────────────────────────────────────── */
   .folio__head, .facts__head, .svc__head, .map__head, .cta {
-    text-align: center;
-    justify-items: center;
+    text-align: left;
+    justify-items: start;
   }
   .folio__head { grid-template-columns: 1fr; gap: 1rem; }
-  .folio__index { justify-items: center; gap: .8rem; }
+  .folio__index { justify-items: start; gap: 1.6rem; }
 
-  .svc__title, .facts__lead, .statement__text {
-    max-width: 22ch;
-    margin-inline: auto;
-    font-size: clamp(1.65rem, 7.4vw, 2.15rem);
+  .svc__title, .statement__text, .cta h2, .map__title, .proc__heading {
+    max-width: 17ch;
+    margin-inline: 0;
+    font-size: clamp(1.5rem, 6.8vw, 2rem);
     font-weight: 400;
-    line-height: 1.16;
-    letter-spacing: -.022em;
+    line-height: 1.15;
+    letter-spacing: -.028em;
   }
-  .statement__text { max-width: 20ch; }
-  .statement--stats {
-    min-height: clamp(23rem, 88vw, 29rem);
-    padding-block: clamp(2rem, 7vw, 2.8rem);
+  .statement__text { max-width: 20ch; font-weight: 300; line-height: 1.3; }
+  .svc__lead, .cta p, .map__address {
+    max-width: 36ch;
+    margin-inline: 0;
+    font-size: .92rem;
+    line-height: 1.68;
   }
-  .facts__lead { font-size: clamp(1.35rem, 5.8vw, 1.7rem); line-height: 1.24; }
-  .svc__lead, .cta p {
-    max-width: 34ch;
-    margin-inline: auto;
-    font-size: .95rem;
-    line-height: 1.62;
-  }
-  .cta h2 { font-size: clamp(1.7rem, 7.6vw, 2.2rem); max-width: 16ch; }
 
-  /* ── Pill actions ────────────────────────────────────────────── */
+  /* ── Actions: a ticked frame, not a pill ──────────────────────── */
   .btn {
-    justify-content: center;
-    gap: .8rem;
-    width: min(100%, 20rem);
-    margin-inline: auto;
-    padding: 1.15rem 1.6rem;
-    border-radius: 999px;
-    background: #0a0a0c;
-    color: #ffffff;
-    font-size: .78rem;
-    letter-spacing: .1em;
+    justify-content: flex-start;
+    width: auto;
+    margin-inline: 0;
+    padding: 1rem 1.3rem;
+    border: 1px solid var(--hair);
+    border-radius: 0;
+    background: none;
+    color: var(--violet);
+    font-size: .68rem;
+    letter-spacing: .18em;
   }
-  .btn .marks { display: none; }
+  .btn .marks { display: block; }
+  .btn .marks i { border-color: var(--amber); width: 12px; height: 12px; }
   .btn__arrow {
-    width: 24px; height: 24px;
-    background: transparent;
-    border-color: rgba(251, 247, 239, .4);
-    color: #ffffff;
+    width: 22px; height: 22px;
+    border-radius: 0;
+    background: none;
+    border-color: var(--hair);
+    color: var(--amber);
   }
-  .btn:hover .btn__arrow { background: #ffffff; color: #0a0a0c; border-color: #ffffff; }
+  .btn:hover .btn__arrow { background: none; color: var(--amber); border-color: var(--amber); }
 
-  /* ── Plates ──────────────────────────────────────────────────── */
-  .folio__grid { gap: 1.1rem; }
-  .folio__frame { border-radius: 18px; }
-  .folio__frame .marks { display: none; }
+  /* ── Plates: full bleed, square, black and white ──────────────────
+     The block keeps its structure and its parallax; only the frame
+     changes. Grayscale is deliberate — the work reads as a set rather
+     than as six differently-lit photographs. */
+  .folio { padding-inline: 0; }
+  .folio__head, .chips, .chips__empty, .folio__foot { padding-inline: var(--page-x); }
+  .folio__grid { gap: 1.6rem; }
+  .folio__frame { border-radius: 0; }
+  .folio__frame img { filter: grayscale(1) contrast(1.04); }
+  .folio__frame .marks { display: block; inset: 10px; }
+  .folio__frame .marks i { border-color: rgba(255, 255, 255, .75); width: 12px; height: 12px; }
   .folio__cap {
     grid-template-columns: auto minmax(0, 1fr) auto;
-    border-top: 0;
-    padding-top: .7rem;
-    margin-top: .55rem;
+    padding: .7rem var(--page-x) 0;
+    border-top: 1px solid var(--hair-soft);
+    margin-top: .7rem;
   }
-  .folio__badge { border-radius: 999px; background: rgba(251, 247, 239, .92); }
-  .folio__foot { border-top: 0; justify-content: center; }
-  .folio__foot .annot { display: none; }
+  .folio__badge {
+    border-radius: 0;
+    background: var(--sheet);
+    color: var(--amber);
+  }
+  .folio__foot { border-top: 0; justify-content: flex-start; }
+  .folio__foot .annot { display: block; }
 
-  .chips { justify-content: flex-start; padding-inline: 2px; }
-  .chip { border-radius: 999px; padding: .62rem 1rem; }
-  .chip.is-on { background: #0a0a0c; border-color: #0a0a0c; color: #ffffff; }
+  /* ── Portfolio: exactly black and white ───────────────────────────
+     The collage keeps its DNA untouched — the split reveal, the rotation,
+     the clipped corners, the label. Only the colour is held: hover
+     restored full colour, and on a phone :hover sticks after a tap, so a
+     tapped tile turned colour and stayed that way. It now stays
+     monochrome through the whole interaction. */
+  .portfolio-category:hover .portfolio-category__half img,
+  .portfolio-category:focus-visible .portfolio-category__half img,
+  .portfolio-category:active .portfolio-category__half img {
+    filter: grayscale(1) contrast(1.06);
+  }
+
+  /* Category chips — square, ticked when live. */
+  .chips { justify-content: flex-start; }
+  .chip {
+    border-radius: 0;
+    padding: .58rem .9rem;
+    border-color: var(--hair-soft);
+  }
+  .chip.is-on {
+    background: none;
+    border-color: var(--amber);
+    color: var(--violet);
+  }
   .chip.is-on span { color: var(--amber); }
-  .chip.is-on::before, .chip.is-on::after { display: none; }
+  .chip.is-on::before, .chip.is-on::after { display: block; }
 
-  /* ── Bento ───────────────────────────────────────────────────── */
-  .facts__grid { gap: .7rem; }
-  .facts__cell {
+  /* ── Floating figures: same behaviour, new frame ──────────────────
+     The float and the count are untouched; the cell loses its radius,
+     its fill and its violet wash and becomes a ruled cell instead. */
+  .facts__grid, .statement-stats { gap: 0; }
+  .facts__cell, .statement-stat {
     border: 0;
-    border-radius: 20px;
-    background: var(--plate);
-    padding: 1.5rem 1.35rem;
+    border-radius: 0;
+    background: none;
+    padding: 1.3rem 1rem 1.5rem 0;
     text-align: left;
   }
-  .facts__cell[data-tone='warm'] {
-    background:
-      radial-gradient(120% 90% at 85% 8%, rgba(167, 139, 250, .34), transparent 58%),
-      var(--plate);
-  }
+  /* A ruled 2x2: a line under each row and one between the columns, so it
+     reads as a schedule rather than as four tiles. */
+  .statement-stat { border-bottom: 1px solid var(--hair-soft); }
+  .statement-stat:nth-child(odd) { border-right: 1px solid var(--hair-soft); padding-right: 1rem; }
+  .statement-stat:nth-child(even) { padding-left: 1rem; }
+  /* The corner wash belonged to the filled tile. */
+  .statement-stat::after, .facts__cell::after { display: none; }
+  .facts__cell[data-tone='warm'] { background: none; }
   .facts__cell[data-tone='warm']::before { display: none; }
-  .facts__fig { font-size: clamp(2.4rem, 11vw, 3rem); }
+  .facts__fig, .statement-stat__figure { font-size: clamp(2.4rem, 11vw, 3rem); }
 
-  /* ── Services schedule ─────────────────────────────────────────
-     The services are ruled rows now, not filled tiles, so the panel skin
-     must not put its card back underneath them. */
+  /* ── Services: ruled rows ─────────────────────────────────────── */
   .svc__card {
     border: 0;
     border-top: 1px solid var(--hair-soft);
     border-radius: 0;
     background: none;
-    padding: .85rem 1.6rem .85rem 0;
+    padding: .95rem 1.6rem .95rem 0;
   }
   .svc__card:nth-child(3), .svc__card:nth-child(6) { border-bottom: 1px solid var(--hair-soft); }
   .svc__card .marks { display: none; }
-  .svc__arrow { border-radius: 50%; border-color: var(--hair); }
   .svc__ref { display: none; }
+  .svc__arrow { border-radius: 0; border-color: var(--hair); }
 
-  /* ── Process ─────────────────────────────────────────────────── */
-  /* The pin is one screen tall, so everything inside it has to fit inside
-     one screen: header offset, stage, note and ticker. Measured at 360x740
-     the old sizes ran 39px past the bottom, which clipped the ticker and
-     pushed the photograph up under the header. */
-  .proc__col { gap: 1rem; }
-  /* The stage is the thing worth looking at, so the section label gives up
-     its line to it — the kicker and the running index both already name
-     which stage you are on. */
-  .proc__col > .tag { display: none; }
-  /* Tallest note measures 203px; this clears it without leaving a hole. */
-  .proc__stack { min-height: 13.5rem; }
-  .proc__ticker { padding-top: .8rem; }
-  .proc__stage {
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .05);
-    max-width: min(100%, 30vh);
+  /* ── Process: note above, photograph under it, uncropped ──────────
+     The rail and its pin are unchanged. The photograph keeps its own
+     proportions rather than being cut to a fixed ratio, so a square
+     source stays square and a 5:4 source stays 5:4. */
+  .proc__card {
+    border: 1px solid var(--hair-soft);
+    border-radius: 0;
+    background: none;
+    padding: 1.3rem 1.2rem;
   }
-  .proc__stage .marks { display: none; }
-  .proc__grid-lines { opacity: .5; }
-  .proc__chips li { border-radius: 999px; }
+  .proc__no { color: var(--muted); }
+  .proc__chips li {
+    border-radius: 0;
+    border-color: var(--hair-soft);
+    color: var(--violet);
+  }
   .proc__chips li::before, .proc__chips li::after { display: none; }
+  .proc__shot {
+    margin-top: 1.1rem;
+    border-radius: 0;
+    background: none;
+  }
+  .proc__shot img {
+    aspect-ratio: auto;
+    height: auto;
+    object-fit: contain;
+  }
 
-  /* The header floats over panels of either colour, so it carries its
-     own scrim rather than relying on the page behind it. */
+  /* ── Location ─────────────────────────────────────────────────── */
+  .map__frame { border-radius: 0; border-color: var(--hair-soft); }
+
+  /* ── Header ───────────────────────────────────────────────────── */
   .head {
     background: linear-gradient(to bottom,
       color-mix(in srgb, var(--sheet) 94%, transparent) 0%,
@@ -272,48 +274,20 @@
     .head { background: var(--sheet); }
   }
 
-  /* On lacquer the pill inverts — a near-black pill on a near-black
-     panel reads as a hole rather than a control. */
-  .svc .btn, .proc .btn, .cta .btn { background: #ffffff; color: #0a0a0c; }
-  .svc .btn__arrow, .proc .btn__arrow, .cta .btn__arrow {
-    border-color: rgba(23, 16, 11, .35);
-    color: #0a0a0c;
+  /* ── Footer: the title block returns ──────────────────────────── */
+  .foot { padding-inline: var(--page-x); }
+  .foot__rule { opacity: .8; }
+  .titleblock {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: stretch;
+    border-top: 1px solid var(--hair);
+    padding-top: 0;
   }
-  .svc .btn:hover .btn__arrow,
-  .cta .btn:hover .btn__arrow { background: #0a0a0c; color: #ffffff; border-color: #0a0a0c; }
-
-  /* ── Footer sits on paper, not in a panel ────────────────────── */
-  .foot { padding-inline: calc(var(--panel-x) + .35rem); }
-  .foot__rule { opacity: .4; }
-}
-
-/* Short phones — and any phone once the browser's own chrome is showing —
-   leave the pinned stage almost no room. The note and its ticker are the
-   content that matters, so the photograph gives up the height. */
-@media (max-width: 900px) and (max-height: 800px) {
-  .proc__pin { gap: .8rem; }
-  .proc__stage { max-width: min(100%, 35vh); }
-  .proc__col { gap: .85rem; }
-  .proc__ticker { padding-top: .7rem; }
-}
-
-/* Very short viewports: there is not enough height for the stage, the note
-   and the running index all at once. The index goes — the number and
-   kicker above already say which stage you are on, and the rail still
-   tracks progress — rather than clipping the note itself. */
-@media (max-width: 900px) and (max-height: 680px) {
-  .proc__ticker { display: none; }
-  .proc__stage { max-width: min(100%, 38vh); }
-  .proc__num { font-size: 2.6rem; }
-}
-
-
-/* On a phone the pill is near-black. That reads on paper panels in light
-   mode, but in dark mode the panels are near-black too and the button
-   disappeared into them — it was only findable by its text. Dark mode
-   flips the pill instead, which also matches the lacquer panels. */
-@media (max-width: 900px) {
-  [data-theme='dark'] .btn { background: #ffffff; color: #0a0a0c; }
-  [data-theme='dark'] .btn__arrow { border-color: rgba(10, 10, 12, .35); color: #0a0a0c; }
-  [data-theme='dark'] .btn:hover .btn__arrow { background: #0a0a0c; color: #ffffff; border-color: #0a0a0c; }
+  .titleblock div {
+    padding: .8rem .5rem;
+    border-left: 0;
+    border-right: 1px solid var(--hair-soft);
+  }
+  .titleblock div:last-child { border-right: 0; }
 }
