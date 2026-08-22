@@ -267,101 +267,8 @@
     const railFill = $('.proc__rail-fill', pin);
     const ticker = $$('.proc__ticker li', pin);
     const figOut = $('[data-step-fig]', pin);
+    const diagrams = $$('.proc__diagram', pin);
     let active = -1;
-
-    /* ── Scroll-scrubbed film ──────────────────────────────────────
-       The drawn diagrams are replaced by one clip whose playhead is tied
-       to scroll position. The first two seconds are skipped, so the pin
-       maps onto the part of the clip that actually shows something.
-
-       Seeking needs HTTP Range on the host. GitHub Pages serves it; note
-       that python -m http.server does not, and without it currentTime
-       silently refuses to move. */
-    const film = $('#proc-film');
-    const FILM_IN = 2;
-    let filmSpan = 0;
-    let filmSeek = null;
-
-    if (film) {
-      const loopOnly = matchMedia('(max-width: 900px), (pointer: coarse)').matches;
-
-      /* The clip is 2.3MB. Left on preload="auto" it downloads before the
-         visitor has scrolled anywhere, which on a phone is 2.3MB of their
-         data spent on a section they may never reach. Fetch it only as the
-         section comes within a screen or so. */
-      new IntersectionObserver((entries, obs) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        obs.disconnect();
-        film.preload = 'auto';
-        film.load();
-      }, { rootMargin: '120% 0px' }).observe(film);
-
-      const revealFilm = () => film.classList.add('is-ready');
-      film.addEventListener('loadeddata', revealFilm, { once: true });
-      film.addEventListener('playing', revealFilm, { once: true });
-
-      film.addEventListener('loadedmetadata', () => {
-        filmSpan = Math.max(0, film.duration - FILM_IN);
-        if (loopOnly) {
-          /* Mobile reads the film like a GIF: it plays continuously instead
-             of being forced through lots of tiny scroll seeks. Loop only the
-             useful part of the clip, skipping its empty opening frames. */
-          film.loop = false;
-          film.autoplay = true;
-          film.muted = true;
-          film.defaultMuted = true;
-          film.setAttribute('autoplay', '');
-          film.setAttribute('playsinline', '');
-          film.setAttribute('webkit-playsinline', '');
-
-          const restartLoop = () => {
-            try { film.currentTime = FILM_IN; } catch { /* metadata can race on iOS */ }
-            const playing = film.play();
-            if (playing?.catch) playing.catch(() => { /* first gesture retries below */ });
-          };
-
-          film.addEventListener('timeupdate', () => {
-            if (film.duration && film.currentTime >= film.duration - .08) restartLoop();
-          });
-          film.addEventListener('ended', restartLoop);
-          restartLoop();
-        } else film.currentTime = FILM_IN;
-      }, { once: true });
-      film.addEventListener('seeked', revealFilm, { once: true });
-
-      /* iOS will not paint a frame from a video that has never played, so a
-         seek alone leaves the element blank. One muted play/pause on the
-         first gesture is enough to wake the decoder. */
-      const nudge = () => {
-        const go = film.play();
-        if (loopOnly) { if (go && go.catch) go.catch(() => {}); }
-        else if (go && go.then) go.then(() => film.pause()).catch(() => {});
-        else film.pause();
-        removeEventListener('pointerdown', nudge);
-        removeEventListener('touchstart', nudge);
-      };
-      addEventListener('pointerdown', nudge, { once: true, passive: true });
-      addEventListener('touchstart', nudge, { once: true, passive: true });
-
-      // One seek in flight at a time; the newest target wins. Seeking on
-      // every scroll event floods the decoder and the picture stutters.
-      let seeking = false;
-      let want = -1;
-      const pump = () => {
-        if (seeking || want < 0 || !filmSpan) return;
-        seeking = true;
-        const t = want;
-        want = -1;
-        const done = () => { film.removeEventListener('seeked', done); seeking = false; pump(); };
-        film.addEventListener('seeked', done);
-        try { film.currentTime = t; } catch { seeking = false; }
-      };
-      filmSeek = (p) => {
-        if (loopOnly) return;              // it is playing, not scrubbing
-        want = FILM_IN + Math.min(1, Math.max(0, p)) * filmSpan;
-        pump();
-      };
-    }
 
     const activate = (index) => {
       if (index === active) return;
@@ -387,6 +294,18 @@
       });
 
 
+      // Each photograph settles out of a slight push-in and a little blur.
+      diagrams.forEach((diagram, i) => {
+        if (!motion) return;
+        if (i === index) {
+          gsap.fromTo(diagram,
+            { opacity: 0, scale: 1.07, filter: 'blur(7px)' },
+            { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .85, ease: 'power2.out', overwrite: true });
+        } else {
+          gsap.to(diagram, { opacity: 0, scale: 1.02, duration: .45, ease: 'power2.in', overwrite: true });
+        }
+      });
+
       ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
       ticker.forEach((item, i) => item.classList.toggle('is-on', i === index));
       if (figOut) figOut.textContent = String(index + 1).padStart(2, '0');
@@ -395,6 +314,7 @@
     if (motion) {
       // Stack the panels so only the active one is visible.
       gsap.set(panels, { position: 'absolute', inset: 0, opacity: 0 });
+      gsap.set(diagrams, { opacity: 0 });
       activate(0);
 
       ScrollTrigger.create({
@@ -407,8 +327,7 @@
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (railFill) railFill.style.height = `${self.progress * 100}%`;
-          if (filmSeek) filmSeek(self.progress);
-          activate(Math.min(panels.length - 1,
+            activate(Math.min(panels.length - 1,
             Math.floor(self.progress * panels.length * .999)));
         }
       });

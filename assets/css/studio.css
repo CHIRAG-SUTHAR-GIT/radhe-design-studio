@@ -1552,19 +1552,22 @@ body.is-touring { overflow: hidden; }
 }
 
 
-/* ── Process film ────────────────────────────────────────────────────
-   A scroll-scrubbed clip in place of the drawn diagrams. object-fit
+/* ── Process photographs ─────────────────────────────────────────────
+   One photograph per stage, cross-faded as the pin advances. object-fit
    covers the stage so the frame stays square whatever the source is. */
-.proc__film {
+.proc__diagram {
   position: absolute; z-index: 0; inset: 0;
+  margin: 0;
+  overflow: hidden;
+  background: var(--plate);
+  will-change: transform, filter, opacity;
+}
+.proc__diagram picture { display: block; width: 100%; height: 100%; }
+.proc__diagram img {
   width: 100%; height: 100%;
   object-fit: cover;
-  background: var(--plate);
   filter: var(--img-filter);
-  opacity: 0;
-  transition: opacity .6s var(--ease);
 }
-.proc__film.is-ready { opacity: 1; }
 
 /* A scrim under the top labels: the clip is bright and the annotations
    are small, so they need something to sit on. */
@@ -1715,7 +1718,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 .stack__card:hover { border-color: var(--hair); }
 
 .proc__stage, .services__stage, .seq__pin, .prog__pin { overflow: hidden; }
-.proc__film, .seq__canvas { border-radius: var(--r-card); }
+.proc__diagram, .seq__canvas { border-radius: var(--r-card); }
 
 /* ── Buttons: a filled violet pill and an outlined pill ────────────── */
 .btn, .lux-link, .form__send, .prog__pill, .chips button, .theme-toggle {
