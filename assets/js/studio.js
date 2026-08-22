@@ -606,7 +606,9 @@
       });
     });
   } else {
-    counters.forEach((n) => { n.textContent = String(n.dataset.count).padStart(2, '0'); });
+    counters.forEach((n) => {
+      n.textContent = String(n.dataset.count).padStart(2, '0') + (n.dataset.suffix || '');
+    });
   }
 
   /* ── Services carousel ─────────────────────────────────────────────

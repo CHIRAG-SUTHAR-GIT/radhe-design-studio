@@ -549,6 +549,94 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   letter-spacing: -.01em;
 }
 
+/* The studio figures replace the long manifesto and the separate facts deck. */
+.statement--stats {
+  display: grid;
+  align-content: center;
+  min-height: min(72vh, 46rem);
+  text-align: left;
+}
+.statement-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  border-top: 1px solid var(--hair-soft);
+  border-left: 1px solid var(--hair-soft);
+}
+.statement-stat {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: clamp(11rem, 16vw, 14rem);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  border-right: 1px solid var(--hair-soft);
+  border-bottom: 1px solid var(--hair-soft);
+  background: var(--plate);
+  overflow: hidden;
+}
+.statement-stat::after {
+  content: '';
+  position: absolute;
+  width: 7rem;
+  aspect-ratio: 1;
+  right: -3.5rem;
+  bottom: -4rem;
+  border-radius: 50%;
+  background: var(--violet);
+  opacity: .08;
+  filter: blur(8px);
+}
+.statement-stat__no { font-size: .58rem; letter-spacing: .18em; }
+.statement-stat__figure {
+  align-self: center;
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+  color: var(--violet);
+}
+.statement-stat__figure strong {
+  display: inline-block;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.055em;
+  animation: statement-stat-float 4s ease-in-out infinite;
+}
+.statement-stat:nth-child(2) strong { animation-delay: -.8s; }
+.statement-stat:nth-child(3) strong { animation-delay: -1.6s; }
+.statement-stat:nth-child(4) strong { animation-delay: -2.4s; }
+.statement-stat__figure i {
+  color: var(--muted);
+  font-size: .55rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.statement-stat h2 {
+  position: relative;
+  z-index: 1;
+  max-width: 14ch;
+  color: var(--clay-strong);
+  font-size: clamp(.88rem, 1.25vw, 1.05rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+@keyframes statement-stat-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@media (max-width: 760px) {
+  .statement-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .statement-stat { min-height: clamp(8rem, 35vw, 10rem); padding: .85rem; }
+  .statement-stat__figure { gap: .3rem; }
+  .statement-stat__figure strong { font-size: clamp(2rem, 10vw, 3rem); }
+  .statement-stat__figure i { font-size: .47rem; letter-spacing: .1em; }
+  .statement-stat h2 { font-size: .75rem; }
+}
+
 /* ═══ HOME · Our services ══════════════════════════════════════════
    A schedule of what the studio takes on, drawn as a ruled table with a
    line glyph per trade. */

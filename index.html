@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geologica:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="assets/vendor/lenis.css">
-  <link rel="stylesheet" href="assets/css/studio.css?v=20260822-mobile-motion">
-  <link rel="stylesheet" href="assets/css/panels.css?v=20260822-mobile-motion">
+  <link rel="stylesheet" href="assets/css/studio.css?v=20260822-statement-stats">
+  <link rel="stylesheet" href="assets/css/panels.css?v=20260822-statement-stats">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -275,78 +275,29 @@
       </div>
     </section>
 
-    <!-- ══ 03 · Statement ══ -->
-    <section class="statement" id="statement" aria-label="About the studio">
-      <div class="statement__head">
-        <span class="tag">about us<i></i></span>
-        <div class="statement__dim">
-          <div class="dim"><span class="dim__label annot">14.33 M — ESC 1:50</span></div>
-          <span class="statement__coords annot">X 6.818 Y 5.092 · PLOT 88%</span>
-        </div>
-      </div>
-      <p class="statement__text sweep" id="statement-text">Since 2013, <b>Radhe Studio</b> has brought together architects, makers and engineers who read a site before they draw a line.</p>
-    </section>
-
-    <!-- ══ 04 · Studio at a glance ══ -->
-    <section class="facts" aria-label="The studio at a glance">
-      <div class="facts__head">
-        <span class="tag">at a glance<i></i></span>
-        <p class="facts__lead sweep sweep--body">Thirteen years of built work, measured the only
-          way that matters — projects delivered, clients who came back, and work that stands up.</p>
-      </div>
-
-      <div class="stack" id="facts-stack">
-        <div class="stack__slot" style="--i:0">
-          <article class="stack__card">
-            <div class="stack__row">
-              <span class="stack__badge"><b>13</b><i>years</i></span>
-              <div>
-                <span class="stack__no">01 / 04</span>
-                <h3 class="stack__title">In practice since 2013</h3>
-                <p class="stack__text">Founded in Ahmedabad by Radhe Suthar, working on new homes, extensions, refurbishments and interiors across western India.</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="stack__slot" style="--i:1">
-          <article class="stack__card">
-            <div class="stack__row">
-              <span class="stack__badge"><b>50+</b><i>projects</i></span>
-              <div>
-                <span class="stack__no">02 / 04</span>
-                <h3 class="stack__title">Delivered end to end</h3>
-                <p class="stack__text">Homes, workplaces and stays taken from the first survey through to handover and styling.</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="stack__slot" style="--i:2">
-          <article class="stack__card">
-            <div class="stack__row">
-              <span class="stack__badge"><b>100%</b><i>satisfied</i></span>
-              <div>
-                <span class="stack__no">03 / 04</span>
-                <h3 class="stack__title">Clients who recommend us</h3>
-                <p class="stack__text">Every project so far has come back to us or sent someone who did.</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="stack__slot" style="--i:3">
-          <article class="stack__card">
-            <div class="stack__row">
-              <span class="stack__badge"><b>09</b><i>awards</i></span>
-              <div>
-                <span class="stack__no">04 / 04</span>
-                <h3 class="stack__title">Design recognitions</h3>
-                <p class="stack__text">Regional and national citations for residential and hospitality projects.</p>
-              </div>
-            </div>
-          </article>
-        </div>
+    <!-- ══ 03 · Studio figures ══ -->
+    <section class="statement statement--stats" id="statement" aria-label="Studio figures">
+      <div class="statement-stats">
+        <article class="statement-stat">
+          <span class="statement-stat__no annot">01 / 04</span>
+          <p class="statement-stat__figure"><strong data-count="13">13</strong><i>years</i></p>
+          <h2>In practice since 2013</h2>
+        </article>
+        <article class="statement-stat">
+          <span class="statement-stat__no annot">02 / 04</span>
+          <p class="statement-stat__figure"><strong data-count="50" data-suffix="+">50+</strong><i>projects</i></p>
+          <h2>Delivered end to end</h2>
+        </article>
+        <article class="statement-stat">
+          <span class="statement-stat__no annot">03 / 04</span>
+          <p class="statement-stat__figure"><strong data-count="100" data-suffix="%">100%</strong><i>satisfied</i></p>
+          <h2>Clients recommend us</h2>
+        </article>
+        <article class="statement-stat">
+          <span class="statement-stat__no annot">04 / 04</span>
+          <p class="statement-stat__figure"><strong data-count="1">01</strong><i>studio</i></p>
+          <h2>One dedicated team</h2>
+        </article>
       </div>
     </section>
 
@@ -539,6 +490,6 @@
   <script src="assets/vendor/lenis.min.js"></script>
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/js/studio.js?v=20260822-mobile-motion"></script>
+  <script src="assets/js/studio.js?v=20260822-statement-stats"></script>
 </body>
 </html>
