@@ -238,6 +238,12 @@
   .svc__ref { display: none; }
   .svc__arrow { border-radius: 0; border-color: var(--hair); }
 
+  /* A pinned section must fill the screen it is pinned to. At 808px in an
+     844px viewport the 36px below it showed the empty pin spacer, and on
+     a narrower, taller phone that gap grows to hundreds of pixels — which
+     is the blank space under the stages that kept being reported. */
+  .proc { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+
   /* ── Process: note above, photograph under it, uncropped ──────────
      The rail and its pin are unchanged. The photograph keeps its own
      proportions rather than being cut to a fixed ratio, so a square

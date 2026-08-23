@@ -554,22 +554,30 @@
     paint();
   };
 
-  /* ── Process: a swipeable rail ──────────────────────────────────────
-     This was a pinned horizontal scroll, where vertical scrolling drove
-     the stages sideways. It is removed deliberately.
-
-     Pinning inserts a spacer as tall as the section plus the whole scroll
-     distance — 1986px holding an 808px section, so 1178px of it is empty
-     by construction — and holds the section in it with fixed positioning.
-     On this page that stopped holding: the empty part of the spacer
-     showed as blank screens, ScrollTrigger's coordinates drifted 2500px
-     from where things actually rendered, and a flick could land you back
-     at the start of the section.
-
-     A rail you swipe has none of those parts. The stages still travel
-     horizontally, the arrows still work, and nothing about the page's
-     vertical scrolling is taken over. */
-  carousel('.proc__track', '.proc__nav', '.proc__card', '[data-proc-prev]', '[data-proc-next]');
+  /* ── Process: a pinned horizontal rail ─────────────────────────── */
+  const procTrack = $('.proc__track');
+  const procNav = $('.proc__nav');
+  if (procTrack && motion) {
+    gsap.matchMedia().add('(max-width: 760px)', () => {
+      const cards = $$('.proc__card', procTrack);
+      const bar = $('.svc__bar i', procNav);
+      procTrack.style.overflow = 'visible';
+      procTrack.style.scrollSnapType = 'none';
+      const distance = () => Math.max(0, procTrack.scrollWidth - procTrack.clientWidth);
+      const tween = gsap.to(procTrack, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#process', start: 'top top', end: () => `+=${distance()}`,
+          pin: '#process', pinSpacing: true, scrub: .6, invalidateOnRefresh: true,
+          onUpdate: (self) => { if (bar) { bar.style.width = `${100 / cards.length}%`;
+            bar.style.left = `${(100 / cards.length) * Math.min(cards.length - 1, Math.floor(self.progress * cards.length * .999))}%`; } }
+        }
+      });
+      return () => { procTrack.style.overflow = ''; procTrack.style.scrollSnapType = '';
+        gsap.set(procTrack, { clearProps: 'x' }); tween.scrollTrigger?.kill(); tween.kill(); };
+    });
+  }
 
   /* ── Accordion ─────────────────────────────────────────────────── */
   $$('.acc__head').forEach((head) => {
