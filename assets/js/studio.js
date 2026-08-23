@@ -200,6 +200,27 @@
         { opacity: 1, y: 0, ease: 'power2.out' }, .55);
   }
 
+  const revealed = new WeakSet();
+  const observe = (els, play) => {
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (revealed.has(entry.target)) return;
+        /* Reveal when it comes into view — or immediately if it is already
+           above the viewport, which happens on a deep link or a fast flick
+           that carries the reader straight past it. Without that second
+           case an element scrolled past unseen would stay hidden until the
+           reader happened to scroll back up to it. */
+        const passed = entry.boundingClientRect.bottom <= 0;
+        if (!entry.isIntersecting && !passed) return;
+        revealed.add(entry.target);
+        play(entry.target, passed);
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
+    els.forEach((el) => io.observe(el));
+  };
+
   /* ── Selected work ─────────────────────────────────────────────────
      The sheet stays rigid — nothing slides out of its column. Each plate
      is uncovered from the bottom edge like a sheet pulled off a drawing,
@@ -221,13 +242,11 @@
           scrollTrigger: { trigger: item, start: 'top 88%', once: true }
         });
 
-      gsap.fromTo(cap,
-        { opacity: 0, y: 12 },
-        {
-          opacity: 1, y: 0, duration: .7, ease: 'power2.out',
-          delay: .35 + (index % 3) * .08,
-          scrollTrigger: { trigger: item, start: 'top 88%', once: true }
-        });
+      gsap.set(cap, { opacity: 0, y: 12 });
+      observe([cap], (el, passed) => gsap.to(el, {
+        opacity: 1, y: 0, duration: passed ? 0 : .7, ease: 'power2.out',
+        delay: passed ? 0 : .35 + (index % 3) * .08
+      }));
 
       // The frame carries 18% more image than it shows, which is the room
       // this drift moves through.
@@ -244,14 +263,15 @@
      schedule reads as it is being written out. */
   const schedule = $('.svc__grid');
   if (schedule && motion) {
-    $$('.svc__card', schedule).forEach((card, index) => {
-      gsap.fromTo(card, { opacity: 0, y: 26, filter: 'blur(7px)' }, {
-        opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out',
-        // Three per column, so the delay runs down a column and the
-        // second follows the first.
-        delay: (index % 3) * .09 + Math.floor(index / 3) * .12,
-        scrollTrigger: { trigger: card, start: 'top 92%', once: true }
-      });
+    const cards = $$('.svc__card', schedule);
+    gsap.set(cards, { opacity: 0, y: 26, filter: 'blur(7px)' });
+    cards.forEach((card, index) => {
+      observe([card], (el, passed) => gsap.to(el, {
+        opacity: 1, y: 0, filter: 'blur(0px)',
+        duration: passed ? 0 : .8, ease: 'power3.out',
+        // Three per column, so the delay runs down a column.
+        delay: passed ? 0 : (index % 3) * .09 + Math.floor(index / 3) * .12
+      }));
     });
   }
 
@@ -300,27 +320,6 @@
       rail.style.overflow = 'visible';
     }
   }
-
-  const revealed = new WeakSet();
-  const observe = (els, play) => {
-    if (!els.length) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (revealed.has(entry.target)) return;
-        /* Reveal when it comes into view — or immediately if it is already
-           above the viewport, which happens on a deep link or a fast flick
-           that carries the reader straight past it. Without that second
-           case an element scrolled past unseen would stay hidden until the
-           reader happened to scroll back up to it. */
-        const passed = entry.boundingClientRect.bottom <= 0;
-        if (!entry.isIntersecting && !passed) return;
-        revealed.add(entry.target);
-        play(entry.target, passed);
-        io.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
-    els.forEach((el) => io.observe(el));
-  };
 
   /* ── Quiet reveals for everything else ───────────────────────────
      Same observer, same reason. */
