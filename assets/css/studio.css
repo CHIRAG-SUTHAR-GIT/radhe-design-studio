@@ -2305,6 +2305,15 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 }
 .proc__card:hover .proc__shot img { scale: 1.04; }
 
+/* On the wide grid the five cards sit side by side, but their copy runs to
+   different depths — a title that wraps, a third chip that drops to its own
+   line — so the photographs used to start at five different heights. Letting
+   the chip row take up the slack lands every photograph on one line. */
+@media (min-width: 761px) {
+  .proc__card { grid-template-rows: auto auto auto 1fr auto; }
+  .proc__card .proc__chips { align-content: flex-start; }
+}
+
 @media (max-width: 900px) {
   .proc__card .proc__title { font-size: clamp(1.15rem, 4.6vw, 1.45rem); }
   .proc__shot img { aspect-ratio: 3 / 2; }
