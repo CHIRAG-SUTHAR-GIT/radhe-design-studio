@@ -2293,6 +2293,11 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 .proc__shot picture { display: block; }
 .proc__shot img {
   width: 100%;
+  /* The intrinsic width and height attributes on these images reserve
+     their space before they load, but the height attribute is also a
+     presentational hint — without this the photograph is laid out at its
+     source height of 1254px and comes out as a tall sliver. */
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   filter: var(--img-filter);
