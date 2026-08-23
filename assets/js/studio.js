@@ -554,74 +554,22 @@
     paint();
   };
 
-  /* ── Process: a pinned horizontal rail ─────────────────────────────
-     Same behaviour as the project rail: the section holds while vertical
-     scrolling carries the stages sideways, and releases onto the next
-     block once the last one has passed.
+  /* ── Process: a swipeable rail ──────────────────────────────────────
+     This was a pinned horizontal scroll, where vertical scrolling drove
+     the stages sideways. It is removed deliberately.
 
-     Only on the width where the stages are a rail — the desktop lays all
-     five out at once and has nothing to travel. gsap.matchMedia tears the
-     pin down again if the viewport crosses back over. */
-  const procTrack = $('.proc__track');
-  const procNav = $('.proc__nav');
-  if (procTrack && motion) {
-    gsap.matchMedia().add('(max-width: 760px)', () => {
-      const cards = $$('.proc__card', procTrack);
-      const bar = $('.svc__bar i', procNav);
-      const prev = $('[data-proc-prev]', procNav);
-      const next = $('[data-proc-next]', procNav);
+     Pinning inserts a spacer as tall as the section plus the whole scroll
+     distance — 1986px holding an 808px section, so 1178px of it is empty
+     by construction — and holds the section in it with fixed positioning.
+     On this page that stopped holding: the empty part of the spacer
+     showed as blank screens, ScrollTrigger's coordinates drifted 2500px
+     from where things actually rendered, and a flick could land you back
+     at the start of the section.
 
-      /* The track scrolls natively without JS, which is the fallback. Once
-         the pin takes over, that native scroll has to go or the two fight
-         each other for the same gesture. */
-      procTrack.style.overflow = 'visible';
-      procTrack.style.scrollSnapType = 'none';
-
-      const distance = () => Math.max(0, procTrack.scrollWidth - procTrack.clientWidth);
-
-      const tween = gsap.to(procTrack, {
-        x: () => -distance(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#process',
-          start: 'top top',
-          end: () => `+=${distance()}`,
-          pin: '#process',
-          pinSpacing: true,
-          scrub: .6,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (!bar) return;
-            const i = Math.min(cards.length - 1, Math.floor(self.progress * cards.length * .999));
-            bar.style.width = `${100 / cards.length}%`;
-            bar.style.left = `${(100 / cards.length) * i}%`;
-            if (prev) prev.disabled = self.progress <= .01;
-            if (next) next.disabled = self.progress >= .99;
-          }
-        }
-      });
-
-      // The arrows drive the page, since the page is what drives the rail.
-      const st = tween.scrollTrigger;
-      const step = (dir) => scrollTo({
-        top: st.start + (st.end - st.start) * Math.min(1, Math.max(0,
-          st.progress + dir / (cards.length - 1))),
-        behavior: 'smooth'
-      });
-      const onPrev = () => step(-1);
-      const onNext = () => step(1);
-      prev?.addEventListener('click', onPrev);
-      next?.addEventListener('click', onNext);
-
-      return () => {
-        prev?.removeEventListener('click', onPrev);
-        next?.removeEventListener('click', onNext);
-        procTrack.style.overflow = '';
-        procTrack.style.scrollSnapType = '';
-        gsap.set(procTrack, { clearProps: 'x' });
-      };
-    });
-  }
+     A rail you swipe has none of those parts. The stages still travel
+     horizontally, the arrows still work, and nothing about the page's
+     vertical scrolling is taken over. */
+  carousel('.proc__track', '.proc__nav', '.proc__card', '[data-proc-prev]', '[data-proc-next]');
 
   /* ── Accordion ─────────────────────────────────────────────────── */
   $$('.acc__head').forEach((head) => {

@@ -137,6 +137,14 @@
     font-size: .68rem;
     letter-spacing: .18em;
   }
+  /* `.cta .btn` outranks a bare `.btn` whatever the file order, so the
+     filled violet-to-pink action kept its gradient on the sheet. These
+     are named at the same weight to take it back. */
+  .cta .btn, .btn--go, .form__send {
+    border: 1px solid var(--hair);
+    background: none;
+    color: var(--violet);
+  }
   .btn .marks { display: block; }
   .btn .marks i { border-color: var(--amber); width: 12px; height: 12px; }
   .btn__arrow {
