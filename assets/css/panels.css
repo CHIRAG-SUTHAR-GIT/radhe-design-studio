@@ -266,10 +266,15 @@
     border-radius: 0;
     background: none;
   }
+  /* Every stage photograph occupies the same square, so the cards are the
+     same height whichever one you are on. Two of the five sources are
+     already square; the other three are 1400x1120 and give up 140px from
+     each side to match, which is the smallest crop that squares them. */
   .proc__shot img {
-    aspect-ratio: auto;
+    aspect-ratio: 1 / 1;
     height: auto;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
   }
 
   /* ── Location ─────────────────────────────────────────────────── */
