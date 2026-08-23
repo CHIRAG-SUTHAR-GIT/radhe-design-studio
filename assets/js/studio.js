@@ -561,8 +561,15 @@
     gsap.matchMedia().add('(max-width: 760px)', () => {
       const cards = $$('.proc__card', procTrack);
       const bar = $('.svc__bar i', procNav);
+      /* The track's native scroll has to go while the pin owns the gesture.
+         That leaves a 1528px-wide track with nothing containing it, which
+         widens the document itself — innerWidth measured 1548 instead of
+         390 and the browser zoomed the whole page out to fit. The pinned
+         section clips it instead. */
+      const procSection = $('#process');
       procTrack.style.overflow = 'visible';
       procTrack.style.scrollSnapType = 'none';
+      procSection.style.overflow = 'hidden';
       const distance = () => Math.max(0, procTrack.scrollWidth - procTrack.clientWidth);
       const tween = gsap.to(procTrack, {
         x: () => -distance(),
@@ -575,6 +582,7 @@
         }
       });
       return () => { procTrack.style.overflow = ''; procTrack.style.scrollSnapType = '';
+        procSection.style.overflow = '';
         gsap.set(procTrack, { clearProps: 'x' }); tween.scrollTrigger?.kill(); tween.kill(); };
     });
   }
