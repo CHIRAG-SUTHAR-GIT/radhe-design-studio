@@ -222,15 +222,10 @@
   .facts__cell[data-tone='warm']::before { display: none; }
   .facts__fig, .statement-stat__figure { font-size: clamp(2.4rem, 11vw, 3rem); }
 
-  /* ── Services: ruled rows ─────────────────────────────────────── */
-  .svc__card {
-    border: 0;
-    border-top: 1px solid var(--hair-soft);
-    border-radius: 0;
-    background: none;
-    padding: .95rem 1.6rem .95rem 0;
-  }
-  .svc__card:nth-child(3), .svc__card:nth-child(6) { border-bottom: 1px solid var(--hair-soft); }
+  /* ── Services: the ruled schedule, one column ─────────────────────
+     The rows carry their own rules from the base stylesheet; the panel
+     skin must not put a second set on top or split them into columns. */
+  .svc__card { padding-block: clamp(1.05rem, 3.4vw, 1.4rem); }
   .svc__card .marks { display: none; }
   .svc__ref { display: none; }
   .svc__arrow { border-radius: 0; border-color: var(--hair); }

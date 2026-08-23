@@ -2326,116 +2326,54 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
 
 
 
-/* ═══ Services — a ruled schedule ══════════════════════════════════
-   No boxes. Six names set as a drawing schedule: three down the first
-   column, three down the second, each on its own rule. The whole set
-   reads at one glance and nothing scrolls.
 
-   grid-auto-flow is column, not row — with row flow the names would run
-   across the pair and read 1,2 / 3,4 / 5,6 rather than 1,2,3 down one
-   side and 4,5,6 down the other. */
+/* ═══ Services — a ruled schedule ══════════════════════════════════
+   One column, six rows: number, name, arrow, each on its own rule.
+   This is the approved demo layout, kept to its measurements. */
 .svc__grid {
   display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, auto);
-  column-gap: clamp(1.1rem, 5vw, 4rem);
-  margin-top: clamp(2rem, 4vw, 3rem);
-  border: 0;
-}
-
-.svc__card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: clamp(4.4rem, 15vw, 6.5rem);
-  padding: .85rem 2rem .85rem 0;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
   border: 0;
   border-top: 1px solid var(--hair-soft);
+}
+.svc__card {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .8rem;
+  padding: clamp(1.05rem, 2.4vw, 1.5rem) 0;
+  border: 0;
+  border-bottom: 1px solid var(--hair-soft);
   border-radius: 0;
   background: none;
   overflow: visible;
   text-align: left;
+  transition: padding-left .5s var(--ease);
 }
-.svc__card:nth-child(3), .svc__card:nth-child(6) { border-bottom: 1px solid var(--hair-soft); }
+.svc__card:hover, .svc__card:focus-within { padding-left: .5rem; }
 
-/* The rule under the name draws itself across on hover, the way the
-   underlines elsewhere on the sheet do. */
-.svc__card::after {
-  content: '';
-  position: absolute; left: 0; bottom: -1px;
-  width: 100%; height: 1px;
-  background: var(--violet);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .6s var(--ease);
+.svc__no {
+  color: var(--amber);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .14em;
 }
-.svc__card:hover::after, .svc__card:focus-within::after { transform: scaleX(1); }
-
-/* An arrow waits at the end of the rule. */
-.svc__card::before {
-  content: '↗';
-  position: absolute; right: .1rem; top: 50%;
-  transform: translate(-6px, -50%);
-  color: var(--violet);
-  font-size: .85rem;
-  opacity: 0;
-  transition: opacity .45s var(--ease), transform .45s var(--ease);
-}
-.svc__card:hover::before, .svc__card:focus-within::before { opacity: 1; transform: translate(0, -50%); }
-
 .svc__name {
   margin: 0;
-  font-size: clamp(.82rem, 3.3vw, 1.3rem);
-  font-weight: 600;
-  line-height: 1.28;
-  letter-spacing: -.015em;
-  text-wrap: balance;
-  transition: transform .5s var(--ease), color .45s var(--ease);
+  max-width: none;
+  font-size: clamp(.95rem, 3.4vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  transition: color .45s var(--ease);
 }
-.svc__card:hover .svc__name, .svc__card:focus-within .svc__name {
-  transform: translateX(8px);
-  color: var(--violet-lift);
-}
-
-
-/* ═══ Location ═════════════════════════════════════════════════════ */
-.map { position: relative; padding: clamp(3rem, 7vw, 7rem) var(--page-x); }
-.map__head { display: grid; gap: 1.1rem; justify-items: start; }
-.map__title {
-  max-width: 18ch;
-  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
-  font-weight: 400;
-  line-height: 1.16;
-  letter-spacing: -.02em;
-}
-.map__address {
-  color: var(--muted);
+.svc__go {
+  color: var(--clay);
   font-style: normal;
-  font-size: clamp(.9rem, 1.1vw, 1rem);
-  line-height: 1.75;
+  font-size: .8rem;
+  transition: color .45s var(--ease), transform .45s var(--ease);
 }
-.map__head .btn { margin-top: .4rem; }
-
-.map__frame {
-  position: relative;
-  margin-top: clamp(1.6rem, 3.5vw, 2.6rem);
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--hair-soft);
-  border-radius: var(--r-card);
-  overflow: hidden;
-  background: var(--plate);
-}
-.map__frame iframe {
-  display: block;
-  width: 100%; height: 100%;
-  border: 0;
-}
-/* A bright map inside a near-black panel is jarring, so it is taken down
-   a little. Deliberately not inverted: that would recolour Google's own
-   attribution and logo, which their terms do not allow. */
-[data-theme='dark'] .map__frame iframe { filter: brightness(.88) saturate(.92) contrast(1.02); }
-
-@media (max-width: 760px) {
-  .map__frame { aspect-ratio: 4 / 5; }
-  .map__title { font-size: clamp(1.5rem, 6.4vw, 2rem); }
-}
+.svc__card:hover .svc__name, .svc__card:focus-within .svc__name { color: var(--violet-lift); }
+.svc__card:hover .svc__go, .svc__card:focus-within .svc__go { color: var(--amber); transform: translate(3px, -3px); }
