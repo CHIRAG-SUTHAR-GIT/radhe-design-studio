@@ -3,27 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hero directions — Radhe Design Studio</title>
-<link rel="stylesheet" href="assets/css/studio.css?v=demo-hero1">
-<link rel="stylesheet" href="assets/css/panels.css?v=demo-hero1">
+<title>Ten hero directions — Radhe Design Studio</title>
+<link rel="stylesheet" href="assets/css/studio.css?v=demo-hero10">
+<link rel="stylesheet" href="assets/css/panels.css?v=demo-hero10">
 <style>
+/* ═══════════════════════════════════════════════════════════════
+   Ten hero treatments, one per screen, each labelled. Nothing here
+   touches the live page — every class is prefixed hx.
+   ═══════════════════════════════════════════════════════════════ */
+
 /* ── Demo chrome ─────────────────────────────────────────────── */
-.demo-label {
-  position: sticky; top: 0; z-index: 40;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: .7rem var(--page-x);
-  background: var(--clay); color: var(--sheet);
-  font-family: var(--sans); font-size: .6rem; font-weight: 700;
-  letter-spacing: .22em; text-transform: uppercase;
+.demo-top {
+  position: sticky; top: 0; z-index: 60;
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  padding: .6rem var(--page-x);
+  background: var(--clay);
 }
-.demo-label b { font-weight: 700; }
-.demo-label span { opacity: .6; letter-spacing: .1em; text-transform: none; font-weight: 500; }
-.hx { position: relative; overflow: hidden; }
+.demo-top a {
+  display: grid; place-items: center;
+  width: 22px; height: 22px;
+  border: 1px solid rgba(255,255,255,.28);
+  color: #fff;
+  font-family: var(--sans); font-size: .58rem; font-weight: 700;
+  letter-spacing: 0; text-decoration: none;
+}
+.demo-top b {
+  margin-right: auto;
+  color: rgba(255,255,255,.55);
+  font-family: var(--sans); font-size: .55rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; line-height: 22px;
+}
+@media (max-width: 460px) { .demo-top b { display: none; } }
+.demo-label {
+  position: sticky; top: 35px; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .6rem var(--page-x);
+  background: var(--amber); color: #fff;
+  font-family: var(--sans); font-size: .58rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+}
+.demo-label span { opacity: .82; letter-spacing: .06em; text-transform: none; font-weight: 500; }
+.hx { position: relative; overflow: hidden; scroll-margin-top: 62px; }
+
+/* Shared: a crossfading stack of photographs. */
+.hx [data-stage] > img,
+.hx [data-stage] > picture > img { transition: opacity 1.2s var(--ease); }
 
 /* ══ A · FULL BLEED ═══════════════════════════════════════════
-   The photograph is the hero. Everything else is set on top of it
-   as a drawing frame: hairline border, wordmark on the baseline,
-   a title-block rail across the foot. */
+   The photograph is the hero. Everything else sits on it as a
+   drawing frame: hairline border, wordmark on the baseline, a
+   title-block rail across the foot. */
 .hx-a { height: 100svh; min-height: 560px; color: #fff; }
 .hxa__stage { position: absolute; inset: 0; background: #16130f; }
 .hxa__stage img {
@@ -39,18 +68,12 @@
     linear-gradient(180deg, rgba(12,10,8,.42) 0%, rgba(12,10,8,0) 26%),
     linear-gradient(0deg, rgba(12,10,8,.78) 0%, rgba(12,10,8,.12) 44%, rgba(12,10,8,0) 62%);
 }
-.hxa__frame {
-  position: absolute; inset: 12px;
-  border: 1px solid rgba(255,255,255,.26);
-  pointer-events: none;
-}
+.hxa__frame { position: absolute; inset: 12px; border: 1px solid rgba(255,255,255,.26); pointer-events: none; }
 .hxa__frame::before, .hxa__frame::after {
-  content: ''; position: absolute; width: 14px; height: 14px;
-  border: 0 solid var(--amber-lift, #d9a05b);
+  content: ''; position: absolute; width: 14px; height: 14px; border: 0 solid #d9a05b;
 }
 .hxa__frame::before { left: -1px; top: -1px; border-top-width: 2px; border-left-width: 2px; }
 .hxa__frame::after { right: -1px; bottom: -1px; border-bottom-width: 2px; border-right-width: 2px; }
-
 .hxa__body {
   position: absolute; left: 0; right: 0; bottom: 0;
   display: grid; gap: 1.1rem;
@@ -61,44 +84,34 @@
   font-family: var(--sans); font-size: .58rem; font-weight: 600;
   letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.72);
 }
-.hxa__eyebrow i { display: block; width: 26px; height: 1px; background: var(--amber-lift, #d9a05b); }
+.hxa__eyebrow i { display: block; width: 26px; height: 1px; background: #d9a05b; }
 .hxa__word {
-  margin: 0;
-  font-family: var(--display);
+  margin: 0; font-family: var(--display);
   font-size: clamp(3.1rem, 15vw, 9rem);
-  font-weight: 300; line-height: .88; letter-spacing: -.035em;
-  color: #fff;
+  font-weight: 300; line-height: .88; letter-spacing: -.035em; color: #fff;
 }
 .hxa__word b { font-weight: 600; }
 .hxa__word em { font-style: normal; position: relative; }
 .hxa__word em::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -.02em;
-  height: .055em; background: var(--amber-lift, #d9a05b);
+  height: .055em; background: #d9a05b;
 }
-.hxa__line {
-  max-width: 22ch;
-  font-size: clamp(.92rem, 3.6vw, 1.1rem); line-height: 1.45;
-  color: rgba(255,255,255,.8);
-}
+.hxa__line { max-width: 22ch; font-size: clamp(.92rem, 3.6vw, 1.1rem); line-height: 1.45; color: rgba(255,255,255,.8); }
 .hxa__rail {
   display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .9rem;
-  padding-top: .9rem;
-  border-top: 1px solid rgba(255,255,255,.24);
+  padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.24);
   font-family: var(--sans); font-size: .56rem; font-weight: 600;
   letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.66);
 }
 .hxa__ticks { display: flex; gap: 5px; }
 .hxa__ticks i { display: block; width: 16px; height: 2px; background: rgba(255,255,255,.28); }
-.hxa__ticks i.is-on { background: var(--amber-lift, #d9a05b); }
+.hxa__ticks i.is-on { background: #d9a05b; }
 
 /* ══ B · TITLE BLOCK ══════════════════════════════════════════
-   The drawing-sheet cover: the practice set as a title block on the
-   left, the photograph bleeding off the right edge. */
-.hx-b { min-height: 100svh; display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
-.hxb__text {
-  display: grid; align-content: center; gap: 1.5rem;
-  padding: clamp(4rem, 10vh, 8rem) clamp(1.6rem, 4vw, 4rem);
-}
+   The drawing-sheet cover: the practice set as a title block, the
+   photograph bleeding off the opposite edge. */
+.hx-b { min-height: 100svh; display: grid; grid-template-columns: 1fr 1fr; }
+.hxb__text { display: grid; align-content: center; gap: 1.5rem; padding: clamp(4rem,10vh,8rem) clamp(1.6rem,4vw,4rem); }
 .hxb__slug {
   display: flex; align-items: center; gap: .55rem;
   font-family: var(--sans); font-size: .56rem; font-weight: 600;
@@ -106,96 +119,280 @@
 }
 .hxb__slug i { width: 22px; height: 1px; background: var(--amber); }
 .hxb__title {
-  margin: 0;
-  font-family: var(--display);
+  margin: 0; font-family: var(--display);
   font-size: clamp(2.6rem, 6.4vw, 5.4rem);
-  font-weight: 300; line-height: .92; letter-spacing: -.035em;
-  color: var(--clay);
+  font-weight: 300; line-height: .92; letter-spacing: -.035em; color: var(--clay);
 }
 .hxb__title b { display: block; font-weight: 600; }
 .hxb__title span { position: relative; display: inline-block; }
-.hxb__title span::after {
-  content: ''; position: absolute; left: 0; bottom: -.14em;
-  width: 100%; height: 3px; background: var(--amber);
-}
-.hxb__lead { max-width: 30ch; color: var(--muted); font-size: clamp(.95rem, 1.15vw, 1.05rem); line-height: 1.6; }
-.hxb__meta {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid var(--hair-soft);
-}
+.hxb__title span::after { content: ''; position: absolute; left: 0; bottom: -.14em; width: 100%; height: 3px; background: var(--amber); }
+.hxb__lead { max-width: 30ch; color: var(--muted); font-size: clamp(.95rem,1.15vw,1.05rem); line-height: 1.6; }
+.hxb__meta { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); border-top: 1px solid var(--hair-soft); }
 .hxb__meta div { padding: .85rem .2rem .85rem 0; border-bottom: 1px solid var(--hair-soft); }
-.hxb__meta dt {
-  font-family: var(--sans); font-size: .52rem; font-weight: 600;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
-}
+.hxb__meta dt { font-family: var(--sans); font-size: .52rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2); }
 .hxb__meta dd { margin: .3rem 0 0; color: var(--clay); font-size: .86rem; }
 .hxb__go {
-  justify-self: start;
-  display: inline-flex; align-items: center; gap: .6rem;
-  padding: .8rem 1.3rem;
-  border: 1px solid var(--hair);
-  color: var(--clay);
-  font-family: var(--sans); font-size: .6rem; font-weight: 700;
-  letter-spacing: .2em; text-transform: uppercase;
+  justify-self: start; display: inline-flex; align-items: center; gap: .6rem;
+  padding: .8rem 1.3rem; border: 1px solid var(--hair); color: var(--clay);
+  font-family: var(--sans); font-size: .6rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; text-decoration: none;
 }
 .hxb__plate { position: relative; overflow: hidden; background: var(--plate); }
-.hxb__plate img {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; transition: opacity 1.2s var(--ease);
-}
+.hxb__plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
 .hxb__plate img.is-active { opacity: 1; }
 .hxb__fig {
-  position: absolute; left: 0; bottom: 0; z-index: 2;
-  padding: .55rem .9rem;
+  position: absolute; left: 0; bottom: 0; z-index: 2; padding: .55rem .9rem;
   background: var(--sheet); color: var(--muted-2);
-  font-family: var(--sans); font-size: .55rem; font-weight: 600;
-  letter-spacing: .2em; text-transform: uppercase;
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
 }
 
 /* ══ C · STATEMENT ════════════════════════════════════════════
-   Type first, picture second: the sentence carries the screen and the
-   photograph runs under it as a wide band. */
-.hx-c { min-height: 100svh; display: grid; grid-template-rows: 1fr auto; padding-top: clamp(5rem, 12vh, 9rem); }
-.hxc__head { display: grid; align-content: end; gap: 1.4rem; padding: 0 var(--page-x) clamp(1.6rem, 4vh, 3rem); }
+   Type first, picture second. */
+.hx-c { min-height: 100svh; display: grid; grid-template-rows: 1fr auto; padding-top: clamp(3rem,8vh,6rem); }
+.hxc__head { display: grid; align-content: end; gap: 1.4rem; padding: 0 var(--page-x) clamp(1.6rem,4vh,3rem); }
 .hxc__index {
   display: flex; justify-content: space-between; gap: 1rem;
   padding-bottom: .9rem; border-bottom: 1px solid var(--hair-soft);
-  font-family: var(--sans); font-size: .55rem; font-weight: 600;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
 }
 .hxc__say {
-  margin: 0; max-width: 16ch;
-  font-family: var(--display);
+  margin: 0; max-width: 16ch; font-family: var(--display);
   font-size: clamp(2.5rem, 11vw, 6.5rem);
-  font-weight: 300; line-height: .96; letter-spacing: -.035em;
-  color: var(--clay);
+  font-weight: 300; line-height: .96; letter-spacing: -.035em; color: var(--clay);
 }
 .hxc__say em { font-style: normal; color: var(--amber); }
 .hxc__band { position: relative; height: clamp(240px, 42svh, 460px); overflow: hidden; background: var(--plate); }
-.hxc__band img {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; transition: opacity 1.2s var(--ease);
-}
+.hxc__band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
 .hxc__band img.is-active { opacity: 1; }
 .hxc__foot {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: .9rem var(--page-x);
-  border-top: 1px solid var(--hair-soft);
-  font-family: var(--sans); font-size: .55rem; font-weight: 600;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
+  padding: .9rem var(--page-x); border-top: 1px solid var(--hair-soft);
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
 }
 
+/* ══ D · INDEX ════════════════════════════════════════════════
+   The first screen as a contents page: four numbered disciplines,
+   each row lighting its own photograph behind. */
+.hx-d { min-height: 100svh; display: grid; align-content: center; gap: 1.6rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hxd__bg { position: absolute; inset: 0; z-index: 0; background: var(--plate); }
+.hxd__bg img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; filter: grayscale(1) contrast(1.05);
+  transition: opacity 1.2s var(--ease);
+}
+.hxd__bg img.is-active { opacity: 1; }
+/* A veil the colour of the sheet: the plate reads as a watermark, the
+   index stays the thing you actually read. */
+.hxd__bg::after { content: ''; position: absolute; inset: 0; background: var(--sheet); opacity: .88; }
+.hxd__head, .hxd__list { position: relative; z-index: 1; }
+.hxd__head { display: grid; gap: .7rem; }
+.hxd__name {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(2rem, 8.5vw, 3.6rem); font-weight: 300; line-height: 1; letter-spacing: -.03em; color: var(--clay);
+}
+.hxd__name b { font-weight: 600; }
+.hxd__sub { font-family: var(--sans); font-size: .56rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-2); }
+.hxd__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hair-soft); }
+.hxd__list li {
+  display: grid; grid-template-columns: 2.6rem minmax(0,1fr) auto; align-items: center; gap: .8rem;
+  padding: clamp(.95rem, 3vw, 1.35rem) 0; border-bottom: 1px solid var(--hair-soft);
+  cursor: pointer;
+}
+.hxd__list b { font-family: var(--sans); font-size: .58rem; font-weight: 700; letter-spacing: .16em; color: var(--amber); }
+.hxd__list span { font-family: var(--display); font-size: clamp(1.1rem, 4.6vw, 1.7rem); font-weight: 400; letter-spacing: -.02em; color: var(--clay); }
+.hxd__list em { font-style: normal; color: var(--muted-2); font-size: .9rem; transition: transform .4s var(--ease); }
+.hxd__list li.is-on em { transform: translate(4px, -4px); color: var(--amber); }
+
+/* ══ E · PRINTS ═══════════════════════════════════════════════
+   Three photographs laid on the sheet like loose prints on a table,
+   the name set under them. */
+.hx-e { min-height: 100svh; display: grid; align-content: center; justify-items: center; gap: clamp(2rem,6vh,3.4rem); padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hxe__deck { position: relative; width: min(74vw, 340px); aspect-ratio: 3 / 4; }
+.hxe__deck figure {
+  position: absolute; inset: 0; margin: 0; overflow: hidden;
+  background: var(--plate); box-shadow: 0 24px 50px -30px rgba(0,0,0,.55);
+}
+.hxe__deck figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hxe__deck figure:nth-child(1) { transform: rotate(-7deg) translate(-6%, 2%); }
+.hxe__deck figure:nth-child(2) { transform: rotate(5deg) translate(6%, -1%); }
+.hxe__deck figure:nth-child(3) { transform: rotate(-1deg); }
+.hxe__deck figure:nth-child(3)::after {
+  content: ''; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.3);
+}
+.hxe__cap { display: grid; justify-items: center; gap: .8rem; text-align: center; }
+.hxe__cap h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(2rem, 9vw, 3.4rem); font-weight: 300; line-height: 1; letter-spacing: -.03em; color: var(--clay);
+}
+.hxe__cap h1 b { font-weight: 600; }
+.hxe__cap p { max-width: 26ch; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+.hxe__rule { width: 44px; height: 2px; background: var(--amber); }
+
+/* ══ F · MARQUEE ══════════════════════════════════════════════
+   A running band of the studio name between two photographs — the
+   only moving thing on the screen. */
+.hx-f { height: 100svh; min-height: 560px; display: grid; grid-template-rows: 1fr auto 1fr; }
+.hxf__band { position: relative; overflow: hidden; background: var(--plate); }
+.hxf__band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.hxf__band img.is-active { opacity: 1; }
+.hxf__band--foot { display: grid; }
+.hxf__marq { overflow: hidden; padding: clamp(.7rem,2.4vw,1.1rem) 0; border-block: 1px solid var(--hair-soft); background: var(--sheet); }
+.hxf__marq div { display: flex; gap: 1.6rem; width: max-content; animation: hxfRun 26s linear infinite; }
+.hxf__marq span {
+  display: flex; align-items: center; gap: 1.6rem;
+  font-family: var(--display); font-size: clamp(1.7rem, 7vw, 3.2rem);
+  font-weight: 300; letter-spacing: -.02em; color: var(--clay); white-space: nowrap;
+}
+.hxf__marq span i { display: block; width: .34em; height: .34em; border-radius: 50%; background: var(--amber); }
+@keyframes hxfRun { to { transform: translateX(-50%); } }
+.hxf__meta {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding: .9rem var(--page-x);
+  background: linear-gradient(0deg, rgba(12,10,8,.7), rgba(12,10,8,0));
+  color: rgba(255,255,255,.86);
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+}
+
+/* ══ G · COLUMN ═══════════════════════════════════════════════
+   One tall plate, generous air, the type set beneath it and never
+   over it. The quiet gallery treatment. */
+.hx-g { min-height: 100svh; display: grid; align-content: center; justify-items: center; gap: clamp(1.6rem,5vh,2.6rem); padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hxg__plate { position: relative; width: min(62vw, 300px); aspect-ratio: 3 / 4; overflow: hidden; background: var(--plate); }
+.hxg__plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+.hxg__plate img.is-active { opacity: 1; }
+.hxg__plate::after {
+  content: ''; position: absolute; inset: 8px; border: 1px solid rgba(255,255,255,.34); pointer-events: none;
+}
+.hxg__cap { display: grid; justify-items: center; gap: .9rem; text-align: center; }
+.hxg__fig { font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-2); }
+.hxg__name {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.9rem, 8vw, 3rem); font-weight: 300; line-height: 1.02; letter-spacing: -.03em; color: var(--clay);
+}
+.hxg__name b { font-weight: 600; }
+.hxg__tag { color: var(--muted); font-size: .86rem; letter-spacing: .04em; }
+.hxg__dots { display: flex; gap: 6px; }
+.hxg__dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--hair); }
+.hxg__dots i.is-on { background: var(--amber); }
+
+/* ══ H · CONTACT SHEET ════════════════════════════════════════
+   Four plates filling the screen, the name reversed out of one of
+   them. The cover of a photo folio. */
+.hx-h { height: 100svh; min-height: 560px; display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 2px; background: var(--hair-soft); }
+.hxh__t { position: relative; overflow: hidden; background: var(--plate); }
+.hxh__t img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hxh__t--big { grid-row: span 2; }
+.hxh__t--word {
+  display: grid; align-content: center; gap: .7rem;
+  padding: clamp(1rem,4vw,1.8rem); background: var(--clay);
+}
+.hxh__t--word h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.6rem, 6.6vw, 2.8rem); font-weight: 300; line-height: .98; letter-spacing: -.03em; color: #fff;
+}
+.hxh__t--word h1 b { font-weight: 600; }
+.hxh__t--word p { color: rgba(255,255,255,.6); font-family: var(--sans); font-size: .53rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.hxh__t--word i { display: block; width: 30px; height: 2px; background: var(--amber); }
+.hxh__no {
+  position: absolute; left: 0; top: 0; padding: .35rem .6rem;
+  background: var(--sheet); color: var(--muted-2);
+  font-family: var(--sans); font-size: .5rem; font-weight: 700; letter-spacing: .16em;
+}
+
+/* ══ I · CUT TYPE ═════════════════════════════════════════════
+   The photograph appears only inside the letters. Flat sheet, one
+   enormous word, nothing else competing. */
+.hx-i { min-height: 100svh; display: grid; align-content: center; gap: 1.4rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hxi__cut {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(4.4rem, 28vw, 16rem);
+  font-weight: 700; line-height: .82; letter-spacing: -.05em; text-transform: uppercase;
+  background-image: url('assets/images/earth-house.webp');
+  background-size: cover; background-position: center 40%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  animation: hxiDrift 18s var(--ease-io) infinite alternate;
+}
+@keyframes hxiDrift {
+  from { background-position: center 32%; }
+  to   { background-position: center 62%; }
+}
+.hxi__under {
+  display: grid; gap: .8rem;
+  padding-top: 1rem; border-top: 1px solid var(--hair-soft);
+}
+.hxi__under h2 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.3rem, 5.4vw, 2.1rem); font-weight: 300; letter-spacing: -.02em; color: var(--clay);
+}
+.hxi__under p { max-width: 30ch; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+.hxi__foot {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
+}
+
+/* ══ J · RAIL ═════════════════════════════════════════════════
+   The whole first screen is a filmstrip you swipe, the practice name
+   pinned over it. */
+.hx-j { height: 100svh; min-height: 560px; display: grid; grid-template-rows: auto 1fr auto; background: var(--clay); }
+.hxj__top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding: clamp(1.4rem,5vh,2.4rem) var(--page-x) 1rem;
+}
+.hxj__top h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.7rem, 7.4vw, 3rem); font-weight: 300; line-height: 1; letter-spacing: -.03em; color: #fff;
+}
+.hxj__top h1 b { font-weight: 600; }
+.hxj__top span { font-family: var(--sans); font-size: .53rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.hxj__rail {
+  display: flex; gap: 10px; padding: 0 var(--page-x) 1rem;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.hxj__rail::-webkit-scrollbar { display: none; }
+.hxj__rail figure {
+  position: relative; flex: 0 0 76%; margin: 0; overflow: hidden;
+  scroll-snap-align: center; background: #22201d;
+}
+.hxj__rail img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hxj__rail figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; gap: .6rem;
+  padding: .7rem .8rem;
+  background: linear-gradient(0deg, rgba(12,10,8,.8), rgba(12,10,8,0));
+  color: rgba(255,255,255,.9);
+  font-family: var(--sans); font-size: .52rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+}
+.hxj__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1rem var(--page-x) clamp(1.4rem,5vh,2.2rem);
+  border-top: 1px solid rgba(255,255,255,.16);
+  color: rgba(255,255,255,.6);
+  font-family: var(--sans); font-size: .53rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+}
+.hxj__foot b { color: var(--amber); }
+
+/* ── Small screens ───────────────────────────────────────────── */
 @media (max-width: 760px) {
-  .hx-b { grid-template-columns: 1fr; grid-template-rows: 46svh auto; }
+  .hx-b { grid-template-columns: 1fr; grid-template-rows: 44svh auto; }
   .hxb__text { padding: 2rem var(--page-x) 3rem; }
   .hxb__meta { grid-template-columns: 1fr; }
+  .hx-h { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
+<nav class="demo-top">
+  <b>Ten heroes</b>
+  <a href="#hx-a">A</a><a href="#hx-b">B</a><a href="#hx-c">C</a><a href="#hx-d">D</a><a href="#hx-e">E</a>
+  <a href="#hx-f">F</a><a href="#hx-g">G</a><a href="#hx-h">H</a><a href="#hx-i">I</a><a href="#hx-j">J</a>
+</nav>
+
+<!-- ══ A ══ -->
 <p class="demo-label"><b>A · Full bleed</b><span>photograph carries the screen</span></p>
-<section class="hx hx-a" data-hx="a">
+<section class="hx hx-a" id="hx-a" data-hx="a">
   <div class="hxa__stage" data-stage>
     <img class="is-active" src="assets/images/earth-house.webp" alt="">
     <img src="assets/images/sandstone-courtyard.webp" alt="">
@@ -218,8 +415,9 @@
   </div>
 </section>
 
+<!-- ══ B ══ -->
 <p class="demo-label"><b>B · Title block</b><span>drawing-sheet cover</span></p>
-<section class="hx hx-b" data-hx="b">
+<section class="hx hx-b" id="hx-b" data-hx="b">
   <div class="hxb__plate" data-stage>
     <img class="is-active" src="assets/images/sandstone-courtyard.webp" alt="">
     <img src="assets/images/earth-house.webp" alt="">
@@ -237,14 +435,15 @@
       <div><dt>Location</dt><dd>Gota, Ahmedabad</dd></div>
       <div><dt>Delivery</dt><dd>Turnkey</dd></div>
     </dl>
-    <a class="hxb__go" href="projects.html">Selected work <em>&#8599;</em></a>
+    <a class="hxb__go" href="projects.html">Selected work &#8599;</a>
   </div>
 </section>
 
+<!-- ══ C ══ -->
 <p class="demo-label"><b>C · Statement</b><span>type first, picture under</span></p>
-<section class="hx hx-c" data-hx="c">
+<section class="hx hx-c" id="hx-c" data-hx="c">
   <div class="hxc__head">
-    <p class="hxc__index"><span>Radhe Design Studio</span><span>Ahmedabad · Est. 2016</span></p>
+    <p class="hxc__index"><span>Radhe Design Studio</span><span>Ahmedabad · Est. 2013</span></p>
     <h1 class="hxc__say">Architecture for the way people <em>live</em>.</h1>
   </div>
   <div>
@@ -258,11 +457,132 @@
   </div>
 </section>
 
+<!-- ══ D ══ -->
+<p class="demo-label"><b>D · Index</b><span>first screen as a contents page</span></p>
+<section class="hx hx-d" id="hx-d" data-hx="d">
+  <div class="hxd__bg" data-stage data-sync="d">
+    <img class="is-active" src="assets/images/earth-house.webp" alt="">
+    <img src="assets/images/noma-studio.webp" alt="">
+    <img src="assets/images/sandstone-courtyard.webp" alt="">
+    <img src="assets/images/material-detail.webp" alt="">
+  </div>
+  <div class="hxd__head">
+    <h1 class="hxd__name">Radhe <b>Design Studio</b></h1>
+    <p class="hxd__sub">Interior architecture · Ahmedabad, Gujarat</p>
+  </div>
+  <ul class="hxd__list" data-rows="d">
+    <li class="is-on"><b>01</b><span>Homes &amp; apartments</span><em>&#8599;</em></li>
+    <li><b>02</b><span>Offices &amp; workplaces</span><em>&#8599;</em></li>
+    <li><b>03</b><span>Restaurants &amp; hotels</span><em>&#8599;</em></li>
+    <li><b>04</b><span>Turnkey &amp; renovation</span><em>&#8599;</em></li>
+  </ul>
+</section>
+
+<!-- ══ E ══ -->
+<p class="demo-label"><b>E · Prints</b><span>loose photographs on the sheet</span></p>
+<section class="hx hx-e" id="hx-e" data-hx="e">
+  <div class="hxe__deck">
+    <figure><img src="assets/images/noma-studio.webp" alt=""></figure>
+    <figure><img src="assets/images/sandstone-courtyard.webp" alt=""></figure>
+    <figure><img src="assets/images/earth-house.webp" alt=""></figure>
+  </div>
+  <div class="hxe__cap">
+    <i class="hxe__rule"></i>
+    <h1>Radhe <b>Design Studio</b></h1>
+    <p>Thirteen years of interiors drawn, detailed and delivered in Ahmedabad.</p>
+  </div>
+</section>
+
+<!-- ══ F ══ -->
+<p class="demo-label"><b>F · Marquee</b><span>the name runs between two plates</span></p>
+<section class="hx hx-f" id="hx-f" data-hx="f">
+  <div class="hxf__band" data-stage>
+    <img class="is-active" src="assets/images/hero-radhe.webp" alt="">
+    <img src="assets/images/earth-house.webp" alt="">
+    <img src="assets/images/sandstone-courtyard.webp" alt="">
+  </div>
+  <div class="hxf__marq">
+    <div>
+      <span>Radhe Design Studio <i></i> Interiors <i></i> Ahmedabad <i></i></span>
+      <span>Radhe Design Studio <i></i> Interiors <i></i> Ahmedabad <i></i></span>
+    </div>
+  </div>
+  <div class="hxf__band hxf__band--foot" data-stage>
+    <img class="is-active" src="assets/images/noma-studio.webp" alt="">
+    <img src="assets/images/material-detail.webp" alt="">
+    <img src="assets/images/courtyard-house-hero.jpg" alt="">
+    <p class="hxf__meta"><span>Est. 2013</span><span>Turnkey interiors</span></p>
+  </div>
+</section>
+
+<!-- ══ G ══ -->
+<p class="demo-label"><b>G · Column</b><span>one plate, air, type beneath</span></p>
+<section class="hx hx-g" id="hx-g" data-hx="g">
+  <div class="hxg__plate" data-stage>
+    <img class="is-active" src="assets/images/earth-house.webp" alt="">
+    <img src="assets/images/sandstone-courtyard.webp" alt="">
+    <img src="assets/images/hero-radhe.webp" alt="">
+    <img src="assets/images/noma-studio.webp" alt="">
+  </div>
+  <div class="hxg__cap">
+    <p class="hxg__fig">Fig. <b data-fig>01</b> / 04</p>
+    <h1 class="hxg__name">Radhe <b>Design Studio</b></h1>
+    <p class="hxg__tag">Architecture for the way people live</p>
+    <span class="hxg__dots" data-ticks><i class="is-on"></i><i></i><i></i><i></i></span>
+  </div>
+</section>
+
+<!-- ══ H ══ -->
+<p class="demo-label"><b>H · Contact sheet</b><span>four plates, name reversed out</span></p>
+<section class="hx hx-h" id="hx-h" data-hx="h">
+  <div class="hxh__t hxh__t--big"><img src="assets/images/earth-house.webp" alt=""><span class="hxh__no">01</span></div>
+  <div class="hxh__t"><img src="assets/images/noma-studio.webp" alt=""><span class="hxh__no">02</span></div>
+  <div class="hxh__t hxh__t--word">
+    <i></i>
+    <h1>Radhe<br><b>Design Studio</b></h1>
+    <p>Ahmedabad · Interiors</p>
+  </div>
+  <div class="hxh__t"><img src="assets/images/sandstone-courtyard.webp" alt=""><span class="hxh__no">03</span></div>
+  <div class="hxh__t"><img src="assets/images/material-detail.webp" alt=""><span class="hxh__no">04</span></div>
+</section>
+
+<!-- ══ I ══ -->
+<p class="demo-label"><b>I · Cut type</b><span>the photograph inside the letters</span></p>
+<section class="hx hx-i" id="hx-i" data-hx="i">
+  <h1 class="hxi__cut">Radhe</h1>
+  <div class="hxi__under">
+    <h2>Design Studio</h2>
+    <p>Interior architecture for homes, offices and hospitality — drawn and delivered in Ahmedabad.</p>
+    <p class="hxi__foot"><span>Est. 2013</span><span>Scroll &#8595;</span></p>
+  </div>
+</section>
+
+<!-- ══ J ══ -->
+<p class="demo-label"><b>J · Rail</b><span>a filmstrip you swipe</span></p>
+<section class="hx hx-j" id="hx-j" data-hx="j">
+  <div class="hxj__top">
+    <h1>Radhe<br><b>Design Studio</b></h1>
+    <span>01 / 05</span>
+  </div>
+  <div class="hxj__rail">
+    <figure><img src="assets/images/earth-house.webp" alt=""><figcaption><span>The Earth House</span><span>01</span></figcaption></figure>
+    <figure><img src="assets/images/sandstone-courtyard.webp" alt=""><figcaption><span>Aaranya</span><span>02</span></figcaption></figure>
+    <figure><img src="assets/images/hero-radhe.webp" alt=""><figcaption><span>Serein</span><span>03</span></figcaption></figure>
+    <figure><img src="assets/images/noma-studio.webp" alt=""><figcaption><span>Noma Studio</span><span>04</span></figcaption></figure>
+    <figure><img src="assets/images/material-detail.webp" alt=""><figcaption><span>Material study</span><span>05</span></figcaption></figure>
+  </div>
+  <p class="hxj__foot"><span>Swipe the strip</span><span><b>Ahmedabad</b> · Est. 2013</span></p>
+</section>
+
 <script>
+/* One crossfade driver for every stack on the page. */
 document.querySelectorAll('[data-stage]').forEach((stage) => {
   const imgs = [...stage.querySelectorAll('img')];
-  const fig = stage.closest('[data-hx]').querySelector('[data-fig]');
-  const ticks = stage.closest('[data-hx]').querySelectorAll('[data-ticks] i');
+  if (imgs.length < 2) return;
+  const scope = stage.closest('[data-hx]');
+  const fig = scope.querySelector('[data-fig]');
+  const ticks = scope.querySelectorAll('[data-ticks] i');
+  const rows = stage.dataset.sync ? scope.querySelectorAll(`[data-rows="${stage.dataset.sync}"] li`) : [];
   let i = 0;
   setInterval(() => {
     imgs[i].classList.remove('is-active');
@@ -270,7 +590,20 @@ document.querySelectorAll('[data-stage]').forEach((stage) => {
     imgs[i].classList.add('is-active');
     if (fig) fig.textContent = String(i + 1).padStart(2, '0');
     ticks.forEach((t, n) => t.classList.toggle('is-on', n === i));
+    rows.forEach((r, n) => r.classList.toggle('is-on', n === i));
   }, 3800);
+});
+
+/* D: tapping a row lights its own plate. */
+document.querySelectorAll('[data-rows]').forEach((list) => {
+  const key = list.dataset.rows;
+  const imgs = [...document.querySelectorAll(`[data-sync="${key}"] img`)];
+  [...list.children].forEach((row, n) => {
+    row.addEventListener('pointerenter', () => {
+      imgs.forEach((im, m) => im.classList.toggle('is-active', m === n));
+      [...list.children].forEach((r, m) => r.classList.toggle('is-on', m === n));
+    });
+  });
 });
 </script>
 </body>
