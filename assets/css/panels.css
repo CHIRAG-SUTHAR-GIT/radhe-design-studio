@@ -208,9 +208,9 @@
   .chip.is-on span { color: var(--amber); }
   .chip.is-on::before, .chip.is-on::after { display: block; }
 
-  /* ── Floating figures: same behaviour, new frame ──────────────────
+  /* ── Floating figures: same behaviour, no frame ───────────────────
      The float and the count are untouched; the cell loses its radius,
-     its fill and its violet wash and becomes a ruled cell instead. */
+     its fill and its violet wash and stands on the bare sheet. */
   .facts__grid, .statement-stats { gap: 0; }
   .facts__cell, .statement-stat {
     border: 0;
@@ -219,11 +219,13 @@
     padding: 1.3rem 1rem 1.5rem 0;
     text-align: left;
   }
-  /* A ruled 2x2: a line under each row and one between the columns, so it
-     reads as a schedule rather than as four tiles. */
-  .statement-stat { border-bottom: 1px solid var(--hair-soft); }
-  .statement-stat:nth-child(odd) { border-right: 1px solid var(--hair-soft); padding-right: 1rem; }
-  .statement-stat:nth-child(even) { padding-left: 1rem; }
+  /* No frame at all: the four figures stand on the sheet on their own,
+     held by the column rhythm rather than by rules. The grid's own top and
+     left edges come from the base stylesheet, so they are cleared too. */
+  .statement-stats { border: 0; }
+  .statement-stat { border: 0; }
+  .statement-stat:nth-child(odd) { padding-right: 1.2rem; }
+  .statement-stat:nth-child(even) { padding-left: 1.2rem; }
   /* The corner wash belonged to the filled tile. */
   .statement-stat::after, .facts__cell::after { display: none; }
   .facts__cell[data-tone='warm'] { background: none; }
