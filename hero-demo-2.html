@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twenty more hero directions — Radhe Design Studio</title>
+<link rel="stylesheet" href="assets/css/studio.css?v=demo-hero20">
+<link rel="stylesheet" href="assets/css/panels.css?v=demo-hero20">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   Directions K–AD. Every class is prefixed hy; nothing here touches
+   the live page.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Demo chrome ─────────────────────────────────────────────── */
+.demo-top {
+  position: sticky; top: 0; z-index: 60;
+  display: flex; flex-wrap: wrap; gap: 4px;
+  padding: .5rem var(--page-x);
+  background: var(--clay);
+}
+.demo-top a {
+  display: grid; place-items: center;
+  min-width: 22px; height: 22px; padding: 0 4px;
+  border: 1px solid rgba(255,255,255,.28);
+  color: #fff; font-family: var(--sans); font-size: .54rem; font-weight: 700; text-decoration: none;
+}
+.demo-top a.is-back { border-color: var(--amber); color: var(--amber); }
+.demo-label {
+  position: sticky; top: 68px; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .55rem var(--page-x);
+  background: var(--amber); color: #fff;
+  font-family: var(--sans); font-size: .56rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+}
+.demo-label span { opacity: .82; letter-spacing: .06em; text-transform: none; font-weight: 500; }
+.hy { position: relative; overflow: hidden; scroll-margin-top: 96px; min-height: 100svh; }
+
+/* Shared bits reused by several directions. */
+.hy__fill { position: absolute; inset: 0; overflow: hidden; background: var(--plate); }
+.hy__fill img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hy__kicker {
+  font-family: var(--sans); font-size: .55rem; font-weight: 600;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--muted-2);
+}
+.hy__display {
+  margin: 0; font-family: var(--display);
+  font-weight: 300; line-height: .95; letter-spacing: -.035em; color: var(--clay);
+}
+.hy__display b { font-weight: 600; }
+
+/* ══ K · HALVES ═══════════════════════════════════════════════ */
+.hy-k { display: grid; grid-template-rows: 1fr 1fr; }
+.hyk__top { position: relative; overflow: hidden; background: var(--plate); }
+.hyk__top img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyk__bot {
+  display: grid; align-content: center; gap: 1.1rem;
+  padding: clamp(1.6rem,6vw,3rem) var(--page-x); background: var(--clay);
+}
+.hyk__bot h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(2.2rem, 10vw, 4rem); font-weight: 300; line-height: .95; letter-spacing: -.035em; color: #fff;
+}
+.hyk__bot h1 b { font-weight: 600; }
+.hyk__bot p { max-width: 28ch; color: rgba(255,255,255,.66); font-size: .92rem; line-height: 1.55; }
+.hyk__bot i { display: block; width: 34px; height: 2px; background: var(--amber); }
+
+/* ══ L · DIAGONAL ═════════════════════════════════════════════ */
+.hy-l { display: grid; }
+.hyl__cut { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 100% 58%, 0 88%); overflow: hidden; background: var(--plate); }
+.hyl__cut img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyl__body {
+  position: relative; z-index: 1; align-self: end;
+  display: grid; gap: .9rem; padding: 0 var(--page-x) clamp(2.2rem,7vh,4rem);
+}
+.hyl__body h1 { font-size: clamp(2.2rem, 10vw, 4.2rem); }
+.hyl__body p { max-width: 28ch; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+
+/* ══ M · ROUNDEL ══════════════════════════════════════════════ */
+.hy-m { display: grid; align-content: center; justify-items: center; gap: clamp(1.6rem,5vh,2.6rem); padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hym__wrap { position: relative; width: min(76vw, 340px); aspect-ratio: 1; }
+.hym__disc { position: absolute; inset: 12%; border-radius: 50%; overflow: hidden; background: var(--plate); }
+.hym__disc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hym__ring { position: absolute; inset: 0; animation: hymSpin 44s linear infinite; }
+.hym__ring text { font-family: var(--sans); font-size: 6.2px; font-weight: 700; letter-spacing: 2.1px; text-transform: uppercase; fill: var(--muted-2); }
+@keyframes hymSpin { to { transform: rotate(360deg); } }
+.hym__cap { display: grid; justify-items: center; gap: .7rem; text-align: center; }
+.hym__cap h1 { font-size: clamp(1.9rem, 8vw, 3rem); }
+.hym__cap p { color: var(--muted); font-size: .88rem; }
+
+/* ══ N · OVERLAP CARD ═════════════════════════════════════════ */
+.hy-n { display: grid; align-items: end; }
+.hyn__card {
+  position: relative; z-index: 1;
+  margin: 0 var(--page-x) clamp(2rem,7vh,4rem);
+  display: grid; gap: .9rem;
+  padding: clamp(1.4rem,5vw,2.2rem);
+  background: var(--sheet);
+  border-left: 3px solid var(--amber);
+  box-shadow: 0 30px 60px -40px rgba(0,0,0,.5);
+}
+.hyn__card h1 { font-size: clamp(1.9rem, 8.4vw, 3.2rem); }
+.hyn__card p { max-width: 30ch; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+.hyn__row {
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding-top: .8rem; border-top: 1px solid var(--hair-soft);
+}
+
+/* ══ O · VERTICAL ═════════════════════════════════════════════ */
+.hy-o { display: grid; grid-template-columns: auto 1fr; }
+.hyo__spine {
+  display: grid; align-content: space-between; justify-items: center; gap: 1rem;
+  padding: clamp(1.4rem,5vh,2.4rem) .7rem; border-right: 1px solid var(--hair-soft);
+}
+.hyo__spine h1 {
+  margin: 0; writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--display); font-size: clamp(1.5rem, 6.6vw, 2.4rem);
+  font-weight: 300; letter-spacing: -.02em; color: var(--clay);
+}
+.hyo__spine h1 b { font-weight: 600; }
+.hyo__spine span { writing-mode: vertical-rl; font-family: var(--sans); font-size: .5rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--muted-2); }
+.hyo__plate { position: relative; overflow: hidden; background: var(--plate); }
+.hyo__plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyo__tag {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding: .8rem 1rem;
+  background: linear-gradient(0deg, rgba(12,10,8,.75), rgba(12,10,8,0));
+  color: rgba(255,255,255,.86);
+  font-family: var(--sans); font-size: .52rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+}
+
+/* ══ P · NUMBERED STACK ═══════════════════════════════════════ */
+.hy-p { display: grid; align-content: center; gap: 1.2rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyp__rows { display: grid; border-top: 1px solid var(--hair-soft); }
+.hyp__rows div {
+  display: grid; grid-template-columns: 2.2rem minmax(0,1fr) 56px; align-items: center; gap: .9rem;
+  padding: clamp(.8rem,2.6vw,1.2rem) 0; border-bottom: 1px solid var(--hair-soft);
+}
+.hyp__rows b { font-family: var(--sans); font-size: .55rem; font-weight: 700; letter-spacing: .16em; color: var(--amber); }
+.hyp__rows h1, .hyp__rows h2 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.9rem, 9vw, 3.4rem); font-weight: 300; line-height: 1; letter-spacing: -.035em; color: var(--clay);
+}
+.hyp__rows div:nth-child(2) h2 { font-weight: 600; }
+.hyp__rows figure { margin: 0; width: 56px; aspect-ratio: 1; overflow: hidden; background: var(--plate); }
+.hyp__rows figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyp__foot { display: flex; justify-content: space-between; gap: 1rem; }
+
+/* ══ Q · BLUEPRINT ════════════════════════════════════════════ */
+.hy-q { display: grid; align-content: center; gap: 1.4rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyq__grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--hair-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hair-soft) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: .55;
+}
+.hyq__body { position: relative; z-index: 1; display: grid; gap: 1.2rem; }
+.hyq__out {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(3rem, 17vw, 8rem); font-weight: 700; line-height: .86;
+  letter-spacing: -.04em; text-transform: uppercase;
+  color: transparent; -webkit-text-stroke: 1.4px var(--clay);
+}
+.hyq__out b { color: var(--clay); -webkit-text-stroke: 0; font-weight: 700; }
+.hyq__callout { display: grid; grid-template-columns: 92px minmax(0,1fr); align-items: center; gap: .9rem; }
+.hyq__callout figure { margin: 0; aspect-ratio: 1; overflow: hidden; background: var(--plate); border: 1px solid var(--hair-soft); }
+.hyq__callout figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyq__callout div { display: grid; gap: .4rem; }
+.hyq__callout p { color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.hyq__dims { display: flex; justify-content: space-between; gap: 1rem; padding-top: .9rem; border-top: 1px solid var(--hair-soft); }
+
+/* ══ R · APERTURES ════════════════════════════════════════════ */
+.hy-r { display: grid; align-content: center; gap: clamp(1.6rem,5vh,2.6rem); padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyr__set { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.hyr__set i {
+  display: block; aspect-ratio: 1 / 1.9;
+  border-radius: 999px 999px 4px 4px;
+  background-image: url('assets/images/earth-house.webp');
+  background-size: 300% 100%;
+}
+.hyr__set i:nth-child(1) { background-position: 0% 40%; }
+.hyr__set i:nth-child(2) { background-position: 50% 40%; }
+.hyr__set i:nth-child(3) { background-position: 100% 40%; }
+.hyr__cap { display: grid; gap: .8rem; }
+.hyr__cap h1 { font-size: clamp(2rem, 9vw, 3.4rem); }
+.hyr__cap p { max-width: 30ch; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+/* ══ S · STRIP + LEAD ═════════════════════════════════════════ */
+.hy-s { display: grid; grid-template-rows: auto 1fr; }
+.hys__strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; height: clamp(150px, 26svh, 260px); background: var(--hair-soft); }
+.hys__strip figure { margin: 0; overflow: hidden; background: var(--plate); }
+.hys__strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hys__body { display: grid; align-content: center; gap: 1.2rem; padding: clamp(2rem,7vh,4rem) var(--page-x); }
+.hys__body h1 { font-size: clamp(2.1rem, 9.4vw, 4rem); max-width: 15ch; }
+.hys__body h1 em { font-style: normal; color: var(--amber); }
+.hys__go {
+  justify-self: start; display: inline-flex; align-items: center; gap: .7rem;
+  padding: .85rem 1.4rem; border: 1px solid var(--hair); color: var(--clay); text-decoration: none;
+  font-family: var(--sans); font-size: .58rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+}
+
+/* ══ T · CORNERS ══════════════════════════════════════════════ */
+.hy-t { display: grid; grid-template-rows: auto 1fr auto; }
+.hyt__a, .hyt__z { padding: clamp(1.4rem,5vh,2.4rem) var(--page-x); }
+.hyt__z { display: flex; justify-content: flex-end; text-align: right; }
+.hyt__a h1 { font-size: clamp(1.8rem, 8vw, 3rem); }
+.hyt__band { position: relative; overflow: hidden; background: var(--plate); }
+.hyt__band img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyt__z div { display: grid; gap: .4rem; justify-items: end; }
+.hyt__z p { max-width: 24ch; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+
+/* ══ U · DUOTONE ══════════════════════════════════════════════ */
+.hy-u { display: grid; align-content: center; justify-items: center; gap: 1.2rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyu__wash { position: absolute; inset: 0; overflow: hidden; background: var(--clay); }
+.hyu__wash img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.15); opacity: .55; }
+.hyu__wash::after { content: ''; position: absolute; inset: 0; background: var(--amber); mix-blend-mode: color; opacity: .55; }
+.hyu__body { position: relative; z-index: 1; display: grid; justify-items: center; gap: 1rem; text-align: center; }
+.hyu__body h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(2.6rem, 13vw, 6rem); font-weight: 300; line-height: .92; letter-spacing: -.04em; color: #fff;
+}
+.hyu__body h1 b { font-weight: 600; }
+.hyu__body p { max-width: 26ch; color: rgba(255,255,255,.8); font-size: .95rem; line-height: 1.5; }
+.hyu__body i { display: block; width: 38px; height: 2px; background: #fff; }
+
+/* ══ V · SANDWICH ═════════════════════════════════════════════ */
+.hy-v { display: grid; grid-template-rows: auto 1fr auto; }
+.hyv__w {
+  margin: 0; padding: clamp(1rem,4vh,2rem) var(--page-x);
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 15.5vw, 7rem); font-weight: 300; line-height: .9;
+  letter-spacing: -.045em; text-transform: uppercase; color: var(--clay);
+}
+.hyv__w--b { font-weight: 700; text-align: right; }
+.hyv__band { position: relative; overflow: hidden; background: var(--plate); }
+.hyv__band img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyv__band span {
+  position: absolute; left: 0; bottom: 0; padding: .5rem .8rem;
+  background: var(--sheet); color: var(--muted-2);
+  font-family: var(--sans); font-size: .52rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+}
+
+/* ══ W · JOURNAL ══════════════════════════════════════════════ */
+.hy-w { display: grid; align-content: center; gap: 1.4rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyw__head { display: grid; grid-template-columns: 88px minmax(0,1fr); gap: 1rem; align-items: center; }
+.hyw__head figure { margin: 0; aspect-ratio: 3/4; overflow: hidden; background: var(--plate); }
+.hyw__head img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyw__head div { display: grid; gap: .4rem; }
+.hyw__head h1 { font-size: clamp(1.5rem, 6.4vw, 2.4rem); }
+.hyw__text { display: grid; gap: .9rem; padding-top: 1rem; border-top: 1px solid var(--hair-soft); }
+.hyw__text p { color: var(--muted); font-size: clamp(.95rem, 3.9vw, 1.06rem); line-height: 1.7; }
+.hyw__text p:first-child::first-letter {
+  float: left; margin: .1em .18em 0 0;
+  font-family: var(--display); font-size: 3.1em; line-height: .82; font-weight: 600; color: var(--amber);
+}
+.hyw__sign { display: flex; justify-content: space-between; gap: 1rem; padding-top: .8rem; border-top: 1px solid var(--hair-soft); }
+
+/* ══ X · LEDGER ═══════════════════════════════════════════════ */
+.hy-x { display: grid; align-content: center; gap: 1.3rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyx__title { font-size: clamp(2rem, 9vw, 3.4rem); }
+.hyx__table { display: grid; border-top: 1px solid var(--hair-soft); }
+.hyx__table div {
+  display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: baseline; gap: 1rem;
+  padding: .85rem 0; border-bottom: 1px solid var(--hair-soft);
+}
+.hyx__table dt { font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2); }
+.hyx__table dd { margin: 0; font-family: var(--display); font-size: clamp(1.2rem, 5.2vw, 1.9rem); font-weight: 400; color: var(--clay); }
+.hyx__table dd b { color: var(--amber); font-weight: 400; }
+.hyx__plate { height: clamp(140px, 22svh, 220px); overflow: hidden; background: var(--plate); }
+.hyx__plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ══ Y · PORTAL ═══════════════════════════════════════════════ */
+.hy-y { display: grid; align-content: center; justify-items: center; gap: clamp(1.4rem,4.5vh,2.4rem); padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyy__arch {
+  position: relative; width: min(66vw, 300px); aspect-ratio: 2 / 3;
+  border-radius: 50% 50% 4px 4px / 34% 34% 2% 2%;
+  overflow: hidden; background: var(--plate);
+}
+.hyy__arch img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyy__arch::after {
+  content: ''; position: absolute; inset: 9px;
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 50% 50% 2px 2px / 34% 34% 1% 1%;
+}
+.hyy__cap { display: grid; justify-items: center; gap: .7rem; text-align: center; }
+.hyy__cap h1 { font-size: clamp(1.9rem, 8vw, 3rem); }
+.hyy__cap p { color: var(--muted); font-size: .88rem; }
+
+/* ══ Z · TYPE GRID ════════════════════════════════════════════ */
+.hy-z { display: grid; align-content: center; gap: 1.1rem; padding: clamp(4rem,11vh,7rem) var(--page-x); }
+.hyz__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.hyz__grid span, .hyz__grid figure {
+  display: grid; place-items: center; margin: 0;
+  aspect-ratio: 1; background: var(--plate-2);
+  font-family: var(--display); font-size: clamp(1rem, 4.6vw, 1.6rem);
+  letter-spacing: -.02em; color: var(--clay);
+}
+.hyz__grid span:nth-child(2n) { font-weight: 700; background: var(--clay); color: var(--sheet); }
+.hyz__grid figure { overflow: hidden; padding: 0; background: var(--plate); }
+.hyz__grid figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyz__cap { display: flex; justify-content: space-between; gap: 1rem; padding-top: .9rem; border-top: 1px solid var(--hair-soft); }
+
+/* ══ AA · SLOW ════════════════════════════════════════════════ */
+.hy-aa { display: grid; align-items: end; }
+.hyaa__stage { position: absolute; inset: 0; overflow: hidden; background: #16130f; }
+.hyaa__stage img { width: 100%; height: 100%; object-fit: cover; display: block; animation: hyaaZoom 24s var(--ease-io) infinite alternate; }
+@keyframes hyaaZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+.hyaa__stage::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(12,10,8,.72), rgba(12,10,8,0) 55%); }
+.hyaa__body { position: relative; z-index: 1; display: grid; justify-items: center; gap: 1rem; padding: 0 var(--page-x) clamp(2.4rem,8vh,4.5rem); text-align: center; }
+.hyaa__line { width: 0; height: 1px; background: var(--amber); animation: hyaaDraw 4.5s var(--ease-io) forwards; }
+@keyframes hyaaDraw { to { width: min(60vw, 300px); } }
+.hyaa__body h1 {
+  margin: 0; font-family: var(--display);
+  font-size: clamp(1.4rem, 6vw, 2.2rem); font-weight: 300; letter-spacing: .02em; color: #fff;
+}
+.hyaa__body h1 b { font-weight: 600; }
+.hyaa__body p { color: rgba(255,255,255,.7); font-family: var(--sans); font-size: .54rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; }
+
+/* ══ AB · TWO COLUMN ══════════════════════════════════════════ */
+.hy-ab { display: grid; grid-template-columns: 1fr 1fr; height: 100svh; }
+.hyab__text { display: grid; align-content: center; gap: 1rem; padding: clamp(2rem,7vh,4rem) 1rem clamp(2rem,7vh,4rem) var(--page-x); }
+.hyab__text h1 { font-size: clamp(1.7rem, 7.4vw, 3.2rem); }
+.hyab__text p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+.hyab__text i { display: block; width: 30px; height: 2px; background: var(--amber); }
+.hyab__scroll { overflow: hidden; background: var(--plate); }
+.hyab__scroll div { display: grid; gap: 8px; animation: hyabRun 30s linear infinite; }
+.hyab__scroll figure { margin: 0; aspect-ratio: 3/4; overflow: hidden; }
+.hyab__scroll img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@keyframes hyabRun { to { transform: translateY(-50%); } }
+
+/* ══ AC · KNOCKOUT ════════════════════════════════════════════ */
+.hy-ac { display: grid; align-items: center; }
+.hyac__panel { position: absolute; inset: 0; }
+.hyac__panel img { width: 100%; height: 100%; object-fit: cover; object-position: center 68%; filter: contrast(1.18) saturate(1.1); display: block; }
+.hyac__mask { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hyac__mask rect.sheet { fill: var(--sheet); }
+.hyac__foot {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding: 1rem var(--page-x);
+  font-family: var(--sans); font-size: .55rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
+}
+
+/* ══ AD · POSTCARD ════════════════════════════════════════════ */
+.hy-ad { display: grid; place-items: center; padding: clamp(2rem,7vh,4rem) var(--page-x); background: var(--plate-2); }
+.hyad__card {
+  width: min(100%, 380px);
+  display: grid; gap: 0;
+  padding: 12px; background: var(--sheet);
+  border: 1px solid var(--hair-soft);
+  box-shadow: 0 30px 60px -40px rgba(0,0,0,.45);
+}
+.hyad__shot { position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--plate); }
+.hyad__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hyad__stamp {
+  position: absolute; right: 10px; top: 10px;
+  display: grid; place-items: center; gap: 2px;
+  width: 48px; height: 58px; padding: 4px;
+  background: var(--sheet); border: 1px dashed var(--hair);
+  font-family: var(--sans); font-size: .46rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); text-align: center;
+}
+.hyad__stamp b { color: var(--amber); font-size: .9rem; letter-spacing: 0; }
+.hyad__body { display: grid; gap: .7rem; padding: 1.1rem .3rem .4rem; }
+.hyad__body h1 { font-size: clamp(1.5rem, 6.6vw, 2.1rem); }
+.hyad__body p { color: var(--muted); font-size: .88rem; line-height: 1.55; }
+.hyad__body .hyad__rule { height: 1px; background: var(--hair-soft); }
+.hyad__addr { display: flex; justify-content: space-between; gap: 1rem; }
+
+@media (max-width: 760px) {
+  .hy-ab { grid-template-columns: 1fr 1.05fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="demo-top">
+  <a class="is-back" href="hero-demo.html">A–J</a>
+  <a href="#hy-k">K</a><a href="#hy-l">L</a><a href="#hy-m">M</a><a href="#hy-n">N</a><a href="#hy-o">O</a>
+  <a href="#hy-p">P</a><a href="#hy-q">Q</a><a href="#hy-r">R</a><a href="#hy-s">S</a><a href="#hy-t">T</a>
+  <a href="#hy-u">U</a><a href="#hy-v">V</a><a href="#hy-w">W</a><a href="#hy-x">X</a><a href="#hy-y">Y</a>
+  <a href="#hy-z">Z</a><a href="#hy-aa">AA</a><a href="#hy-ab">AB</a><a href="#hy-ac">AC</a><a href="#hy-ad">AD</a>
+</nav>
+
+<p class="demo-label"><b>K · Halves</b><span>hard 50/50, name reversed below</span></p>
+<section class="hy hy-k" id="hy-k">
+  <div class="hyk__top"><img src="assets/images/earth-house.webp" alt=""></div>
+  <div class="hyk__bot">
+    <i></i>
+    <h1>Radhe<br><b>Design Studio</b></h1>
+    <p>Interior architecture drawn, detailed and delivered in Ahmedabad.</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>L · Diagonal</b><span>the photograph cut on a slope</span></p>
+<section class="hy hy-l" id="hy-l">
+  <div class="hyl__cut"><img src="assets/images/sandstone-courtyard.webp" alt=""></div>
+  <div class="hyl__body">
+    <p class="hy__kicker">Interior architecture · Ahmedabad</p>
+    <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+    <p>Rooms drawn for Gujarat light, built to be lived in.</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>M · Roundel</b><span>circular plate, name running around it</span></p>
+<section class="hy hy-m" id="hy-m">
+  <div class="hym__wrap">
+    <div class="hym__disc"><img src="assets/images/hero-radhe.webp" alt=""></div>
+    <svg class="hym__ring" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><path id="hymPath" d="M50,50 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+      <text><textPath href="#hymPath">Radhe Design Studio · Ahmedabad, Gujarat · </textPath></text>
+    </svg>
+  </div>
+  <div class="hym__cap">
+    <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+    <p>Architecture for the way people live</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>N · Overlap card</b><span>a solid card set over the photograph</span></p>
+<section class="hy hy-n" id="hy-n">
+  <div class="hy__fill"><img src="assets/images/noma-studio.webp" alt=""></div>
+  <div class="hyn__card">
+    <p class="hy__kicker">Est. Ahmedabad, Gujarat</p>
+    <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+    <p>Interiors drawn the way a building is — measured, detailed, handed over finished.</p>
+    <div class="hyn__row"><span class="hy__kicker">Turnkey interiors</span><span class="hy__kicker">Since 2013</span></div>
+  </div>
+</section>
+
+<p class="demo-label"><b>O · Spine</b><span>the name set vertically down the edge</span></p>
+<section class="hy hy-o" id="hy-o">
+  <div class="hyo__spine">
+    <span>Est. 2013</span>
+    <h1>Radhe <b>Design Studio</b></h1>
+    <span>Ahmedabad</span>
+  </div>
+  <div class="hyo__plate">
+    <img src="assets/images/earth-house.webp" alt="">
+    <p class="hyo__tag"><span>The Earth House</span><span>Fig. 01</span></p>
+  </div>
+</section>
+
+<p class="demo-label"><b>P · Numbered stack</b><span>the name as three ruled rows</span></p>
+<section class="hy hy-p" id="hy-p">
+  <div class="hyp__rows">
+    <div><b>01</b><h1>Radhe</h1><figure><img src="assets/images/earth-house.webp" alt=""></figure></div>
+    <div><b>02</b><h2>Design</h2><figure><img src="assets/images/sandstone-courtyard.webp" alt=""></figure></div>
+    <div><b>03</b><h2>Studio</h2><figure><img src="assets/images/noma-studio.webp" alt=""></figure></div>
+  </div>
+  <p class="hyp__foot"><span class="hy__kicker">Interior architecture</span><span class="hy__kicker">Ahmedabad, Gujarat</span></p>
+</section>
+
+<p class="demo-label"><b>Q · Blueprint</b><span>outline type on a drawing grid</span></p>
+<section class="hy hy-q" id="hy-q">
+  <div class="hyq__grid"></div>
+  <div class="hyq__body">
+    <p class="hy__kicker">Sheet 01 · Cover</p>
+    <h1 class="hyq__out">Radhe<br><b>Studio</b></h1>
+    <div class="hyq__callout">
+      <figure><img src="assets/images/material-detail.webp" alt=""></figure>
+      <div>
+        <p class="hy__kicker">Detail A</p>
+        <p>Interiors for homes, offices and hospitality — drawn and delivered in Ahmedabad.</p>
+      </div>
+    </div>
+    <p class="hyq__dims"><span class="hy__kicker">Scale 1:1</span><span class="hy__kicker">Est. 2013</span></p>
+  </div>
+</section>
+
+<p class="demo-label"><b>R · Apertures</b><span>one photograph seen through three arches</span></p>
+<section class="hy hy-r" id="hy-r">
+  <div class="hyr__set"><i></i><i></i><i></i></div>
+  <div class="hyr__cap">
+    <p class="hy__kicker">Interior architecture · Ahmedabad</p>
+    <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+    <p>Rooms drawn for Gujarat light, built to be lived in.</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>S · Strip &amp; lead</b><span>three plates, then the sentence</span></p>
+<section class="hy hy-s" id="hy-s">
+  <div class="hys__strip">
+    <figure><img src="assets/images/earth-house.webp" alt=""></figure>
+    <figure><img src="assets/images/sandstone-courtyard.webp" alt=""></figure>
+    <figure><img src="assets/images/noma-studio.webp" alt=""></figure>
+  </div>
+  <div class="hys__body">
+    <p class="hy__kicker">Radhe Design Studio · Ahmedabad</p>
+    <h1 class="hy__display">Interiors we design, detail and <em>deliver</em>.</h1>
+    <a class="hys__go" href="projects.html">Selected work &#8599;</a>
+  </div>
+</section>
+
+<p class="demo-label"><b>T · Corners</b><span>name up, tagline down, plate between</span></p>
+<section class="hy hy-t" id="hy-t">
+  <div class="hyt__a">
+    <h1 class="hy__display">Radhe<br><b>Design Studio</b></h1>
+  </div>
+  <div class="hyt__band"><img src="assets/images/hero-radhe.webp" alt=""></div>
+  <div class="hyt__z">
+    <div>
+      <p class="hy__kicker">Ahmedabad, Gujarat</p>
+      <p>Architecture for the way people live.</p>
+    </div>
+  </div>
+</section>
+
+<p class="demo-label"><b>U · Duotone</b><span>the photograph washed into the palette</span></p>
+<section class="hy hy-u" id="hy-u">
+  <div class="hyu__wash"><img src="assets/images/sandstone-courtyard.webp" alt=""></div>
+  <div class="hyu__body">
+    <i></i>
+    <h1>Radhe<br><b>Design Studio</b></h1>
+    <p>Interior architecture · Ahmedabad, Gujarat</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>V · Sandwich</b><span>plate held between two huge words</span></p>
+<section class="hy hy-v" id="hy-v">
+  <p class="hyv__w">Radhe</p>
+  <div class="hyv__band">
+    <img src="assets/images/earth-house.webp" alt="">
+    <span>Fig. 01 · The Earth House</span>
+  </div>
+  <p class="hyv__w hyv__w--b">Studio</p>
+</section>
+
+<p class="demo-label"><b>W · Journal</b><span>reads like the opening of an essay</span></p>
+<section class="hy hy-w" id="hy-w">
+  <div class="hyw__head">
+    <figure><img src="assets/images/material-detail.webp" alt=""></figure>
+    <div>
+      <p class="hy__kicker">Radhe Design Studio</p>
+      <h1 class="hy__display">Ahmedabad, <b>since 2013</b></h1>
+    </div>
+  </div>
+  <div class="hyw__text">
+    <p>We draw interiors the way a building is drawn — surveyed first, detailed to the millimetre, and handed over finished rather than nearly finished.</p>
+    <p class="hyw__sign"><span class="hy__kicker">Homes · Offices · Hospitality</span><span class="hy__kicker">Turnkey</span></p>
+  </div>
+</section>
+
+<p class="demo-label"><b>X · Ledger</b><span>the practice stated as figures</span></p>
+<section class="hy hy-x" id="hy-x">
+  <h1 class="hy__display hyx__title">Radhe <b>Design Studio</b></h1>
+  <dl class="hyx__table">
+    <div><dt>In practice since</dt><dd>2013</dd></div>
+    <div><dt>Projects delivered</dt><dd><b>50+</b></dd></div>
+    <div><dt>Based in</dt><dd>Ahmedabad</dd></div>
+    <div><dt>Delivery</dt><dd>Turnkey</dd></div>
+  </dl>
+  <div class="hyx__plate"><img src="assets/images/noma-studio.webp" alt=""></div>
+</section>
+
+<p class="demo-label"><b>Y · Portal</b><span>the plate cut as an arch</span></p>
+<section class="hy hy-y" id="hy-y">
+  <div class="hyy__arch"><img src="assets/images/sandstone-courtyard.webp" alt=""></div>
+  <div class="hyy__cap">
+    <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+    <p>Architecture for the way people live</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>Z · Type grid</b><span>the name as a nine-square block</span></p>
+<section class="hy hy-z" id="hy-z">
+  <div class="hyz__grid">
+    <span>RA</span><span>DHE</span><figure><img src="assets/images/earth-house.webp" alt=""></figure>
+    <span>DE</span><span>SIGN</span><span>·</span>
+    <figure><img src="assets/images/material-detail.webp" alt=""></figure><span>STU</span><span>DIO</span>
+  </div>
+  <p class="hyz__cap"><span class="hy__kicker">Interior architecture</span><span class="hy__kicker">Ahmedabad · 2013</span></p>
+</section>
+
+<p class="demo-label"><b>AA · Slow</b><span>one plate, a drawn line, small type</span></p>
+<section class="hy hy-aa" id="hy-aa">
+  <div class="hyaa__stage"><img src="assets/images/hero-radhe.webp" alt=""></div>
+  <div class="hyaa__body">
+    <i class="hyaa__line"></i>
+    <h1>Radhe <b>Design Studio</b></h1>
+    <p>Ahmedabad · Interiors</p>
+  </div>
+</section>
+
+<p class="demo-label"><b>AB · Two column</b><span>fixed type, a strip running past it</span></p>
+<section class="hy hy-ab" id="hy-ab">
+  <div class="hyab__text">
+    <i></i>
+    <h1 class="hy__display">Radhe<br><b>Design Studio</b></h1>
+    <p>Interior architecture for homes, offices and hospitality.</p>
+    <p class="hy__kicker">Ahmedabad, Gujarat</p>
+  </div>
+  <div class="hyab__scroll">
+    <div>
+      <figure><img src="assets/images/earth-house.webp" alt=""></figure>
+      <figure><img src="assets/images/sandstone-courtyard.webp" alt=""></figure>
+      <figure><img src="assets/images/noma-studio.webp" alt=""></figure>
+      <figure><img src="assets/images/earth-house.webp" alt=""></figure>
+      <figure><img src="assets/images/sandstone-courtyard.webp" alt=""></figure>
+      <figure><img src="assets/images/noma-studio.webp" alt=""></figure>
+    </div>
+  </div>
+</section>
+
+<p class="demo-label"><b>AC · Knockout</b><span>the letters cut out of a solid panel</span></p>
+<section class="hy hy-ac" id="hy-ac">
+  <div class="hyac__panel"><img src="assets/images/earth-house.webp" alt=""></div>
+  <svg class="hyac__mask" viewBox="0 0 390 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <mask id="hyacCut">
+        <rect width="390" height="700" fill="#fff"/>
+        <text x="195" y="330" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="86" font-weight="800" letter-spacing="-3" fill="#000">RADHE</text>
+        <text x="195" y="400" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="500" letter-spacing="6" fill="#000">STUDIO</text>
+      </mask>
+    </defs>
+    <rect class="sheet" width="390" height="700" mask="url(#hyacCut)"/>
+  </svg>
+  <p class="hyac__foot"><span>Interior architecture</span><span>Ahmedabad</span></p>
+</section>
+
+<p class="demo-label"><b>AD · Postcard</b><span>the first screen as a printed card</span></p>
+<section class="hy hy-ad" id="hy-ad">
+  <div class="hyad__card">
+    <div class="hyad__shot">
+      <img src="assets/images/sandstone-courtyard.webp" alt="">
+      <span class="hyad__stamp"><b>13</b>Years</span>
+    </div>
+    <div class="hyad__body">
+      <p class="hy__kicker">From Ahmedabad, Gujarat</p>
+      <h1 class="hy__display">Radhe <b>Design Studio</b></h1>
+      <p>Interiors drawn, detailed and delivered — turnkey, since 2013.</p>
+      <div class="hyad__rule"></div>
+      <p class="hyad__addr"><span class="hy__kicker">Gota, Ahmedabad</span><span class="hy__kicker">Fig. 01</span></p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
