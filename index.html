@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geologica:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="assets/vendor/lenis.css">
-  <link rel="stylesheet" href="assets/css/studio.css?v=20260825-nostatbox">
-  <link rel="stylesheet" href="assets/css/panels.css?v=20260825-nostatbox">
+  <link rel="stylesheet" href="assets/css/studio.css?v=20260826-hero">
+  <link rel="stylesheet" href="assets/css/panels.css?v=20260826-hero">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -41,7 +41,7 @@
     </svg>
   </div>
 
-  <header class="head">
+  <header class="head head--over">
     <a class="brand" href="index.html" aria-label="Radhe Design Studio — home"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
       <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-heavy">DHE</tspan></text>
       <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
@@ -70,20 +70,28 @@
         <figure class="hero__figure" id="hero-figure">
           <img src="assets/images/earth-house.webp" alt="The Earth House" class="is-active" fetchpriority="high" decoding="async"><img src="assets/images/sandstone-courtyard.webp" alt="Aaranya" loading="lazy" decoding="async"><img src="assets/images/hero-radhe.webp" alt="Serein" loading="lazy" decoding="async"><img src="assets/images/courtyard-house-hero.jpg" alt="Courtyard House" loading="lazy" decoding="async"><img src="assets/images/noma-studio.webp" alt="Noma Studio" loading="lazy" decoding="async"><img src="assets/images/material-detail.webp" alt="Material study" loading="lazy" decoding="async">
         </figure>
+        <!-- The room arrives the way a blind opens: eight slats turning
+             flat one after another. It runs once, on load. -->
+        <div class="hero__blind" id="hero-blind" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
         <p class="hero__caption">
           <span class="annot">FIG. <b data-slide-index>01</b> / 06</span>
           <button type="button" id="slides-toggle" aria-label="Pause slideshow">&#10073;&#10073;</button>
         </p>
       </div>
 
-      <div class="hero__mark" aria-hidden="true"><svg viewBox="0 0 1000 220" role="img" aria-label="Radhe Design Studio">
-      <text x="500" y="176" text-anchor="middle" class="wm-type"><tspan class="wm-light">RA</tspan><tspan class="wm-stroke">D</tspan><tspan class="wm-heavy">HE</tspan></text>
-      <rect class="wm-amber" x="745" y="57" width="90" height="25"/>
-    </svg></div>
-
-      <div class="hero__aside">
-        <span class="hero__studio">studio</span>
-        <span class="hero__tagline">Architecture for the way people live</span>
+      <div class="hero__block">
+        <p class="hero__slug"><i></i>Est. Ahmedabad, Gujarat</p>
+        <h1 class="hero__title">Radhe<b>Design</b><b><span>Studio</span></b></h1>
+        <p class="hero__lead">Interiors drawn the way a building is &mdash; measured, detailed and handed over finished.</p>
+        <dl class="hero__meta">
+          <div><dt>Discipline</dt><dd>Interior architecture</dd></div>
+          <div><dt>Practice</dt><dd>Residential &amp; commercial</dd></div>
+          <div><dt>Location</dt><dd>Gota, Ahmedabad</dd></div>
+          <div><dt>Delivery</dt><dd>Turnkey</dd></div>
+        </dl>
+        <a class="hero__go" href="projects.html">Selected work <em aria-hidden="true">&#8599;</em></a>
       </div>
 
       <div class="hero__scroll" aria-hidden="true">
@@ -442,6 +450,6 @@
   <script src="assets/vendor/lenis.min.js"></script>
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/js/studio.js?v=20260825-nostatbox"></script>
+  <script src="assets/js/studio.js?v=20260826-hero"></script>
 </body>
 </html>

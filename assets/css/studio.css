@@ -339,23 +339,20 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* ── Page shell ─────────────────────────────────────────────────────── */
 .page { position: relative; z-index: 1; }
 
-/* ═══ HOME · Hero ═══════════════════════════════════════════════════ */
+/* ═══ HOME · Hero ═══════════════════════════════════════════════════
+   A drawing-sheet cover: the photograph bleeds off one half, the
+   practice is set as a title block on the other. The room arrives
+   through a blind that opens slat by slat. */
 .hero {
   position: relative;
-  height: 100svh; min-height: 620px;
-  display: grid; place-items: center;
+  min-height: 100svh;
+  display: grid; grid-template-columns: 1fr 1fr;
   overflow: hidden;
 }
 
-.hero__plate { position: relative; display: grid; gap: .9rem; justify-items: center; }
+.hero__plate { position: relative; overflow: hidden; background: var(--plate); }
 
-.hero__figure {
-  position: relative;
-  width: min(30vw, 400px);
-  aspect-ratio: 1 / 1.32;
-  overflow: hidden;
-  background: var(--plate);
-}
+.hero__figure { position: absolute; inset: 0; }
 .hero__figure img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -365,46 +362,99 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .hero__figure img.is-active { opacity: 1; }
 
-/* The wordmark straddles the photograph: solid letters in front, outlined
-   letters let the image read straight through them. */
-.hero__mark {
-  position: absolute; left: 50%; top: 50%;
-  width: min(78vw, 1080px);
-  transform: translate(-50%, -50%);
+/* Eight slats standing on edge, turning flat one after another. Each
+   carries its own band of the first photograph, so a closed blind is a
+   dark shutter and an open one registers back into a single room. */
+.hero__blind {
+  position: absolute; inset: 0; z-index: 2;
+  display: grid; grid-template-rows: repeat(8, 1fr);
+  background: var(--clay);
+  perspective: 900px;
   pointer-events: none;
 }
-.hero__mark svg { width: 100%; height: auto; display: block; overflow: visible; }
-.hero__mark .wm-stroke { stroke: var(--clay); stroke-width: 2; }
-.hero__mark .wm-solid { fill: var(--clay); }
+.hero__blind i {
+  display: block;
+  background-image: url('../images/earth-house.webp');
+  background-size: 100% 800%;
+  transform-origin: 50% 0;
+  transform: rotateX(-88deg);
+  backface-visibility: hidden;
+  animation: heroBlind 1.5s var(--ease-io) forwards;
+}
+.hero__blind i:nth-child(1) { background-position: center 0%;      animation-delay: .25s; }
+.hero__blind i:nth-child(2) { background-position: center 14.28%;  animation-delay: .34s; }
+.hero__blind i:nth-child(3) { background-position: center 28.57%;  animation-delay: .43s; }
+.hero__blind i:nth-child(4) { background-position: center 42.85%;  animation-delay: .52s; }
+.hero__blind i:nth-child(5) { background-position: center 57.14%;  animation-delay: .61s; }
+.hero__blind i:nth-child(6) { background-position: center 71.42%;  animation-delay: .70s; }
+.hero__blind i:nth-child(7) { background-position: center 85.71%;  animation-delay: .79s; }
+.hero__blind i:nth-child(8) { background-position: center 100%;    animation-delay: .88s; }
+@keyframes heroBlind { to { transform: rotateX(0deg); } }
+/* Once open the blind has done its job; it drops out so the crossfade
+   underneath is never showing through a stale first frame. */
+.hero__blind.is-done { display: none; }
 
 .hero__caption {
-  position: relative; z-index: 2;
+  position: absolute; left: 0; bottom: 0; z-index: 3;
   display: flex; align-items: center; gap: .9rem;
+  padding: .55rem .9rem;
+  background: var(--sheet);
   white-space: nowrap;
 }
 .hero__caption button { color: var(--clay); line-height: 1; }
 
-.hero__aside {
-  position: absolute;
-  left: calc(50% + min(23vw, 320px));
-  top: calc(50% + min(9vw, 124px));
-  display: grid; gap: .45rem; justify-items: start;
+/* ── The title block ───────────────────────────────────────────── */
+.hero__block {
+  display: grid; align-content: center; gap: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.6rem, 4vw, 4rem);
 }
-.hero__studio {
-  color: var(--amber);
-  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
-  font-weight: 700;
-  line-height: 1;
+.hero__slug {
+  display: flex; align-items: center; gap: .55rem;
+  font-family: var(--sans); font-size: .56rem; font-weight: 600;
+  letter-spacing: .26em; text-transform: uppercase; color: var(--muted-2);
 }
-.hero__tagline {
+.hero__slug i { width: 22px; height: 1px; background: var(--amber); }
+.hero__title {
+  margin: 0;
+  font-size: clamp(2.6rem, 6.4vw, 5.4rem);
+  font-weight: 300; line-height: .92; letter-spacing: -.035em;
+  color: var(--clay);
+}
+.hero__title b { display: block; font-weight: 600; }
+.hero__title span { position: relative; display: inline-block; }
+.hero__title span::after {
+  content: ''; position: absolute; left: 0; bottom: -.14em;
+  width: 100%; height: 3px; background: var(--amber);
+}
+.hero__lead {
+  max-width: 30ch;
   color: var(--muted);
-  font-size: .66rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font-size: clamp(.95rem, 1.15vw, 1.05rem); line-height: 1.6;
 }
+.hero__meta {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0; border-top: 1px solid var(--hair-soft);
+}
+.hero__meta div { padding: .85rem .2rem; border-bottom: 1px solid var(--hair-soft); }
+.hero__meta dt {
+  font-family: var(--sans); font-size: .52rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
+}
+.hero__meta dd { margin: .3rem 0 0; color: var(--clay); font-size: .86rem; }
+.hero__go {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .8rem 1.3rem;
+  border: 1px solid var(--hair);
+  color: var(--clay);
+  font-family: var(--sans); font-size: .6rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  transition: border-color .4s var(--ease), color .4s var(--ease);
+}
+.hero__go:hover { border-color: var(--amber); color: var(--amber); }
 
 .hero__scroll {
-  position: absolute; left: var(--page-x); bottom: 2rem;
+  position: absolute; right: var(--page-x); bottom: 2rem; z-index: 3;
   display: grid; gap: .6rem; justify-items: center;
 }
 .hero__scroll i { display: block; width: 1px; height: 46px; background: var(--hair); overflow: hidden; position: relative; }
@@ -416,6 +466,25 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 @keyframes scrollTick { 0% { transform: translateY(-100%); } 60%,100% { transform: translateY(100%); } }
 .hero__scroll span { writing-mode: vertical-rl; font-size: .55rem; letter-spacing: .3em; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__blind { display: none; }
+}
+
+/* On the home page the plate runs under the header from the first pixel,
+   so the dark wordmark would sit on a dark photograph until the reader
+   scrolled. It carries its pill straight away instead. Below 760px the
+   plate starts under the header and none of this is needed. */
+@media (min-width: 761px) {
+  .head--over .brand {
+    padding: .6rem .95rem;
+    margin: -.6rem -.95rem;
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--r-pill);
+    background: var(--nav-pill);
+    backdrop-filter: blur(14px);
+  }
+}
 
 /* ═══ HOME · Selected work ═════════════════════════════════════════
    A drawing index rather than a scatter of pictures: nine plates set on a
@@ -1045,13 +1114,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   }
   .menu-btn span { display: block; width: 22px; height: 1px; background: var(--clay); transition: transform .4s var(--ease); }
   .drawer .menu-btn { position: absolute; right: var(--page-x); top: 1.2rem; }
-  .hero__figure { width: 58vw; }
-  /* The plate sits in the first grid row on small screens, so the wordmark
-     is pulled up to straddle it rather than centring on the whole hero. */
-  .hero__mark { width: 102vw; top: 45%; }
-  .hero__aside { position: static; justify-items: center; text-align: center; margin-top: 0; }
-  .hero { grid-template-rows: 1fr; }
-  .hero__caption { top: auto; bottom: 22%; }
+  /* On a phone the sheet stacks: the plate becomes a band across the top
+     and the title block runs underneath it. */
+  .hero { grid-template-columns: 1fr; grid-template-rows: 44svh auto; }
+  .hero__block { padding: 1.8rem var(--page-x) 2.6rem; gap: 1rem; }
+  .hero__meta { grid-template-columns: 1fr; }
+  .hero__scroll { display: none; }
   .folio__item[data-span] { grid-column: span 12; }
   .folio__item[data-size] { --h: clamp(230px, 58vw, 400px); }
   .folio__head { grid-template-columns: 1fr; align-items: start; gap: 1.8rem; }
