@@ -362,37 +362,80 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .hero__figure img.is-active { opacity: 1; }
 
-/* Eight slats standing on edge, turning flat one after another. Each
-   carries its own band of the first photograph, so a closed blind is a
-   dark shutter and an open one registers back into a single room. */
+/* A shaft of daylight crossing the room. It travels by background
+   position on a full-bleed box rather than by moving the box: a box that
+   slides eventually shows its own edge across the room, which reads as a
+   rectangle, not as sunlight. */
+.hero__sun {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(42% 34% at 50% 50%, rgba(255, 214, 150, .38), rgba(255, 196, 120, .1) 46%, transparent 72%);
+  background-repeat: no-repeat;
+  background-size: 155% 155%;
+  background-position: -28% 94%;
+  mix-blend-mode: screen;
+  animation: heroSun 30s var(--ease-io) infinite;
+}
+@keyframes heroSun {
+  0%   { background-position: -28% 94%; opacity: 0; }
+  14%  { opacity: 1; }
+  50%  { background-position: 50% 22%;  opacity: 1; }
+  86%  { opacity: 1; }
+  100% { background-position: 128% 90%; opacity: 0; }
+}
+
+/* ── The blind ──────────────────────────────────────────────────────
+   Eight slats standing on edge, turning flat one after another. Each
+   carries its own band of one photograph, so a shut blind is a shutter
+   and an open one registers back into a single room.
+
+   The same blind does two jobs. On load it opens over the clay to bring
+   the first room in. After that it is transparent between the slats and
+   carries the INCOMING photograph, so every change of picture is the
+   blind opening again over the room you were already looking at. The
+   band each slat shows comes from --shot, which the script re-points at
+   whichever room is arriving. */
 .hero__blind {
   position: absolute; inset: 0; z-index: 2;
   display: grid; grid-template-rows: repeat(8, 1fr);
-  background: var(--clay);
   perspective: 900px;
   pointer-events: none;
+  --shot: url('../images/earth-house.webp');
 }
+.hero__blind.is-enter { background: var(--clay); }
 .hero__blind i {
   display: block;
-  background-image: url('../images/earth-house.webp');
+  background-image: var(--shot);
   background-size: 100% 800%;
   transform-origin: 50% 0;
   transform: rotateX(-88deg);
   backface-visibility: hidden;
-  animation: heroBlind 1.5s var(--ease-io) forwards;
 }
-.hero__blind i:nth-child(1) { background-position: center 0%;      animation-delay: .25s; }
-.hero__blind i:nth-child(2) { background-position: center 14.28%;  animation-delay: .34s; }
-.hero__blind i:nth-child(3) { background-position: center 28.57%;  animation-delay: .43s; }
-.hero__blind i:nth-child(4) { background-position: center 42.85%;  animation-delay: .52s; }
-.hero__blind i:nth-child(5) { background-position: center 57.14%;  animation-delay: .61s; }
-.hero__blind i:nth-child(6) { background-position: center 71.42%;  animation-delay: .70s; }
-.hero__blind i:nth-child(7) { background-position: center 85.71%;  animation-delay: .79s; }
-.hero__blind i:nth-child(8) { background-position: center 100%;    animation-delay: .88s; }
+.hero__blind.is-open i { animation: heroBlind 1.35s var(--ease-io) forwards; }
+.hero__blind i:nth-child(1) { background-position: center 0%;      animation-delay: 0s; }
+.hero__blind i:nth-child(2) { background-position: center 14.28%;  animation-delay: .07s; }
+.hero__blind i:nth-child(3) { background-position: center 28.57%;  animation-delay: .14s; }
+.hero__blind i:nth-child(4) { background-position: center 42.85%;  animation-delay: .21s; }
+.hero__blind i:nth-child(5) { background-position: center 57.14%;  animation-delay: .28s; }
+.hero__blind i:nth-child(6) { background-position: center 71.42%;  animation-delay: .35s; }
+.hero__blind i:nth-child(7) { background-position: center 85.71%;  animation-delay: .42s; }
+.hero__blind i:nth-child(8) { background-position: center 100%;    animation-delay: .49s; }
+/* The entrance is slower off the mark and slower between slats than a
+   change of picture: the first is an arrival, the rest are transitions. */
+.hero__blind.is-enter i:nth-child(1) { animation-delay: .25s; }
+.hero__blind.is-enter i:nth-child(2) { animation-delay: .34s; }
+.hero__blind.is-enter i:nth-child(3) { animation-delay: .43s; }
+.hero__blind.is-enter i:nth-child(4) { animation-delay: .52s; }
+.hero__blind.is-enter i:nth-child(5) { animation-delay: .61s; }
+.hero__blind.is-enter i:nth-child(6) { animation-delay: .70s; }
+.hero__blind.is-enter i:nth-child(7) { animation-delay: .79s; }
+.hero__blind.is-enter i:nth-child(8) { animation-delay: .88s; }
+.hero__blind.is-enter.is-open i { animation-duration: 1.5s; }
 @keyframes heroBlind { to { transform: rotateX(0deg); } }
-/* Once open the blind has done its job; it drops out so the crossfade
-   underneath is never showing through a stale first frame. */
-.hero__blind.is-done { display: none; }
+/* Idle between changes: the slats are back on edge and the whole blind is
+   out of the way, so it is never compositing over a picture that is
+   already on screen. */
+.hero__blind.is-idle { display: none; }
 
 .hero__caption {
   position: absolute; left: 0; bottom: 0; z-index: 3;
@@ -420,12 +463,32 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   font-weight: 300; line-height: .92; letter-spacing: -.035em;
   color: var(--clay);
 }
-.hero__title b { display: block; font-weight: 600; }
-.hero__title span { position: relative; display: inline-block; }
-.hero__title span::after {
-  content: ''; position: absolute; left: 0; bottom: -.14em;
-  width: 100%; height: 3px; background: var(--amber);
+.hero__title b { font-weight: 600; }
+/* Each word is set into place from below its own baseline, the way a
+   line of type drops into a stick. The mask has to be the block that
+   clips, so the rule under Studio lives inside it and rides up with the
+   word rather than being cut off by it. */
+.hero__set { display: block; overflow: hidden; }
+.hero__set > span {
+  display: block;
+  transform: translateY(112%);
+  animation: heroSet 1s var(--ease-io) forwards;
 }
+.hero__set:nth-child(1) > span { animation-delay: .5s; }
+.hero__set:nth-child(2) > span { animation-delay: .64s; }
+.hero__set:nth-child(3) > span { animation-delay: .78s; }
+@keyframes heroSet { to { transform: translateY(0); } }
+/* The masked line has to be a block for the translate to be clipped, so
+   the rule sits on a nested inline-block instead — otherwise it stretches
+   the full width of the column rather than the width of the word. */
+.hero__ruled { display: inline-block; position: relative; padding-bottom: .16em; }
+.hero__ruled::after {
+  content: ''; position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 3px; background: var(--amber);
+  transform: scaleX(0); transform-origin: left;
+  animation: heroRule .9s var(--ease-io) 1.5s forwards;
+}
+@keyframes heroRule { to { transform: scaleX(1); } }
 .hero__lead {
   max-width: 30ch;
   color: var(--muted);
@@ -435,7 +498,17 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0; border-top: 1px solid var(--hair-soft);
 }
-.hero__meta div { padding: .85rem .2rem; border-bottom: 1px solid var(--hair-soft); }
+.hero__meta div { position: relative; padding: .85rem .2rem; }
+.hero__meta div::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--hair-soft);
+  transform: scaleX(0); transform-origin: left;
+  animation: heroRule .7s var(--ease-io) forwards;
+}
+.hero__meta div:nth-child(1)::after { animation-delay: 1.5s; }
+.hero__meta div:nth-child(2)::after { animation-delay: 1.62s; }
+.hero__meta div:nth-child(3)::after { animation-delay: 1.74s; }
+.hero__meta div:nth-child(4)::after { animation-delay: 1.86s; }
 .hero__meta dt {
   font-family: var(--sans); font-size: .52rem; font-weight: 600;
   letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2);
@@ -453,6 +526,28 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .hero__go:hover { border-color: var(--amber); color: var(--amber); }
 
+/* Slug, lead and the way through arrive in the same order a reader takes
+   them, once the name has landed. */
+.hero__slug, .hero__lead, .hero__go {
+  opacity: 0;
+  animation: heroRise .9s var(--ease-io) forwards;
+}
+.hero__slug { animation-delay: .35s; }
+.hero__lead { animation-delay: 1.25s; }
+.hero__go   { animation-delay: 1.95s; }
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Depth: the room shifts a little against its own frame as the pointer
+   moves across it, or as the plate scrolls away on a phone. The scale
+   is what stops the shift from dragging an empty edge into view. */
+.hero__figure img {
+  transform: scale(1.05) translate3d(var(--px, 0px), var(--py, 0px), 0);
+  will-change: transform;
+}
+
 .hero__scroll {
   position: absolute; right: var(--page-x); bottom: 2rem; z-index: 3;
   display: grid; gap: .6rem; justify-items: center;
@@ -468,7 +563,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hero__scroll span { writing-mode: vertical-rl; font-size: .55rem; letter-spacing: .3em; color: var(--muted); }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__blind { display: none; }
+  .hero__blind, .hero__sun { display: none; }
+  .hero__set > span { transform: none; animation: none; }
+  .hero__ruled::after, .hero__meta div::after { transform: scaleX(1); animation: none; }
+  .hero__slug, .hero__lead, .hero__go { opacity: 1; transform: none; animation: none; }
+  .hero__figure img { transform: none; }
 }
 
 /* On the home page the plate runs under the header from the first pixel,

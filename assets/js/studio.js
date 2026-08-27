@@ -113,28 +113,69 @@
   $('#menu-close')?.addEventListener('click', () => setDrawer(false));
   addEventListener('keydown', (e) => { if (e.key === 'Escape') setDrawer(false); });
 
-  /* ── Hero plate slideshow ──────────────────────────────────────── */
+  /* ── Hero plate: the blind carries every change of room ──────────
+     One blind does both jobs. On load it opens over the clay and the
+     first room is behind it. After that it goes transparent between the
+     slats, takes the INCOMING photograph, and opens again — so a change
+     of picture is the same gesture as the arrival, not a crossfade. */
   let heroSlides = null;
   const figure = $('#hero-figure');
+  const blind = $('#hero-blind');
   if (figure) {
     const plates = $$('img', figure);
     const indexOut = $('[data-slide-index]');
     const toggle = $('#slides-toggle');
+    const slats = blind ? $$('i', blind) : [];
+    const lastSlat = slats[slats.length - 1];
     let current = 0;
     let timer = 0;
+    let wipe = 0;
     let playing = !reduced;
 
-    const show = (next) => {
+    /* The blind is only ever mid-open for as long as its own animation
+       runs, and a tab in the background never fires animationend — so
+       every settle is also backstopped by a timer. Without that the
+       blind can be left shut over the hero for as long as the tab
+       stays hidden. */
+    const settle = (done) => {
+      let called = false;
+      const finish = () => { if (called) return; called = true; done(); };
+      if (!lastSlat) { finish(); return; }
+      lastSlat.addEventListener('animationend', finish, { once: true });
+      clearTimeout(wipe);
+      wipe = setTimeout(finish, 4000);
+    };
+
+    const commit = (next) => {
       plates[current].classList.remove('is-active');
-      current = (next + plates.length) % plates.length;
+      current = next;
       plates[current].classList.add('is-active');
       if (indexOut) indexOut.textContent = String(current + 1).padStart(2, '0');
+    };
+
+    const show = (next) => {
+      next = (next + plates.length) % plates.length;
+      if (!blind || reduced) { commit(next); return; }
+
+      /* Point the slats at the room that is arriving, put them back on
+         edge with no animation, then let them turn. Reading offsetWidth
+         between the two is what forces the reset to be painted — without
+         it the browser coalesces both writes and the slats never move. */
+      blind.style.setProperty('--shot', `url('${plates[next].currentSrc || plates[next].src}')`);
+      blind.classList.remove('is-idle', 'is-open', 'is-enter');
+      void blind.offsetWidth;
+      blind.classList.add('is-open');
+
+      settle(() => {
+        commit(next);
+        blind.classList.add('is-idle');
+      });
     };
 
     const start = () => {
       clearInterval(timer);
       if (!playing) return;
-      timer = setInterval(() => show(current + 1), 4200);
+      timer = setInterval(() => show(current + 1), 5200);
     };
 
     toggle?.addEventListener('click', () => {
@@ -151,43 +192,62 @@
 
     if (!playing && toggle) toggle.innerHTML = '&#9654;';
 
-    /* Held while the hero is scrubbing open — a crossfade part-way through
-       the pin leaves two rooms visible through each other. */
+    /* The arrival: the blind is already shut over the clay in the markup,
+       so all it has to be told is to open. */
+    if (blind) {
+      if (reduced) {
+        blind.classList.add('is-idle');
+      } else {
+        blind.classList.add('is-open');
+        settle(() => blind.classList.add('is-idle'));
+      }
+    }
+
+    /* Held while the hero is scrubbing open — a change of room part-way
+       through the pin leaves two rooms visible through each other. */
     heroSlides = {
       hold: () => clearInterval(timer),
       resume: () => start()
     };
   }
 
-  /* ── The blind ───────────────────────────────────────────────────
-     Eight slats open once, on load. Once they are flat they are taking
-     up compositing work for a picture that is already there, so the
-     whole blind is dropped after the last one lands. */
-  const blind = $('#hero-blind');
-  if (blind) {
-    const slats = $$('i', blind);
-    const last = slats[slats.length - 1];
-    if (!last || reduced) {
-      blind.classList.add('is-done');
+  /* ── Depth on the plate ──────────────────────────────────────────
+     The room shifts a little against its own frame: with the pointer
+     where there is one, with the scroll where there is not. Both write
+     the same two custom properties, so the CSS only knows about one. */
+  const plate = $('.hero__plate');
+  if (plate && motion) {
+    const setShift = (x, y) => {
+      plate.style.setProperty('--px', `${x.toFixed(2)}px`);
+      plate.style.setProperty('--py', `${y.toFixed(2)}px`);
+    };
+    if (matchMedia('(pointer: fine)').matches) {
+      plate.addEventListener('pointermove', (e) => {
+        const r = plate.getBoundingClientRect();
+        setShift(((e.clientX - r.left) / r.width - .5) * -18,
+                 ((e.clientY - r.top) / r.height - .5) * -18);
+      });
+      plate.addEventListener('pointerleave', () => setShift(0, 0));
     } else {
-      last.addEventListener('animationend', () => blind.classList.add('is-done'), { once: true });
-      /* A tab opened in the background never fires animationend, so the
-         blind would sit closed over the hero for as long as the tab
-         stayed hidden. This is the backstop. */
-      setTimeout(() => blind.classList.add('is-done'), 4000);
+      const onScrollPlate = () => {
+        const r = plate.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) return;
+        setShift(0, (r.top / innerHeight) * 26);
+      };
+      addEventListener('scroll', onScrollPlate, { passive: true });
+      onScrollPlate();
     }
   }
 
   /* ── Cinematic hero: pinned, scrubbed ────────────────────────────
-     The plate grows out of its column to fill the screen while the
-     title block fades back, and a line rides in over the photograph.
+     The plate grows out of its column to fill the screen while the title
+     block falls back, and a line rides in over the photograph.
 
      Width and height are tweened in explicit pixels rather than CSS
      units — GSAP cannot interpolate a min() expression, and a silent
      no-op there is what stops the pin from ever being built. */
   const heroPin = $('.hero');
-  const heroPlate = $('.hero__plate');
-  if (heroPin && heroPlate && motion && innerWidth > 860) {
+  if (heroPin && plate && motion && innerWidth > 860) {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: heroPin,
@@ -204,9 +264,9 @@
       }
     });
 
-    tl.fromTo(heroPlate,
-      { width: () => heroPlate.getBoundingClientRect().width,
-        height: () => heroPlate.getBoundingClientRect().height },
+    tl.fromTo(plate,
+      { width: () => plate.getBoundingClientRect().width,
+        height: () => plate.getBoundingClientRect().height },
       { width: () => innerWidth,
         height: () => innerHeight,
         ease: 'power2.inOut' }, 0);
