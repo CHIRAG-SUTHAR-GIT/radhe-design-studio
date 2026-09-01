@@ -72,7 +72,7 @@ window.RDS_CATALOGUE = (function () {
         s('Edge profile', ['Bullnose', 'Half bullnose', 'Mitred 40mm', 'Pencil', 'Square']),
         s('Thickness', ['18mm', '20mm', 'Mitred to 40mm', 'Mitred to 60mm'])
       ]),
-      i('kit-splash', 'Backsplash / dado', 'Sq.ft', 320, [
+      i('kit-splash', 'Backsplash / dado', 'Sq.ft', 365, [
         s('Material', ['Ceramic tile', 'Vitrified tile', 'Toughened lacquered glass', 'Quartz slab', 'Granite slab', 'Mosaic'])
       ]),
       i('kit-sink', 'Sink', 'Nos', 9500, [
@@ -173,40 +173,40 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 4 · FALSE CEILING ═════════════════════════════════════ */
     g('ceiling', 'False ceiling', 'Measured on plan area; cornice and coves on running feet.', [
-      i('cl-gyp', 'Gypsum false ceiling — plain', 'Sq.ft', 85, [
+      i('cl-gyp', 'Gypsum false ceiling — plain', 'Sq.ft', 125, [
         s('Board', ['Gyproc / Saint-Gobain', 'India Gypsum', 'USG Boral']),
         s('Framing', ['GI channel (Gyproc)', 'GI channel (local)', 'Wooden batten']),
         s('Finish', ['2 coat putty ready for paint', 'Putty + primer'])
       ]),
-      i('cl-gypd', 'Gypsum false ceiling — designed / multi-level', 'Sq.ft', 130, [
+      i('cl-gypd', 'Gypsum false ceiling — designed / multi-level', 'Sq.ft', 180, [
         s('Design', ['Single drop with cove', 'Two level', 'Curved / island', 'Coffered', 'Floating panel']),
         s('Board', ['Gyproc / Saint-Gobain', 'India Gypsum', 'USG Boral'])
       ]),
-      i('cl-pop', 'POP false ceiling', 'Sq.ft', 95, [s('Type', ['Plain', 'Designed', 'Cornice work'])]),
-      i('cl-cove', 'Cove / pelmet box', 'R.ft', 210, [s('Type', ['Gypsum cove', 'POP cove', 'Wooden pelmet', 'Profile channel cove'])]),
-      i('cl-wpc', 'WPC / PVC panel ceiling', 'Sq.ft', 165, [s('Finish', ['Wood grain', 'Solid colour', 'Louver profile'])]),
-      i('cl-grid', 'Grid ceiling (office)', 'Sq.ft', 110, [
+      i('cl-pop', 'POP false ceiling', 'Sq.ft', 108, [s('Type', ['Plain', 'Designed', 'Cornice work'])]),
+      i('cl-cove', 'Cove / pelmet box', 'R.ft', 245, [s('Type', ['Gypsum cove', 'POP cove', 'Wooden pelmet', 'Profile channel cove'])]),
+      i('cl-wpc', 'WPC / PVC panel ceiling', 'Sq.ft', 195, [s('Finish', ['Wood grain', 'Solid colour', 'Louver profile'])]),
+      i('cl-grid', 'Grid ceiling (office)', 'Sq.ft', 135, [
         s('Tile', ['Mineral fibre (Armstrong)', 'Gypsum tile', 'Metal tile', 'Acoustic tile']),
         s('Grid', ['T-grid exposed 24mm', 'Concealed grid'])
       ]),
-      i('cl-wood', 'Wooden / veneer ceiling feature', 'Sq.ft', 480, [
+      i('cl-wood', 'Wooden / veneer ceiling feature', 'Sq.ft', 620, [
         s('Finish', ['Veneer + PU', 'Solid wood rafter', 'Fluted WPC', 'Laminate'])
       ])
     ]),
 
     /* ══ 5 · WALL FINISHES & PAINTING ══════════════════════════ */
     g('walls', 'Wall finishes & painting', null, [
-      i('wl-emul', 'Interior emulsion painting', 'Sq.ft', 26, [
+      i('wl-emul', 'Interior emulsion painting', 'Sq.ft', 38, [
         s('Paint', ['Asian Paints Royale', 'Asian Paints Royale Aspira', 'Asian Paints Apcolite', 'Berger Silk',
           'Nerolac Impressions', 'Dulux Velvet Touch', 'Indigo']),
         s('Sheen', ['Matt', 'Soft sheen', 'Silk / satin', 'Gloss']),
         s('Preparation', ['2 coat putty + primer + 2 coat paint', '1 coat putty + primer + 2 coat', 'Repaint over existing'])
       ]),
-      i('wl-tex', 'Texture / designer finish', 'Sq.ft', 130, [
+      i('wl-tex', 'Texture / designer finish', 'Sq.ft', 155, [
         s('Finish', ['Royale Play texture', 'Stucco', 'Venetian plaster', 'Lime plaster', 'Metallic',
           'Concrete finish', 'Sand texture', 'Stencil'])
       ]),
-      i('wl-paper', 'Wallpaper', 'Sq.ft', 145, [
+      i('wl-paper', 'Wallpaper', 'Sq.ft', 175, [
         s('Type', ['Imported vinyl', 'Non-woven', 'Customised digital print', 'Fabric backed', 'Peel & stick']),
         s('Includes', ['Material + adhesive + labour', 'Labour only (material by client)'])
       ]),
@@ -215,57 +215,57 @@ window.RDS_CATALOGUE = (function () {
           'Fabric upholstered', 'Mirror + beading', 'Stone / marble cladding', 'Cane / rattan']),
         s('Beading', ['Aluminium profile', 'PU beading', 'None'])
       ]),
-      i('wl-primer', 'Exterior painting', 'Sq.ft', 34, [
+      i('wl-primer', 'Exterior painting', 'Sq.ft', 42, [
         s('Paint', ['Apex Ultima', 'Apex', 'Berger Weathercoat', 'Nerolac Excel']),
         s('Preparation', ['Putty + primer + 2 coat', 'Primer + 2 coat'])
       ]),
-      i('wl-acou', 'Acoustic wall treatment', 'Sq.ft', 420, [
+      i('wl-acou', 'Acoustic wall treatment', 'Sq.ft', 520, [
         s('Type', ['Fabric wrapped panel', 'Polyester fibre panel', 'Perforated MDF', 'Wooden slat acoustic'])
       ])
     ]),
 
     /* ══ 6 · FLOORING ══════════════════════════════════════════ */
     g('floor', 'Flooring & skirting', 'Material plus laying unless noted otherwise.', [
-      i('fl-vit', 'Vitrified tile flooring', 'Sq.ft', 145, [
+      i('fl-vit', 'Vitrified tile flooring', 'Sq.ft', 165, [
         s('Brand', ['Kajaria', 'Somany', 'Nitco', 'Simpolo', 'Varmora', 'Asian Granito', 'Johnson']),
         s('Size', ['600×600', '800×800', '600×1200', '800×1600', '1200×1800 (slab)']),
         s('Finish', ['Glossy', 'Matt', 'Carving', 'Wood finish', 'Double charge', 'GVT / PGVT']),
         s('Scope', ['Material + laying', 'Laying only'])
       ]),
-      i('fl-marble', 'Marble flooring', 'Sq.ft', 420, [
+      i('fl-marble', 'Marble flooring', 'Sq.ft', 470, [
         s('Stone', ['Italian marble', 'Statuario', 'Makrana', 'Ambaji', 'Katni', 'Banswara', 'Onyx']),
         s('Scope', ['Material + laying + polish', 'Laying + polish only'])
       ]),
-      i('fl-gran', 'Granite flooring', 'Sq.ft', 260, [s('Stone', ['Black galaxy', 'Steel grey', 'Tan brown', 'Local'])]),
+      i('fl-gran', 'Granite flooring', 'Sq.ft', 290, [s('Stone', ['Black galaxy', 'Steel grey', 'Tan brown', 'Local'])]),
       i('fl-wood', 'Wooden flooring', 'Sq.ft', 320, [
         s('Type', ['Laminate 8mm (AC4)', 'Laminate 12mm (AC5)', 'Engineered wood', 'SPC click', 'Vinyl plank', 'Solid teak']),
         s('Brand', ['Pergo', 'Action Tesa', 'Greenlam Clicksters', 'Square Foot', 'Welspun', 'Local'])
       ]),
-      i('fl-carpet', 'Carpet / carpet tile', 'Sq.ft', 180, [
+      i('fl-carpet', 'Carpet / carpet tile', 'Sq.ft', 205, [
         s('Type', ['Carpet tile 500×500', 'Broadloom carpet', 'Nylon loop pile', 'Wall to wall'])
       ]),
-      i('fl-epoxy', 'Epoxy / IPS flooring', 'Sq.ft', 190, [s('Type', ['Self-levelling epoxy', 'Epoxy coating', 'IPS with groove', 'Micro-topping'])]),
-      i('fl-skirt', 'Skirting', 'R.ft', 95, [
+      i('fl-epoxy', 'Epoxy / IPS flooring', 'Sq.ft', 215, [s('Type', ['Self-levelling epoxy', 'Epoxy coating', 'IPS with groove', 'Micro-topping'])]),
+      i('fl-skirt', 'Skirting', 'R.ft', 115, [
         s('Material', ['Matching tile', 'Granite', 'Marble', 'MDF + PU (75mm)', 'PVC', 'Aluminium groove skirting', 'Shadow gap'])
       ]),
-      i('fl-water', 'Waterproofing', 'Sq.ft', 85, [
+      i('fl-water', 'Waterproofing', 'Sq.ft', 105, [
         s('System', ['Dr. Fixit membrane', 'Asian Paints SmartCare', 'Fosroc', 'Brick bat coba', 'PU coating'])
       ])
     ]),
 
     /* ══ 7 · DOORS, WINDOWS & HARDWARE ═════════════════════════ */
     g('doors', 'Doors, windows & hardware', 'Shutters by area or piece; ironmongery by piece or set.', [
-      i('dr-flush', 'Internal door shutter', 'Nos', 9500, [
+      i('dr-flush', 'Internal door shutter', 'Nos', 10500, [
         s('Core', ['Flush door (BWP)', 'Flush door (BWR)', 'Solid core WPC', 'PVC door', 'HDF moulded']),
         s('Finish', ['Laminate both sides', 'Membrane', 'Veneer + PU', 'Duco paint', 'Pre-laminated']),
         s('Size', ['32"×82"', '36"×84"', '30"×80"', 'Custom'])
       ]),
-      i('dr-main', 'Main door', 'Nos', 42000, [
+      i('dr-main', 'Main door', 'Nos', 48000, [
         s('Type', ['Solid teak carved', 'Teak veneer + PU', 'Engineered door + veneer', 'Steel security door',
           'Double leaf', 'Pivot door']),
         s('Finish', ['Melamine', 'PU matt', 'PU gloss', 'Natural polish'])
       ]),
-      i('dr-frame', 'Door frame / chowkhat', 'R.ft', 420, [
+      i('dr-frame', 'Door frame / chowkhat', 'R.ft', 480, [
         s('Material', ['Sal wood', 'Teak wood', 'WPC frame', 'Granite frame', 'MS frame', 'Aluminium'])
       ]),
       i('dr-lock', 'Mortise lock set', 'Set', 4800, [
@@ -291,17 +291,17 @@ window.RDS_CATALOGUE = (function () {
           'Peephole / door viewer', 'Safety chain', 'Kick plate', 'Letter plate', 'Door seal / gasket']),
         s('Brand', ['Godrej', 'Dorset', 'Ozone', 'Hafele', 'Europa', 'Local'])
       ]),
-      i('wn-upvc', 'UPVC window', 'Sq.ft', 620, [
+      i('wn-upvc', 'UPVC window', 'Sq.ft', 720, [
         s('Brand', ['Fenesta', 'Aparna Venster', 'Encraft', 'Prominance', 'Local profile']),
         s('Type', ['2 track sliding', '3 track sliding', 'Casement', 'Tilt & turn', 'Fixed']),
         s('Glass', ['5mm clear', '5mm toughened', 'Double glazed (DGU)', 'Frosted', 'Tinted', 'Laminated']),
         s('Mesh', ['With mosquito mesh', 'Without mesh'])
       ]),
-      i('wn-alu', 'Aluminium window / glazing', 'Sq.ft', 540, [
+      i('wn-alu', 'Aluminium window / glazing', 'Sq.ft', 640, [
         s('System', ['Jindal slimline', 'Domal section', 'Slim profile (minimal)', 'Structural glazing']),
         s('Glass', ['6mm toughened', '8mm toughened', '12mm toughened', 'DGU', 'Laminated'])
       ]),
-      i('wn-glass', 'Glass partition', 'Sq.ft', 720, [
+      i('wn-glass', 'Glass partition', 'Sq.ft', 850, [
         s('Type', ['Frameless 12mm toughened', 'Aluminium framed', 'Double glazed with blinds', 'Fluted glass', 'Wired / reeded']),
         s('Film', ['None', 'Frosted film', 'Digital print film', 'Switchable smart glass'])
       ])
@@ -309,7 +309,7 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 8 · CURTAINS, BLINDS & SOFT FURNISHING ════════════════ */
     g('soft', 'Curtains, blinds & soft furnishings', 'Curtains measured on finished fabric area; blinds on opening area.', [
-      i('cu-curtain', 'Curtains', 'Sq.ft', 210, [
+      i('cu-curtain', 'Curtains', 'Sq.ft', 245, [
         s('Fabric', ['Cotton', 'Linen', 'Cotton-linen blend', 'Velvet', 'Jacquard', 'Silk / faux silk',
           'Sheer / net', 'Blackout fabric', 'Printed', 'Embroidered']),
         s('Lining', ['Blackout lining', 'Dim-out lining', 'Cotton lining', 'No lining']),
@@ -317,18 +317,18 @@ window.RDS_CATALOGUE = (function () {
         s('Layers', ['Sheer + main', 'Main only', 'Sheer only', 'Triple layer']),
         s('Scope', ['Fabric + stitching + installation', 'Stitching + installation only'])
       ]),
-      i('cu-track', 'Curtain track / rod', 'R.ft', 320, [
+      i('cu-track', 'Curtain track / rod', 'R.ft', 365, [
         s('Type', ['Aluminium track (manual)', 'Motorised track', 'SS rod 25mm', 'Wooden rod', 'Ceiling recessed track']),
         s('Motor', ['Somfy', 'Dooya', 'Zemismart', 'Not motorised'])
       ]),
-      i('cu-blind', 'Blinds', 'Sq.ft', 180, [
+      i('cu-blind', 'Blinds', 'Sq.ft', 205, [
         s('Type', ['Roller blind', 'Zebra / duo blind', 'Roman blind', 'Venetian (aluminium)', 'Venetian (wooden)',
           'Vertical blind', 'Honeycomb / cellular', 'Bamboo / chick']),
         s('Fabric', ['Sunscreen 3%', 'Sunscreen 5%', 'Dim-out', 'Blackout', 'Printed']),
         s('Operation', ['Chain', 'Cordless spring', 'Motorised'])
       ]),
-      i('cu-pelmet', 'Pelmet / valance box', 'R.ft', 380, [s('Finish', ['Laminate', 'Veneer + PU', 'Upholstered', 'Gypsum recess'])]),
-      i('sf-uphol', 'Upholstery (re-covering)', 'Sq.ft', 260, [
+      i('cu-pelmet', 'Pelmet / valance box', 'R.ft', 420, [s('Finish', ['Laminate', 'Veneer + PU', 'Upholstered', 'Gypsum recess'])]),
+      i('sf-uphol', 'Upholstery (re-covering)', 'Sq.ft', 320, [
         s('Fabric', ['Cotton', 'Linen', 'Velvet', 'Leatherette', 'Genuine leather', 'Chenille', 'Boucle']),
         s('Foam', ['32 density', '40 density', 'Memory foam top', 'Existing foam retained'])
       ]),
@@ -346,7 +346,7 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 9 · LIGHTING & ELECTRICAL ═════════════════════════════ */
     g('electrical', 'Lighting & electrical', null, [
-      i('el-point', 'Electrical point (wiring)', 'Nos', 950, [
+      i('el-point', 'Electrical point (wiring)', 'Nos', 1050, [
         s('Point type', ['Light point', '5A socket', '16A socket', 'AC point', 'Geyser point', 'TV / data point',
           'Fan point', 'Two-way switching']),
         s('Wire', ['Polycab', 'Finolex', 'Havells', 'RR Kabel', 'KEI']),
@@ -363,7 +363,7 @@ window.RDS_CATALOGUE = (function () {
         s('Ways', ['8 way', '12 way', '16 way', '24 way']),
         s('Protection', ['MCB only', 'MCB + RCCB', 'MCB + RCBO + SPD'])
       ]),
-      i('lt-cove', 'Cove / profile LED', 'R.ft', 320, [
+      i('lt-cove', 'Cove / profile LED', 'R.ft', 360, [
         s('Strip', ['2835 warm white', '5050 RGB', 'COB strip (dotless)', 'Tunable white']),
         s('CRI', ['CRI 80+', 'CRI 90+', 'CRI 95+']),
         s('Profile', ['Aluminium recessed profile', 'Surface profile', 'No profile (concealed in cove)']),
@@ -384,7 +384,7 @@ window.RDS_CATALOGUE = (function () {
         s('Brand', ['Atomberg', 'Havells', 'Crompton', 'Orient', 'Usha', 'Luminous']),
         s('Type', ['BLDC energy saving', 'Standard induction', 'Designer', 'Ceiling fan with light'])
       ]),
-      i('el-ac', 'Air conditioning', 'Nos', 42000, [
+      i('el-ac', 'Air conditioning', 'Nos', 52000, [
         s('Type', ['Split 1 ton', 'Split 1.5 ton', 'Split 2 ton', 'Cassette', 'Ducted', 'VRF indoor unit']),
         s('Brand', ['Daikin', 'Mitsubishi', 'Voltas', 'Blue Star', 'LG', 'Hitachi', 'Carrier']),
         s('Star rating', ['3 star', '5 star', 'Inverter'])
@@ -398,7 +398,7 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 10 · BATHROOM ═════════════════════════════════════════ */
     g('bath', 'Bathrooms', null, [
-      i('bt-wc', 'Water closet', 'Nos', 18500, [
+      i('bt-wc', 'Water closet', 'Nos', 24000, [
         s('Type', ['Wall hung + concealed cistern', 'Floor mounted one-piece', 'Two-piece EWC', 'Smart / bidet seat']),
         s('Brand', ['Jaquar', 'Kohler', 'Cera', 'Hindware', 'Parryware', 'Toto', 'Duravit', 'Roca'])
       ]),
@@ -430,7 +430,7 @@ window.RDS_CATALOGUE = (function () {
         s('Type', ['Frameless 10mm toughened', 'Frameless 12mm toughened', 'Framed sliding', 'Fixed panel']),
         s('Hardware', ['SS 304 matt black', 'SS 304 chrome', 'Brushed gold'])
       ]),
-      i('bt-tile', 'Bathroom wall tiling', 'Sq.ft', 175, [
+      i('bt-tile', 'Bathroom wall tiling', 'Sq.ft', 195, [
         s('Brand', ['Kajaria', 'Somany', 'Simpolo', 'Nitco', 'Varmora', 'Johnson']),
         s('Size', ['300×600', '300×900', '600×1200', 'Mosaic', 'Subway 75×300']),
         s('Scope', ['Material + laying', 'Laying only'])
@@ -440,7 +440,7 @@ window.RDS_CATALOGUE = (function () {
           'Shelf', 'Shower niche', 'Floor drain / grating']),
         s('Brand', ['Jaquar', 'Kohler', 'Cera', 'Hindware', 'Ozone'])
       ]),
-      i('bt-geyser', 'Water heater', 'Nos', 12500, [
+      i('bt-geyser', 'Water heater', 'Nos', 13500, [
         s('Type', ['Storage 15L', 'Storage 25L', 'Instant 3L', 'Gas geyser', 'Heat pump']),
         s('Brand', ['AO Smith', 'Racold', 'Bajaj', 'Havells', 'Venus'])
       ])
@@ -472,7 +472,7 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 12 · OFFICE & COMMERCIAL ══════════════════════════════ */
     g('office', 'Office & commercial', null, [
-      i('of-ws', 'Workstation', 'Nos', 32000, [
+      i('of-ws', 'Workstation', 'Nos', 36000, [
         s('Layout', ['Linear 4ft', 'Linear 5ft', 'L-type', 'Cluster of 4', 'Cluster of 6', 'Bench system']),
         s('Top', ['Pre-laminated 25mm', 'Post-formed', 'Veneer + PU', 'Compact laminate']),
         s('Screen', ['Fabric tackboard', 'Glass screen', 'Acrylic screen', 'No screen']),
@@ -497,21 +497,21 @@ window.RDS_CATALOGUE = (function () {
         s('Carcass', CARCASS), s('Finish', SHUTTER)
       ]),
       i('of-booth', 'Phone booth / pod', 'Nos', 165000, [s('Type', ['Single phone booth', 'Two person meeting pod', 'Four person pod'])]),
-      i('of-signage', 'Signage & graphics', 'Sq.ft', 850, [
+      i('of-signage', 'Signage & graphics', 'Sq.ft', 950, [
         s('Type', ['Backlit acrylic', '3D SS letters', 'Vinyl on glass', 'Wall graphics / manifestation', 'Neon flex', 'Digital print'])
       ])
     ]),
 
     /* ══ 13 · CIVIL & PREPARATORY WORK ═════════════════════════ */
     g('civil', 'Civil & preparatory work', 'Site work that has to happen before joinery can start.', [
-      i('cv-demo', 'Demolition & debris removal', 'Sq.ft', 45, [s('Scope', ['Full strip out', 'Partial', 'Tile removal only', 'Wall breaking'])]),
-      i('cv-brick', 'Brickwork / block work', 'Sq.ft', 165, [s('Type', ['4" brick wall', '9" brick wall', 'AAC block 4"', 'Gypsum partition', 'Cement board partition'])]),
-      i('cv-plaster', 'Plastering', 'Sq.ft', 48, [s('Type', ['Internal 12mm', 'External 20mm', 'Gypsum plaster', 'POP punning'])]),
+      i('cv-demo', 'Demolition & debris removal', 'Sq.ft', 62, [s('Scope', ['Full strip out', 'Partial', 'Tile removal only', 'Wall breaking'])]),
+      i('cv-brick', 'Brickwork / block work', 'Sq.ft', 195, [s('Type', ['4" brick wall', '9" brick wall', 'AAC block 4"', 'Gypsum partition', 'Cement board partition'])]),
+      i('cv-plaster', 'Plastering', 'Sq.ft', 62, [s('Type', ['Internal 12mm', 'External 20mm', 'Gypsum plaster', 'POP punning'])]),
       i('cv-plumb', 'Plumbing work', 'Nos', 3800, [
         s('Scope', ['Per point — supply', 'Per point — drainage', 'Full bathroom rough-in', 'Kitchen rough-in']),
         s('Pipes', ['Astral CPVC', 'Supreme CPVC', 'Ashirvad', 'Prince', 'Finolex'])
       ]),
-      i('cv-mstruct', 'MS / SS fabrication', 'Kg', 185, [
+      i('cv-mstruct', 'MS / SS fabrication', 'Kg', 225, [
         s('Item', ['Railing', 'Staircase', 'Pergola', 'Grill', 'Frame / support structure', 'Loft platform']),
         s('Finish', ['Powder coated', 'Duco paint', 'SS 304 mirror', 'SS 304 matt', 'Anti-rust primer + enamel'])
       ]),
@@ -522,20 +522,20 @@ window.RDS_CATALOGUE = (function () {
 
     /* ══ 14 · SURFACES REFERENCE ═══════════════════════════════ */
     g('surface', 'Surfaces — laminates, veneers & acrylics', 'Priced per sheet where bought loose; otherwise carried in the joinery rate.', [
-      i('sr-lam', 'Laminate sheet 8×4', 'Nos', 1450, [
+      i('sr-lam', 'Laminate sheet 8×4', 'Nos', 2300, [
         s('Brand', ['Merino', 'Greenlam', 'Century Mica', 'Royale Touche', 'Advance', 'Virgo', 'Sundek', 'Formica', 'Archidply']),
         s('Thickness', ['0.8mm', '1mm', '1.5mm', 'Compact 6mm']),
         s('Finish', ['Suede / SF', 'Matt', 'High gloss', 'Textured wood grain', 'Solid colour', 'Metallic', 'Anti-fingerprint'])
       ]),
-      i('sr-ven', 'Veneer sheet 8×4', 'Nos', 3200, [
+      i('sr-ven', 'Veneer sheet 8×4', 'Nos', 5100, [
         s('Species', ['Teak', 'Walnut', 'Oak', 'Ash', 'Rosewood', 'Ebony', 'Reconstituted', 'Smoked oak']),
         s('Cut', ['Crown cut', 'Quarter cut', 'Rotary', 'Book matched'])
       ]),
-      i('sr-acr', 'Acrylic sheet 8×4', 'Nos', 5800, [
+      i('sr-acr', 'Acrylic sheet 8×4', 'Nos', 9200, [
         s('Brand', ['Senosan', 'Rehau', 'Merino Gloss', 'Greenlam', 'Aristo']),
         s('Finish', ['High gloss', 'Matt / anti-scratch', 'Metallic'])
       ]),
-      i('sr-corian', 'Solid surface (Corian type)', 'Sq.ft', 1450, [
+      i('sr-corian', 'Solid surface (Corian type)', 'Sq.ft', 1750, [
         s('Brand', ['DuPont Corian', 'LG Hi-Macs', 'Hanex', 'Staron', 'Indian solid surface']),
         s('Use', ['Counter', 'Backlit panel', 'Reception fascia', 'Vanity top'])
       ])

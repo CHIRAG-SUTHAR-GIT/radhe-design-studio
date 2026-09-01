@@ -106,6 +106,13 @@
       bank: 'Bank name / A/c no. / IFSC — set this in Settings',
       quotePrefix: 'RDS/Q', financialYear: '2026-27', nextNumber: 1,
       gstMode: 'cgst-sgst', gstRate: 18, validityDays: 15,
+      overheadPct: 12,
+      milestones: [
+        ['On confirmation of order', 40],
+        ['On material reaching site', 30],
+        ['On completion of installation', 25],
+        ['On handover', 5]
+      ],
       terms: [
         'Rates are inclusive of material and labour unless stated otherwise against the line.',
         'Quantities are provisional and will be measured on site; billing is on actual measurement.',
@@ -117,7 +124,7 @@
         'This quotation is valid for the period stated above; rates are subject to revision after that.'
       ]
     },
-    leads: [], quotes: [], rates: {}, seq: {}
+    leads: [], quotes: [], rates: {}, matRates: {}, wastage: {}, seq: {}
   });
 
   let S = Store.read() || blankState();
@@ -147,8 +154,13 @@
      One function, used by the builder, the list and the document, so
      the number on screen and the number on the page cannot drift. */
   function totals(q) {
-    let sub = 0;
-    (q.rooms || []).forEach((r) => (r.lines || []).forEach((l) => { sub += (Number(l.qty) || 0) * (Number(l.rate) || 0); }));
+    let sub = 0, optional = 0;
+    (q.rooms || []).forEach((r) => (r.lines || []).forEach((l) => {
+      const amt = (Number(l.qty) || 0) * (Number(l.rate) || 0);
+      /* An optional line is priced and printed but not carried into the
+         total — it is not ordered until it is accepted. */
+      if (l.optional) optional += amt; else sub += amt;
+    }));
     const discount = q.discountType === 'pct'
       ? sub * (Number(q.discount) || 0) / 100
       : (Number(q.discount) || 0);
@@ -158,11 +170,106 @@
     const beforeRound = afterDiscount + gst;
     const grand = Math.round(beforeRound);
     return {
-      sub, discount, afterDiscount, gstRate, gst,
+      sub, optional, discount, afterDiscount, gstRate, gst,
       half: gst / 2, rounding: grand - beforeRound, grand
     };
   }
-  const roomTotal = (r) => (r.lines || []).reduce((t, l) => t + (Number(l.qty) || 0) * (Number(l.rate) || 0), 0);
+  const roomTotal = (r) => (r.lines || []).reduce((t, l) => t + (l.optional ? 0 : (Number(l.qty) || 0) * (Number(l.rate) || 0)), 0);
+
+  /* ── Material take-off ───────────────────────────────────────────
+     What the studio has to BUY to build what the client is being
+     quoted. Every priced line is expanded through its consumption
+     norm, the specification chosen on that line substitutes what the
+     norm assumed, wastage is carried by category, and the whole job is
+     aggregated into one purchase list.
+
+     Optional lines are excluded — they are not ordered until they are
+     accepted. */
+  const MAT = window.RDS_MATERIALS;
+  const matIndex = Object.fromEntries(MAT.MATERIALS.map((m) => [m.id, m]));
+  const matRate = (id) => (S.matRates[id] !== undefined ? Number(S.matRates[id])
+    : (matIndex[id] ? matIndex[id].rate : 0));
+  const wastageOf = (cat) => (S.wastage[cat] !== undefined ? Number(S.wastage[cat])
+    : (MAT.WASTAGE[cat] || 0));
+
+  function takeOff(q) {
+    const acc = {};        /* matId -> { qty, from: Map(room -> qty) } */
+    let labour = 0;
+    const add = (id, qty, roomName) => {
+      if (!matIndex[id] || !(qty > 0)) return;
+      const a = acc[id] || (acc[id] = { qty: 0, from: {} });
+      a.qty += qty;
+      a.from[roomName] = (a.from[roomName] || 0) + qty;
+    };
+
+    (q.rooms || []).forEach((room) => {
+      (room.lines || []).forEach((line) => {
+        if (line.optional) return;
+        const rc = MAT.RECIPES[line.itemId];
+        const qty = Number(line.qty) || 0;
+        if (!rc || !qty) return;
+        labour += (rc.labour || 0) * qty;
+
+        /* Work on a copy — a substitution must never edit the shared norm. */
+        let mats = rc.mats.map(([id, per]) => [id, per]);
+        Object.values(line.spec || {}).forEach((choice) => {
+          const ops = MAT.SUBS[choice];
+          if (!ops) return;
+          ops.forEach(([op, a, b]) => {
+            if (op === 'swap') {
+              mats = mats.map(([id, per]) => (id === a ? [b, per] : [id, per]));
+            } else if (op === 'drop') {
+              mats = mats.filter(([id]) => id !== a);
+            } else if (op === 'add') {
+              const hit = mats.find(([id]) => id === a);
+              if (hit) hit[1] += b; else mats.push([a, b]);
+            }
+          });
+        });
+        mats.forEach(([id, per]) => add(id, per * qty, room.name));
+      });
+    });
+
+    /* Consumables ride on the joinery material actually being bought. */
+    let joineryValue = 0;
+    Object.entries(acc).forEach(([id, a]) => {
+      const mm = matIndex[id];
+      if (mm && MAT.CONSUMABLE_BASE.includes(mm.cat)) joineryValue += a.qty * matRate(id);
+    });
+    if (joineryValue > 0) {
+      MAT.CONSUMABLES.forEach(([id, per1000]) =>
+        add(id, per1000 * joineryValue / 1000, 'Workshop consumables'));
+    }
+
+    const rows = Object.entries(acc).map(([id, a]) => {
+      const mm = matIndex[id];
+      const waste = wastageOf(mm.cat);
+      const order = a.qty * (1 + waste / 100);
+      const rate = matRate(id);
+      return {
+        id, name: mm.name, cat: mm.cat, unit: mm.unit, note: mm.note,
+        net: a.qty, waste, order, rate, amount: order * rate,
+        from: Object.entries(a.from).sort((x, y) => y[1] - x[1])
+      };
+    }).sort((a, b) => a.cat.localeCompare(b.cat) || b.amount - a.amount);
+
+    const material = rows.reduce((t, r) => t + r.amount, 0);
+    const byCat = {};
+    rows.forEach((r) => { byCat[r.cat] = (byCat[r.cat] || 0) + r.amount; });
+
+    const t = totals(q);
+    const overheadPct = Number(S.company.overheadPct) || 0;
+    const overhead = (material + labour) * overheadPct / 100;
+    const cost = material + labour + overhead;
+    /* Margin is measured against the value BEFORE tax — GST is collected,
+       not earned, and counting it as revenue flatters every job. */
+    const revenue = t.afterDiscount;
+    return {
+      rows, byCat, material, labour, overhead, overheadPct, cost, revenue,
+      margin: revenue - cost,
+      marginPct: revenue > 0 ? (revenue - cost) / revenue * 100 : 0
+    };
+  }
 
   function nextQuoteNo() {
     const c = S.company;
@@ -172,6 +279,7 @@
 
   /* ══ VIEWS ══════════════════════════════════════════════════════ */
   const views = {};
+  let toQuote = null, toGroup = 'all', toRoom = 'all';
   let route = 'dashboard';
   let openQuoteId = null;
 
@@ -476,13 +584,15 @@
             </select></label>
             <label class="f"><span>GST rate %</span><input type="number" class="num" id="q-gstrate" value="${esc(q.gstRate)}"></label>
           </div>
-          <div class="card__body" style="border-top:1px solid var(--hair)">
-            <div class="doc-tot" style="width:min(100%,20rem)">
+          <div class="card__body grid g2" style="border-top:1px solid var(--hair);align-items:start">
+            <div class="doc-tot" style="width:100%;margin:0">
               <div><span>Sub-total</span><b>${money(t.sub)}</b></div>
+              ${t.optional ? `<div><span>Optional items (not in total)</span><b>${money(t.optional)}</b></div>` : ''}
               ${t.discount ? `<div><span>Less discount</span><b>− ${money(t.discount)}</b></div>` : ''}
               ${t.gst ? `<div><span>GST @ ${t.gstRate}%</span><b>${money(t.gst)}</b></div>` : ''}
               <div class="is-grand"><span>Total</span><b>${money(t.grand)}</b></div>
             </div>
+            ${costPanel(q)}
           </div>
         </div>` : ''}`;
     },
@@ -511,6 +621,8 @@
       bind('#q-disctype', (v) => q.discountType = v);
       bind('#q-gst', (v) => q.gstApplicable = v === '1');
       bind('#q-gstrate', (v) => q.gstRate = Number(v) || 0);
+      const to = $('#q-takeoff');
+      if (to) to.onclick = () => { toQuote = q.id; go('materials'); };
 
       $$('[data-room-name]').forEach((el) => el.onchange = () => {
         const r = q.rooms.find((x) => x.id === el.dataset.roomName);
@@ -523,6 +635,35 @@
         q.rooms = q.rooms.filter((x) => x.id !== r.id); save(); render();
       });
       $$('[data-room-add]').forEach((b) => b.onclick = () => picker(q, b.dataset.roomAdd));
+      const moveRoom = (id, by) => {
+        const n = q.rooms.findIndex((x) => x.id === id);
+        const to = n + by;
+        if (n < 0 || to < 0 || to >= q.rooms.length) return;
+        q.rooms.splice(to, 0, q.rooms.splice(n, 1)[0]);
+        save(); render();
+      };
+      $$('[data-room-up]').forEach((b) => b.onclick = () => moveRoom(b.dataset.roomUp, -1));
+      $$('[data-room-down]').forEach((b) => b.onclick = () => moveRoom(b.dataset.roomDown, 1));
+      $$('[data-room-copy]').forEach((b) => b.onclick = () => {
+        const n = q.rooms.findIndex((x) => x.id === b.dataset.roomCopy);
+        const src = q.rooms[n];
+        if (!src) return;
+        /* A deep copy with fresh ids — sharing line objects would make
+           editing the copy change the original. */
+        q.rooms.splice(n + 1, 0, {
+          id: uid(), name: src.name + ' (copy)',
+          lines: src.lines.map((l) => ({ ...l, id: uid(), spec: { ...l.spec } }))
+        });
+        save(); render(); toast('Room duplicated.');
+      });
+      $$('[data-line-copy]').forEach((b) => b.onclick = () => {
+        const [rid, lid] = b.dataset.lineCopy.split('|');
+        const r = q.rooms.find((x) => x.id === rid);
+        const n = r ? r.lines.findIndex((x) => x.id === lid) : -1;
+        if (n < 0) return;
+        r.lines.splice(n + 1, 0, { ...r.lines[n], id: uid(), spec: { ...r.lines[n].spec } });
+        save(); render();
+      });
       $$('[data-line-edit]').forEach((b) => b.onclick = () => {
         const [rid, lid] = b.dataset.lineEdit.split('|');
         const r = q.rooms.find((x) => x.id === rid);
@@ -550,6 +691,24 @@
     }
   };
 
+  /* What this quotation costs to build, live, while it is being built.
+     Shown only to the studio — it is not on anything the client sees. */
+  function costPanel(q) {
+    const T = takeOff(q);
+    const tone = T.marginPct >= 25 ? 'var(--green)' : T.marginPct >= 15 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="doc-tot" style="width:100%;margin:0">
+      <div><span>Material to buy</span><b>${money(T.material)}</b></div>
+      <div><span>Labour</span><b>${money(T.labour)}</b></div>
+      <div><span>Overhead @ ${T.overheadPct}%</span><b>${money(T.overhead)}</b></div>
+      <div><span>Cost to build</span><b>${money(T.cost)}</b></div>
+      <div class="is-grand" style="color:${tone}"><span>Margin</span>
+        <b>${money(T.margin)} · ${T.marginPct.toFixed(1)}%</b></div>
+      <div style="border:0;padding-top:.5rem">
+        <span style="color:var(--ink-3);font-size:.72rem">Against ${money(T.revenue)} before tax</span>
+        <button class="btn btn--sm" id="q-takeoff">See the take-off</button></div>
+    </div>`;
+  }
+
   function roomHtml(q, r, ri) {
     return `<div class="room">
       <div class="room__head">
@@ -557,6 +716,9 @@
         <input type="text" data-room-name="${r.id}" value="${esc(r.name)}">
         <span class="spacer"></span>
         <span class="room__total">${money(roomTotal(r))}</span>
+        <button class="btn btn--sm btn--icon" data-room-up="${r.id}" title="Move up" ${ri === 0 ? 'disabled' : ''}>&uarr;</button>
+        <button class="btn btn--sm btn--icon" data-room-down="${r.id}" title="Move down">&darr;</button>
+        <button class="btn btn--sm" data-room-copy="${r.id}">Duplicate</button>
         <button class="btn btn--sm" data-room-add="${r.id}">+ Add material</button>
         <button class="btn btn--sm btn--kill" data-room-del="${r.id}">Remove</button>
       </div>
@@ -564,8 +726,8 @@
         <thead><tr><th style="width:44%">Item &amp; specification</th><th>Unit</th>
           <th class="num" style="width:88px">Qty</th><th class="num" style="width:104px">Rate</th>
           <th class="num">Amount</th><th></th></tr></thead>
-        <tbody>${r.lines.map((l) => `<tr class="line">
-          <td><div class="line__name">${esc(l.name)}</div>
+        <tbody>${r.lines.map((l) => `<tr class="line" ${l.optional ? 'style="opacity:.62"' : ''}>
+          <td><div class="line__name">${esc(l.name)}${l.optional ? ' <span class="pill">Optional</span>' : ''}</div>
             ${specLine(l) ? `<div class="line__spec">${specLine(l)}</div>` : ''}
             ${l.remark ? `<div class="line__spec"><b>Note:</b> ${esc(l.remark)}</div>` : ''}</td>
           <td>${esc(l.unit)}</td>
@@ -574,6 +736,7 @@
           <td class="num"><b>${money((Number(l.qty) || 0) * (Number(l.rate) || 0))}</b></td>
           <td class="num" style="white-space:nowrap">
             <button class="btn btn--sm btn--icon" data-line-edit="${r.id}|${l.id}" title="Edit specification">Spec</button>
+            <button class="btn btn--sm btn--icon" data-line-copy="${r.id}|${l.id}" title="Duplicate line">&plus;</button>
             <button class="btn btn--sm btn--icon btn--kill" data-line-del="${r.id}|${l.id}" title="Remove line">×</button>
           </td></tr>`).join('')}</tbody></table></div>`
         : `<div class="empty" style="padding:1.2rem">Nothing in this room yet.</div>`}
@@ -671,6 +834,12 @@
               ${s.options.map((o) => `<option ${line.spec[s.label] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}
             </select></label>`).join('')}</div>`
           : `<div class="note">This line carries no preset specification. Use the note below to describe it.</div>`}
+        <label class="f" style="margin-top:.9rem" title="Priced and printed, but not carried into the total">
+          <span>Scope</span>
+          <select id="ln-optional">
+            <option value="0" ${line.optional ? '' : 'selected'}>Included in the quoted total</option>
+            <option value="1" ${line.optional ? 'selected' : ''}>Optional — priced but not in the total</option>
+          </select></label>
         <label class="f" style="margin-top:.9rem"><span>Line note (prints on the quotation)</span>
           <input type="text" id="ln-remark" value="${esc(line.remark)}" placeholder="e.g. shutters up to 8ft height only"></label>
         <label class="f" style="margin-top:.9rem"><span>Description shown to the client</span>
@@ -682,6 +851,7 @@
           line.qty = Number($('#ln-qty').value) || 0;
           line.rate = Number($('#ln-rate').value) || 0;
           line.remark = $('#ln-remark').value.trim();
+          line.optional = $('#ln-optional').value === '1';
           line.name = $('#ln-name').value.trim() || line.name;
           it.specs.forEach((s, n) => {
             const sel = $(`[data-spec="${n}"]`);
@@ -798,6 +968,18 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
         ${q.client.area ? `<div style="font-size:8.4pt;color:#4f4c46">${esc(q.client.area)} sq.ft carpet area</div>` : ''}</div>
     </div>`));
 
+    /* A client reads the shape of the job before the detail of it, so
+       the rooms are summarised before the schedule that explains them. */
+    if (rooms.length > 1) {
+      place(node(`<section class="doc-room" style="margin-top:7mm">
+        <h2>Summary<em>${money(t.sub)}</em></h2>
+        <table><thead><tr><th style="width:8%">#</th><th>Room</th>
+          <th class="num" style="width:14%">Lines</th><th class="num" style="width:22%">Amount</th></tr></thead>
+        <tbody>${rooms.map((r, n) => `<tr><td>${n + 1}</td><td><b>${esc(r.name)}</b></td>
+          <td class="num">${r.lines.length}</td><td class="num">${money2(roomTotal(r))}</td></tr>`).join('')}
+        </tbody></table></section>`));
+    }
+
     const SCHED_HEAD = `<thead><tr><th style="width:6%">#</th><th style="width:48%">Description</th>
       <th style="width:9%">Unit</th><th class="num" style="width:11%">Qty</th>
       <th class="num" style="width:12%">Rate</th><th class="num" style="width:14%">Amount</th></tr></thead>`;
@@ -830,6 +1012,24 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
         }
       });
     });
+
+    /* Optional lines are printed where they can be seen and priced, but
+       kept out of the total so the figure the client signs is the
+       figure they are committing to. */
+    const optionals = rooms.flatMap((r) => r.lines.filter((l) => l.optional).map((l) => ({ r, l })));
+    if (optionals.length) {
+      place(node(`<section class="doc-room" style="margin-top:6mm">
+        <h2>Optional — not included in the total<em>${money(t.optional)}</em></h2>
+        <table><thead><tr><th style="width:22%">Room</th><th>Description</th><th style="width:9%">Unit</th>
+          <th class="num" style="width:11%">Qty</th><th class="num" style="width:12%">Rate</th>
+          <th class="num" style="width:14%">Amount</th></tr></thead>
+        <tbody>${optionals.map(({ r, l }) => `<tr><td>${esc(r.name)}</td>
+          <td><b>${esc(l.name)}</b>${specLine(l) ? `<div class="doc-spec">${specLine(l)}</div>` : ''}</td>
+          <td>${esc(l.unit)}</td><td class="num">${money2(l.qty)}</td>
+          <td class="num">${money2(l.rate)}</td>
+          <td class="num">${money2((Number(l.qty) || 0) * (Number(l.rate) || 0))}</td></tr>`).join('')}
+        </tbody></table></section>`));
+    }
 
     const tot = node(`<div><div class="doc-tot">
       <div><span>Sub-total</span><span>${money2(t.sub)}</span></div>
@@ -881,6 +1081,21 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
     body.appendChild(node(`<h1>Terms &amp; acceptance</h1>`));
     place(node(`<ol class="doc-terms" style="margin-top:6mm;padding-left:14pt">
       ${(c.terms || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`));
+    const ms = (c.milestones || []).filter((x) => x && x[0]);
+    if (ms.length) {
+      const pct = ms.reduce((n, x) => n + (Number(x[1]) || 0), 0);
+      place(node(`<div style="margin-top:8mm"><h3>Payment schedule</h3>
+        <table style="margin-top:3pt"><thead><tr><th>Stage</th>
+          <th class="num" style="width:14%">%</th><th class="num" style="width:22%">Amount</th></tr></thead>
+        <tbody>${ms.map(([label, p]) => `<tr><td>${esc(label)}</td>
+          <td class="num">${Number(p) || 0}%</td>
+          <td class="num">${money2(t.grand * (Number(p) || 0) / 100)}</td></tr>`).join('')}</tbody>
+        <tfoot><tr><th>Total</th><th class="num">${pct}%</th>
+          <th class="num">${money2(t.grand * pct / 100)}</th></tr></tfoot></table>
+        ${pct !== 100 ? `<div style="margin-top:3pt;font-size:7.6pt;color:#b23b2e">
+          The stages add up to ${pct}%, not 100%. Correct this in Settings before the quotation is sent.</div>` : ''}
+      </div>`));
+    }
     if (q.notes) place(node(`<div style="margin-top:7mm"><h3>Notes for this quotation</h3>
       <div style="margin-top:2pt;font-size:8.6pt;white-space:pre-line">${esc(q.notes)}</div></div>`));
     if (c.bank) place(node(`<div style="margin-top:8mm"><h3>Payment details</h3>
@@ -895,6 +1110,209 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
       `<div class="doc-foot"><span>${esc(c.name)} · ${esc(q.no)}${q.rev ? ' Rev ' + esc(q.rev) : ''}</span>
        <span>Page ${n + 1} of ${pages.length}</span></div>`)));
 
+    doc.remove();
+    return doc;
+  }
+
+  /* ── Materials take-off ──────────────────────────────────────── */
+  views.materials = {
+    title: 'Materials',
+    actions: () => `<button class="btn" id="t-csv">Download CSV</button>
+      <button class="btn btn--go" id="t-print">Purchase list &rarr;</button>`,
+    html() {
+      if (!S.quotes.length) return `<div class="empty"><b>Nothing to take off yet</b>
+        A take-off is worked out from a quotation. Build one first.</div>`;
+      const q = S.quotes.find((x) => x.id === toQuote) || S.quotes[0];
+      toQuote = q.id;
+      const T = takeOff(q);
+      const cats = [...new Set(T.rows.map((r) => r.cat))];
+      const roomNames = [...new Set(T.rows.flatMap((r) => r.from.map(([n]) => n)))];
+      const shown = T.rows.filter((r) => (toGroup === 'all' || r.cat === toGroup)
+        && (toRoom === 'all' || r.from.some(([n]) => n === toRoom)));
+      const shownTotal = shown.reduce((t, r) => t + r.amount, 0);
+
+      return `
+        <div class="row" style="margin-bottom:.9rem">
+          <label class="f" style="min-width:20rem"><span>Quotation</span>
+            <select id="t-quote">${S.quotes.map((x) => `<option value="${x.id}" ${x.id === q.id ? 'selected' : ''}>
+              ${esc(x.no)} — ${esc(x.client.name || 'unnamed')} (${money(totals(x).grand)})</option>`).join('')}</select></label>
+        </div>
+
+        <div class="grid g4" style="margin-bottom:.9rem">
+          ${stat('Material to buy', money(T.material), T.rows.length + ' items')}
+          ${stat('Labour', money(T.labour), 'site + workshop')}
+          ${stat('Cost incl. overhead', money(T.cost), T.overheadPct + '% overhead')}
+          ${stat('Gross margin', money(T.margin), T.marginPct.toFixed(1) + '% of ' + money(T.revenue))}
+        </div>
+
+        ${T.marginPct < 15 ? `<div class="note" style="margin-bottom:.9rem;border-color:var(--red);background:var(--red-soft)">
+          <b>Margin is ${T.marginPct.toFixed(1)}%.</b> At this level a single site revision or a rate rise puts the
+          job under water. Check the rates before this quotation goes out.</div>` : ''}
+
+        <div class="row" style="margin-bottom:.7rem">
+          <button class="btn btn--sm ${toGroup === 'all' ? 'btn--go' : ''}" data-tg="all">All trades</button>
+          ${cats.map((c) => `<button class="btn btn--sm ${toGroup === c ? 'btn--go' : ''}" data-tg="${esc(c)}">${esc(c)} · ${money(T.byCat[c])}</button>`).join('')}
+        </div>
+        <div class="row" style="margin-bottom:.9rem">
+          <span class="hz__kick" style="color:var(--ink-3);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase">Room</span>
+          <button class="btn btn--sm ${toRoom === 'all' ? 'btn--go' : ''}" data-tr="all">Whole job</button>
+          ${roomNames.map((n) => `<button class="btn btn--sm ${toRoom === n ? 'btn--go' : ''}" data-tr="${esc(n)}">${esc(n)}</button>`).join('')}
+        </div>
+
+        <div class="card card__body--flush"><div class="t-wrap"><table>
+          <thead><tr><th style="width:26%">Material</th><th>Unit</th>
+            <th class="num">Net</th><th class="num">Waste</th><th class="num">To buy</th>
+            <th class="num">Rate</th><th class="num">Amount</th><th>Used in</th></tr></thead>
+          <tbody>${shown.map((r) => `<tr>
+            <td><b>${esc(r.name)}</b><div class="line__spec">${esc(r.cat)}${r.note ? ' · ' + esc(r.note) : ''}</div></td>
+            <td>${esc(r.unit)}</td>
+            <td class="num" style="color:var(--ink-3)">${fmtQty(r.net)}</td>
+            <td class="num" style="color:var(--ink-3)">${r.waste}%</td>
+            <td class="num"><b>${fmtQty(r.order)}</b></td>
+            <td class="num">${money(r.rate)}</td>
+            <td class="num"><b>${money(r.amount)}</b></td>
+            <td class="line__spec">${r.from.map(([n, v]) => esc(n) + ' ' + fmtQty(v)).join(' · ')}</td>
+          </tr>`).join('')}</tbody>
+          <tfoot><tr><th colspan="6" style="text-align:right">${toGroup === 'all' && toRoom === 'all' ? 'Total material' : 'Shown'}</th>
+            <th class="num">${money(shownTotal)}</th><th></th></tr></tfoot>
+        </table></div></div>`;
+    },
+    wire() {
+      const sel = $('#t-quote');
+      if (sel) sel.onchange = () => { toQuote = sel.value; toGroup = 'all'; toRoom = 'all'; render(); };
+      $$('[data-tg]').forEach((b) => b.onclick = () => { toGroup = b.dataset.tg; render(); });
+      $$('[data-tr]').forEach((b) => b.onclick = () => { toRoom = b.dataset.tr; render(); });
+      const csv = $('#t-csv');
+      if (csv) csv.onclick = () => {
+        const q = S.quotes.find((x) => x.id === toQuote);
+        if (!q) return;
+        const T = takeOff(q);
+        const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+        const head = ['Trade', 'Material', 'Unit', 'Net qty', 'Wastage %', 'Qty to buy', 'Rate', 'Amount', 'Used in'];
+        const rows = T.rows.map((r) => [r.cat, r.name, r.unit, r.net.toFixed(3), r.waste,
+          r.order.toFixed(3), r.rate, Math.round(r.amount),
+          r.from.map(([n, v]) => n + ' ' + v.toFixed(2)).join('; ')].map(cell).join(','));
+        rows.push('');
+        rows.push([cell('TOTAL MATERIAL'), '', '', '', '', '', '', cell(Math.round(T.material))].join(','));
+        rows.push([cell('LABOUR'), '', '', '', '', '', '', cell(Math.round(T.labour))].join(','));
+        rows.push([cell('OVERHEAD ' + T.overheadPct + '%'), '', '', '', '', '', '', cell(Math.round(T.overhead))].join(','));
+        rows.push([cell('TOTAL COST'), '', '', '', '', '', '', cell(Math.round(T.cost))].join(','));
+        download(`take-off-${q.no.replace(/[^\w]+/g, '-')}-${today()}.csv`,
+          [head.map(cell).join(','), ...rows].join('\n'), 'text/csv');
+        toast('Take-off downloaded.');
+      };
+      const pr = $('#t-print');
+      if (pr) pr.onclick = () => go('purchase', toQuote);
+    }
+  };
+
+  /* Quantities that are read and acted on: a sheet count to two places,
+     a screw count whole. */
+  const fmtQty = (n) => {
+    const v = Number(n) || 0;
+    if (v >= 100) return Math.round(v).toLocaleString('en-IN');
+    if (v >= 10) return v.toFixed(1);
+    return v.toFixed(2);
+  };
+
+  /* ── Purchase list document ────────────────────────────────────── */
+  views.purchase = {
+    title: 'Purchase list',
+    actions: () => `<button class="btn" id="p-back">Back to materials</button>
+      <button class="btn btn--go" id="p-print">Save as PDF / Print</button>`,
+    html: () => `<div id="doc-mount"></div>`,
+    wire() {
+      const b = $('#p-back'); if (b) b.onclick = () => go('materials');
+      const p = $('#p-print'); if (p) p.onclick = () => window.print();
+      const q = S.quotes.find((x) => x.id === openQuoteId) || S.quotes.find((x) => x.id === toQuote);
+      const mount = $('#doc-mount');
+      if (!q) { mount.innerHTML = `<div class="empty"><b>No quotation selected</b></div>`; return; }
+      mount.appendChild(buildPurchase(q));
+    }
+  };
+
+  function buildPurchase(q) {
+    const c = S.company;
+    const T = takeOff(q);
+    const doc = document.createElement('div');
+    doc.className = 'doc'; doc.id = 'doc';
+    document.body.appendChild(doc);
+
+    let page = null, body = null, limit = 0;
+    const pages = [];
+    const openPage = () => {
+      page = node('<div class="sheet"><div class="sheet__body"></div></div>');
+      doc.appendChild(page); body = page.firstElementChild;
+      const cs = getComputedStyle(page);
+      const probe = node('<div style="height:297mm"></div>');
+      doc.appendChild(probe);
+      limit = probe.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      probe.remove(); pages.push(page); return body;
+    };
+    const overflows = () => body.getBoundingClientRect().height > limit;
+    const place = (elm) => {
+      body.appendChild(elm);
+      if (overflows() && body.children.length > 1) { elm.remove(); openPage(); body.appendChild(elm); }
+    };
+    openPage();
+
+    place(node(`<header class="doc-head">
+      <div><div class="doc-mark">Radhe<br><b>Design Studio</b></div><div class="doc-rule"></div>
+        <div style="margin-top:5pt;font-size:7.6pt;color:#6f6b64">Material take-off — internal</div></div>
+      <div class="spacer" style="font-size:7.8pt;color:#4f4c46;white-space:pre-line">${esc(c.address)}</div>
+    </header>`));
+    place(node(`<h1 style="margin-top:8mm">Purchase list</h1>`));
+    place(node(`<dl class="doc-meta">
+      <div><dt>Against quotation</dt><dd>${esc(q.no)}${q.rev ? ' Rev ' + esc(q.rev) : ''}</dd></div>
+      <div><dt>Client</dt><dd>${esc(q.client.name || '—')}</dd></div>
+      <div><dt>Site</dt><dd>${esc(q.client.property || '—')}</dd></div>
+      <div><dt>Prepared</dt><dd>${today()}</dd></div>
+    </dl>`));
+    place(node(`<p style="font-size:8.4pt;color:#4f4c46;max-width:135mm">
+      Quantities include the wastage carried against each trade. Bought-out goods carry none.
+      This is an estimate from the studio's consumption norms, not a cutting list — check it against
+      site measurement before an order is placed.</p>`));
+
+    const cats = [...new Set(T.rows.map((r) => r.cat))];
+    const HEAD = `<thead><tr><th style="width:42%">Material</th><th style="width:10%">Unit</th>
+      <th class="num" style="width:13%">Qty to buy</th><th class="num" style="width:15%">Rate</th>
+      <th class="num" style="width:20%">Amount</th></tr></thead>`;
+
+    cats.forEach((cat) => {
+      const rows = T.rows.filter((r) => r.cat === cat);
+      const sum = rows.reduce((t, r) => t + r.amount, 0);
+      let sec = node(`<section class="doc-room"><h2>${esc(cat)}<em>${money(sum)}</em></h2>
+        <table>${HEAD}<tbody></tbody></table></section>`);
+      place(sec);
+      let tb = sec.querySelector('tbody');
+      rows.forEach((r) => {
+        const tr = node(`<tr><td><b>${esc(r.name)}</b>${r.note ? `<div class="doc-spec">${esc(r.note)}</div>` : ''}</td>
+          <td>${esc(r.unit)}</td><td class="num">${fmtQty(r.order)}</td>
+          <td class="num">${money2(r.rate)}</td><td class="num">${money2(r.amount)}</td></tr>`);
+        tb.appendChild(tr);
+        if (overflows()) {
+          tr.remove();
+          if (!tb.children.length) sec.remove();
+          openPage();
+          sec = node(`<section class="doc-room"><h2>${esc(cat)} <span style="font-weight:400;color:#8d8981">(contd.)</span><em>${money(sum)}</em></h2>
+            <table>${HEAD}<tbody></tbody></table></section>`);
+          body.appendChild(sec); tb = sec.querySelector('tbody'); tb.appendChild(tr);
+        }
+      });
+    });
+
+    place(node(`<div><div class="doc-tot">
+      <div><span>Material</span><span>${money2(T.material)}</span></div>
+      <div><span>Labour</span><span>${money2(T.labour)}</span></div>
+      <div><span>Overhead @ ${T.overheadPct}%</span><span>${money2(T.overhead)}</span></div>
+      <div class="is-grand"><span>Cost to build</span><span>${money(T.cost)}</span></div>
+      <div style="margin-top:6pt"><span>Quoted (before tax)</span><span>${money2(T.revenue)}</span></div>
+      <div><span>Gross margin</span><span>${money(T.margin)} · ${T.marginPct.toFixed(1)}%</span></div>
+    </div></div>`));
+
+    pages.forEach((pg, n) => pg.appendChild(node(
+      `<div class="doc-foot"><span>${esc(c.name)} · Purchase list · ${esc(q.no)} · INTERNAL</span>
+       <span>Page ${n + 1} of ${pages.length}</span></div>`)));
     doc.remove();
     return doc;
   }
@@ -981,6 +1399,30 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
           </div></div>
         </div>
 
+        <div class="card" style="margin-top:.9rem"><div class="card__head"><h3>Costing</h3></div>
+          <div class="card__body grid g2">
+            <label class="f"><span>Overhead on material + labour (%)</span>
+              <input type="number" class="num" id="s-overhead" value="${esc(c.overheadPct)}"></label>
+            <div>
+              <span style="display:block;margin-bottom:.28rem;color:var(--ink-3);font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase">Wastage carried by trade (%)</span>
+              <div class="grid g2" style="gap:.4rem">${Object.keys(MAT.WASTAGE).map((cat) =>
+                `<label style="display:grid;grid-template-columns:minmax(0,1fr) 62px;gap:.4rem;align-items:center;font-size:.76rem">
+                  <span>${esc(cat)}</span>
+                  <input type="number" class="num" data-waste="${esc(cat)}" value="${esc(wastageOf(cat))}"></label>`).join('')}</div>
+            </div>
+          </div>
+          <div class="card__body" style="border-top:1px solid var(--hair)">
+            <span style="display:block;margin-bottom:.4rem;color:var(--ink-3);font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase">Payment stages</span>
+            <div id="s-milestones" class="grid" style="gap:.4rem">${(c.milestones || []).map((mstn, n) =>
+              `<div class="row" style="flex-wrap:nowrap">
+                <input type="text" data-ms-label="${n}" value="${esc(mstn[0])}">
+                <input type="number" class="num" style="width:80px" data-ms-pct="${n}" value="${esc(mstn[1])}">
+                <button class="btn btn--sm btn--kill btn--icon" data-ms-del="${n}">×</button>
+              </div>`).join('')}</div>
+            <button class="btn btn--sm" id="s-ms-add" style="margin-top:.5rem">+ Add a stage</button>
+          </div>
+        </div>
+
         <div class="card" style="margin-top:.9rem"><div class="card__head"><h3>Backup &amp; restore</h3></div>
           <div class="card__body row">
             <button class="btn btn--go" id="s-export">Download backup (JSON)</button>
@@ -1006,8 +1448,21 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
         c.gstRate = Number($('#s-gstrate').value) || 0;
         c.gstMode = $('#s-gstmode').value;
         c.terms = $('#s-terms').value.split('\n').map((x) => x.trim()).filter(Boolean);
+        c.overheadPct = Number($('#s-overhead').value) || 0;
+        $$('[data-waste]').forEach((el) => { S.wastage[el.dataset.waste] = Number(el.value) || 0; });
+        c.milestones = $$('[data-ms-label]').map((el, n) =>
+          [el.value.trim(), Number($(`[data-ms-pct="${n}"]`).value) || 0]).filter((x) => x[0]);
         save(); render(); toast('Settings saved.');
       };
+      const msAdd = $('#s-ms-add');
+      if (msAdd) msAdd.onclick = () => {
+        S.company.milestones = [...(S.company.milestones || []), ['New stage', 0]];
+        save(); render();
+      };
+      $$('[data-ms-del]').forEach((b) => b.onclick = () => {
+        S.company.milestones = (S.company.milestones || []).filter((x, n) => String(n) !== b.dataset.msDel);
+        save(); render();
+      });
       $('#s-export').onclick = () => {
         download(`radhe-desk-${today()}.json`, JSON.stringify(S, null, 2), 'application/json');
         toast('Backup downloaded.');
@@ -1087,6 +1542,6 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
     if (th) document.documentElement.dataset.theme = th;
   } catch (e) { /* private window — the default theme stands */ }
 
-  window.RDS_DESK = { state: () => S, totals, words };
+  window.RDS_DESK = { state: () => S, totals, takeOff, words, fmtQty };
   render();
 })();
