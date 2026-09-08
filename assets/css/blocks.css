@@ -710,6 +710,7 @@
   letter-spacing: -.01em;
   color: #111;
 }
+.pstep__short { display: none; }
 .pstep__text {
   margin: clamp(.7rem, 1.4vw, 1.1rem) 0 0;
   font-size: clamp(.86rem, 1.02vw, .95rem);
@@ -730,34 +731,66 @@
    the last stage stranded beside an empty half-row. Instead each stage takes
    a side, and the bar between them turns at every step. ------------------ */
 @media (max-width: 640px) {
+  /* The whole block is meant to be taken in at once, so it is sized to the
+     screen and centred in it rather than running past the bottom edge. Every
+     measurement below is cut to make the five stages and the heading add up
+     to less than one screenful on the smallest phone still in use. */
+  .proc-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
+    padding: 1.5rem var(--page-x);
+  }
+  .proc-row.proc-row .proc-row__title { font-size: 1.7rem; }
+  .proc-row__rule { width: 46px; height: 2px; margin-top: .75rem; }
+
   .proc-row__grid {
-    --zig: 66px;              /* the column the icon and the bar share */
+    --zig: 56px;              /* the column the icon and the bar share */
     --bar: rgba(20, 19, 15, .16);
     grid-template-columns: 1fr;
     gap: 0;
+    margin-top: 1rem;
   }
   .pstep {
     position: relative;
     display: grid;
     grid-template-columns: var(--zig) 1fr;
-    column-gap: 18px;
-    padding-bottom: 40px;
+    column-gap: 14px;
+    padding-bottom: 20px;
   }
+  /* One line each. The full sentences stay on the desktop, where there are
+     five columns to hold them; here they would each run to three lines and
+     the block would be over two screens before the last stage arrived. */
+  .pstep__long { display: none; }
+  .pstep__short { display: inline; }
   /* Three children, so each is placed by hand — left to flow, the text
      drops into the icon's narrow column and wraps two words to a line. */
-  .pstep__ico  { grid-column: 1; grid-row: 1 / span 2; width: 100%; max-width: 58px; }
-  .pstep__name { grid-column: 2; grid-row: 1; margin-top: 0; }
-  .pstep__text { grid-column: 2; grid-row: 2; margin-top: .5rem; }
+  /* Centred in the column the bar runs down, so icon and bar share an axis.
+     Stretching the icon to the full column left the two a few pixels apart
+     and the zigzag looked like it missed. */
+  .pstep__ico  {
+    grid-column: 1; grid-row: 1 / span 2;
+    width: 42px; max-width: none;
+    justify-self: center;
+  }
+  .pstep__name { grid-column: 2; grid-row: 1; margin-top: 0; font-size: 1rem; }
+  .pstep__text {
+    grid-column: 2; grid-row: 2;
+    margin-top: .28rem;
+    font-size: .78rem;
+    line-height: 1.45;
+  }
 
   .pstep:nth-child(even) { grid-template-columns: 1fr var(--zig); }
-  .pstep:nth-child(even) .pstep__ico { grid-column: 2; margin-left: auto; }
+  .pstep:nth-child(even) .pstep__ico { grid-column: 2; justify-self: center; }
   .pstep:nth-child(even) .pstep__name,
   .pstep:nth-child(even) .pstep__text { grid-column: 1; text-align: right; }
 
   /* Down from this icon, then across to the side the next one sits on. */
   .pstep::before,
   .pstep::after { content: ''; position: absolute; background: var(--bar); }
-  .pstep::before { top: 68px; bottom: 2px; left: calc(var(--zig) / 2 - 1px); width: 2px; }
+  .pstep::before { top: 48px; bottom: 2px; left: calc(var(--zig) / 2 - 1px); width: 2px; }
   .pstep:nth-child(even)::before { left: auto; right: calc(var(--zig) / 2 - 1px); }
   .pstep::after {
     bottom: 0; height: 2px;
