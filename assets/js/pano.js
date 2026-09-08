@@ -197,15 +197,25 @@
           gl.bindTexture(gl.TEXTURE_2D, this.tex);
           gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
-          // Equirect panoramas are power-of-two, so repeat wrap and mipmaps
-          // are both available: the seam closes and zooming out stops aliasing.
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+
+          /* WebGL 1 grants repeat wrapping and mipmaps to power-of-two
+             textures only. Ask for either on a panorama that is not one and
+             the texture is incomplete — it does not warn, it just samples
+             black, which reads as a tour that never loaded. Every panorama
+             here is a power of two, so this is the fast path; the fallback
+             exists so a stray size degrades to a soft seam instead of to
+             nothing at all. */
+          const pot = (v) => v > 0 && (v & (v - 1)) === 0;
+          const two = pot(img.naturalWidth || img.width) && pot(img.naturalHeight || img.height);
+
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, two ? gl.REPEAT : gl.CLAMP_TO_EDGE);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-          gl.generateMipmap(gl.TEXTURE_2D);
-          const aniso = gl.getExtension('EXT_texture_filter_anisotropic')
-            || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER,
+            two ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
+          if (two) gl.generateMipmap(gl.TEXTURE_2D);
+          const aniso = two && (gl.getExtension('EXT_texture_filter_anisotropic')
+            || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic'));
           if (aniso) {
             gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT,
               Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
