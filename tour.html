@@ -207,7 +207,7 @@
         b.classList.toggle('is-on', n === i);
         b.setAttribute('aria-selected', String(n === i));
       });
-      const src = scene.src || `assets/pano/${scene.file}-${tier}.jpg`;
+      const src = scene.src || `assets/pano/${scene.file}-${tier}.webp`;
       veilBar.style.width = '55%';
       pano.load(src).then(() => {
         veilBar.style.width = '100%';
