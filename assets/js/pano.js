@@ -95,27 +95,25 @@
     ]);
   }
 
-  /* Column-major 3x3 multiplication, matching WebGL's matrix layout. */
-  function multiplyMat3(a, b) {
-    const out = new Float32Array(9);
-    for (let col = 0; col < 3; col++) {
-      for (let row = 0; row < 3; row++) {
-        out[col * 3 + row] = a[row] * b[col * 3]
-                           + a[3 + row] * b[col * 3 + 1]
-                           + a[6 + row] * b[col * 3 + 2];
-      }
-    }
-    return out;
+  /* Where the phone is pointing, taken out of a full orientation.
+     rotation() lays the forward axis out as elements 6, 7 and 8, so this is
+     its exact inverse — and it reads a matrix built from a quaternion just
+     as well, since both feed the one uniform. */
+  function heading(matrix) {
+    return {
+      yaw: Math.atan2(matrix[6], matrix[8]),
+      pitch: Math.asin(clamp(-matrix[7], -1, 1))
+    };
   }
 
-  function applyGyroOffsets(matrix, yaw, pitch) {
-    let out = matrix;
-    // Heading remains around world-up, as before.
-    if (yaw) out = multiplyMat3(rotation(yaw, 0), out);
-    // Pitch is local to the camera so dragging vertically always feels natural,
-    // regardless of how the phone is currently tilted.
-    if (pitch) out = multiplyMat3(out, rotation(0, pitch));
-    return out;
+  /* The gyroscope decides where the camera points; it never decides which
+     way is up. Rebuilding the rotation from heading alone throws the roll
+     away, so the room's horizon stays level however the phone is held —
+     which is what a stabilised camera does with the frame. */
+  function levelled(quat, yawOffset, pitchOffset) {
+    const h = heading(matFromQuat(quat));
+    return rotation(h.yaw + yawOffset,
+                    clamp(h.pitch + pitchOffset, -85 * DEG, 85 * DEG));
   }
 
   class Pano {
@@ -338,7 +336,7 @@
        matrix. Nothing is ever decomposed, so there is no pole to cross. */
     startGyro() {
       if (this.gyro) return false;
-      let q = null;                       // smoothed orientation
+      this._raw = null;
 
       const handler = (e) => {
         if (e.alpha == null || e.beta == null || e.gamma == null) return;
@@ -365,21 +363,11 @@
         // Undo the screen rotation so landscape behaves like portrait.
         t = mul(t, [Math.cos(-sa / 2), 0, 0, Math.sin(-sa / 2)]);
 
-        if (!q) { q = t; }
-        else {
-          // Adaptive slerp: barely follow sub-degree tremor, open up for a
-          // deliberate turn. angle is the shortest rotation between the two.
-          let dot = q[0]*t[0] + q[1]*t[1] + q[2]*t[2] + q[3]*t[3];
-          if (dot < 0) { t = t.map((v) => -v); dot = -dot; }
-          const angle = 2 * Math.acos(Math.min(1, Math.abs(dot)));
-          const rate = angle < 0.004 ? 0            // ~0.2 deg: hand tremor
-                     : angle < 0.02  ? 0.10
-                     : angle < 0.10  ? 0.28
-                     : 0.55;
-          if (rate) q = slerp(q, t, rate, dot);
-        }
-
-        this.quat = q;
+        // Nothing is smoothed here. The sensor reports at its own uneven
+        // rate; the stabiliser runs on the display's clock instead, which is
+        // what stops the picture arriving in little steps.
+        this._raw = t;
+        if (!this.quat) this.quat = t;
         this.dirty = true;
       };
 
@@ -388,24 +376,65 @@
       return true;
     }
 
+    /* One step of stabilisation, run once per displayed frame.
+
+       A fixed blend per reading is what makes a phone panorama feel cheap:
+       it drifts when the sensor is slow and judders when it is fast. This is
+       a time-constant filter instead — the fraction covered is
+       1 - e^(-dt/tau) — so the same physical settling happens at 60Hz or
+       120Hz, on a busy frame or an idle one.
+
+       tau is not fixed either. Held still it stretches to a third of a
+       second, and the leftover tremor is damped further still, so the room
+       sits dead in place. Turn the phone deliberately and it collapses
+       towards 50ms, so the view tracks the hand with no perceptible lag.
+       That trade — heavy when static, light when moving — is the whole idea
+       behind optical stabilisation. */
+    _stabilise(dt) {
+      let t = this._raw;
+      if (!t || !this.quat) return;
+      const a = this.quat;
+      let dot = a[0]*t[0] + a[1]*t[1] + a[2]*t[2] + a[3]*t[3];
+      if (dot < 0) { t = t.map((v) => -v); dot = -dot; }
+
+      const angle = 2 * Math.acos(Math.min(1, Math.abs(dot)));   // left to cover
+      if (angle < 2e-4) return;                                  // ~0.01 deg: there
+
+      const k = Math.min(1, (angle / dt) / 1.5);   // 1.5 rad/s reads as a real turn
+      const ease = k * k * (3 - 2 * k);
+      const tau = 0.34 + (0.05 - 0.34) * ease;
+      let rate = 1 - Math.exp(-dt / tau);
+      if (angle < 0.0035) rate *= 0.2;             // ~0.2 deg: tremor, not intent
+
+      this.quat = slerp(a, t, Math.min(1, rate), dot);
+      this.dirty = true;
+    }
+
     stopGyro() {
       if (!this.gyro) return;
       removeEventListener('deviceorientation', this.gyro);
       this.gyro = null;
       // Hand the current view back to the pointer without a jump.
       if (this.quat) {
-        const m = applyGyroOffsets(matFromQuat(this.quat), this.yawOffset, this.pitchOffset);
-        const fx = -m[6], fy = -m[7], fz = -m[8];   // camera looks down -Z
-        this.yaw = Math.atan2(fx, -fz);
-        this.pitch = clamp(Math.asin(clamp(fy, -1, 1)), -85 * DEG, 85 * DEG);
+        // Hand the levelled view over exactly as it is on screen, so letting
+        // go of the gyroscope does not swing or tilt the room.
+        const h = heading(levelled(this.quat, this.yawOffset, this.pitchOffset));
+        this.yaw = h.yaw;
+        this.pitch = clamp(h.pitch, -85 * DEG, 85 * DEG);
         this.quat = null;
+        this._raw = null;
         this.yawOffset = 0;
         this.pitchOffset = 0;
       }
     }
 
-    _loop() {
+    _loop(ts) {
       requestAnimationFrame(this._loop);
+
+      const now = ts || performance.now();
+      const dt = clamp((now - (this._t || now - 16)) / 1000, 1 / 1000, 1 / 20);
+      this._t = now;
+      if (this.gyro) this._stabilise(dt);
 
       // Glide after a flick, unless the gyro is driving.
       if (!this.gyro && (Math.abs(this.velYaw) > 1e-5 || Math.abs(this.velPitch) > 1e-5)) {
@@ -423,7 +452,7 @@
       const gl = this.gl;
       let m;
       if (this.quat) {
-        m = applyGyroOffsets(matFromQuat(this.quat), this.yawOffset, this.pitchOffset);
+        m = levelled(this.quat, this.yawOffset, this.pitchOffset);
       } else {
         m = rotation(this.yaw, this.pitch);
       }
