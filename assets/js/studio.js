@@ -551,7 +551,7 @@
         onUpdate() { print(Math.round(box.v)); }
       });
 
-      ScrollTrigger.create({
+      const watch = ScrollTrigger.create({
         trigger: node,
         start: 'top 92%',
         end: 'bottom 8%',
@@ -560,6 +560,24 @@
         onLeave: () => print(0),
         onLeaveBack: () => print(0)
       });
+
+      /* The figures moved into the hero, so they are on screen the moment
+         the page opens. onEnter only fires on crossing the start, which
+         never happens for a block that was never outside it — the figures
+         would sit on 00 for as long as you stayed near the top.
+
+         Tested on plain visibility rather than the trigger's own start,
+         which sits at 92% and leaves the figures a few pixels short at the
+         foot of the hero. Re-checked on refresh because nothing is measured
+         when the trigger is first created, and guarded on the box still
+         being at zero so a resize cannot restart a count already run. */
+      const kick = () => {
+        if (box.v !== 0) return;                       // already counted
+        const r = node.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) run.restart();
+      };
+      kick();
+      ScrollTrigger.addEventListener('refresh', kick);
     });
   } else {
     counters.forEach((n) => {
