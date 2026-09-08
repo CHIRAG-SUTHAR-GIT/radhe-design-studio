@@ -136,11 +136,35 @@
 .social__link--ig   { --brand: linear-gradient(135deg, #F9CE34 0%, #EE2A7B 48%, #6228D7 100%);
                       --glow: rgba(238, 42, 123, .75); }
 
-@media (max-width: 560px) {
-  .social { gap: .55rem; }
-  .social__link { padding: .55rem .95rem .55rem .6rem; font-size: .6rem; letter-spacing: .12em; }
-  .social__badge { width: 26px; height: 26px; }
-  .social__badge svg { width: 14px; height: 14px; }
+/* On a phone the four pills wrapped to two rows, which reads as two
+   separate offers rather than one row of ways to get in touch. Four equal
+   columns hold the line instead, with the name under its mark rather than
+   beside it — the same information, standing up rather than lying down. */
+@media (max-width: 620px) {
+  .social {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(.35rem, 1.6vw, .6rem);
+  }
+  .social__link {
+    display: grid;
+    grid-auto-flow: row;
+    justify-items: center;
+    gap: .45rem;
+    padding: .7rem .25rem .6rem;
+    border-radius: 14px;
+    font-size: .5rem;
+    letter-spacing: .07em;
+  }
+  .social__link:hover, .social__link:focus-visible { transform: translateY(-2px); }
+  .social__badge { width: 34px; height: 34px; }
+  .social__badge svg { width: 17px; height: 17px; }
+}
+
+/* The narrowest phones: the longest name still has to sit on one line. */
+@media (max-width: 380px) {
+  .social__link { font-size: .46rem; letter-spacing: .04em; padding-left: .12rem; padding-right: .12rem; }
+  .social__badge { width: 31px; height: 31px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
