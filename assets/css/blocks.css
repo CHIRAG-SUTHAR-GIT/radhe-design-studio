@@ -1,0 +1,188 @@
+/* ==========================================================================
+   Ported blocks — "We are great at" and "Our process, your advantage".
+   Lifted from the studio's second homepage build and kept at its exact
+   appearance. Everything is scoped to .zf-block so none of it reaches the
+   rest of the site, and the few global rules in studio.css that would
+   otherwise bleed in (img filter, display font on headings, body colour)
+   are neutralised at the top of the scope.
+   ========================================================================== */
+
+.zf-block {
+  /* Palette is self-contained: these names exist only inside a ported block. */
+  --zf-primary: #F3FE00;
+  --zf-white: #FFFFFF;
+  --zf-cream: #FAF9F4;
+  --zf-ink: #0B0B0B;
+  --zf-gray-02: #1B1818;
+  --zf-gray-03: #2A2727;
+  --zf-muted-dark: #463F3F;
+  --zf-muted-light: #5B5252;
+  --zf-gray-200: #8F8F8F;
+  --zf-gray-495: #D5D5D5;
+  --zf-rail: linear-gradient(270deg, rgba(255,255,255,.20) 86.27%, rgba(255,255,255,0) 88.15%);
+
+  position: relative;
+  font-family: 'Inter Tight', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: normal;
+}
+
+.zf-block--cream { background-color: var(--zf-cream); color: var(--zf-ink); }
+.zf-block--ink   { background-color: var(--zf-ink);   color: var(--zf-white); }
+
+/* ── Undo the site-wide rules that would otherwise reach in ─────────── */
+.zf-block img { filter: none; transition: none; }
+.zf-block h1, .zf-block h2, .zf-block h3, .zf-block h4 {
+  font-family: inherit; letter-spacing: normal; font-weight: 400; margin: 0;
+}
+.zf-block p, .zf-block ul, .zf-block li { margin: 0; padding: 0; }
+.zf-block ul { list-style: none; }
+.zf-block a { color: inherit; text-decoration: none; }
+
+/* ── Layout utilities (scoped) ──────────────────────────────────────── */
+.zf-block .container { max-width: 1400px; margin: 0 auto; padding: 0 80px; }
+.zf-block .flex { display: flex; }
+.zf-block .grid { display: grid; }
+.zf-block .flex-col { flex-direction: column; }
+.zf-block .items-center { align-items: center; }
+.zf-block .justify-between { justify-content: space-between; }
+.zf-block .justify-center { justify-content: center; }
+.zf-block .shrink-0 { flex-shrink: 0; }
+.zf-block .relative { position: relative; }
+.zf-block .overflow-hidden { overflow: hidden; }
+.zf-block .list-unstyled { list-style: none; }
+.zf-block .w-full { width: 100%; }
+.zf-block .h-full { height: 100%; }
+.zf-block .object-cover { object-fit: cover; }
+.zf-block .mx-auto { margin-left: auto; margin-right: auto; }
+.zf-block .text-center { text-align: center; }
+.zf-block .uppercase { text-transform: uppercase; }
+.zf-block .hidden { display: none; }
+.zf-block .gap-80 { gap: 80px; }
+.zf-block .mt_64 { margin-top: 64px; }
+.zf-block .py_80 { padding-top: 80px; padding-bottom: 80px; }
+.zf-block .section-heading { margin-top: 16px; margin-bottom: 16px; }
+
+.zf-block .ff_inter { font-family: Inter, sans-serif !important; }
+.zf-block .fs_14 { font-size: 14px; }
+.zf-block .fs_16 { font-size: 16px; }
+.zf-block .fs_18 { font-size: 18px; }
+.zf-block .fs_28 { font-size: 28px; }
+.zf-block .fs_36 { font-size: 36px; }
+.zf-block .lh_21 { line-height: 21px; }
+.zf-block .lh_24 { line-height: 24px; }
+.zf-block .lh_27 { line-height: 27px; }
+.zf-block .lh_40 { line-height: 40px; }
+.zf-block .lh_normal { line-height: normal; }
+.zf-block .fw_500 { font-weight: 500; }
+.zf-block .fw_600 { font-weight: 600; }
+
+.zf-block.zf-block .text_white { color: var(--zf-white); }
+.zf-block.zf-block .text_black { color: #000; }
+.zf-block.zf-block .text_primary { color: var(--zf-primary); }
+.zf-block.zf-block .text_gray_02 { color: var(--zf-gray-02); }
+.zf-block.zf-block .text_gray_03 { color: var(--zf-gray-03); }
+.zf-block.zf-block .text_gray_495 { color: var(--zf-gray-495); }
+.zf-block.zf-block .text_gray_muted_dark { color: var(--zf-muted-dark); }
+.zf-block.zf-block .text_gray_muted_light { color: var(--zf-muted-light); }
+
+/* ── "We are great at" — six cards that open on hover ───────────────── */
+.zf-block .services-wraper { column-gap: 32px; }
+.zf-block .service-card {
+  display: block; padding: 40px 0; position: relative; z-index: 0;
+  border-top: 1px solid #d7d8d4; border-bottom: 1px solid #d7d8d4;
+  backdrop-filter: blur(6px);
+  transition: padding-left 1s, padding-right 1s;
+}
+.zf-block .service-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0;
+  background-image: radial-gradient(circle at 78% 50%, rgba(243,254,0,.32) 0%, transparent 42%),
+                    linear-gradient(90deg, #2d2d2d 0%, #1c1c1c 100%);
+  background-position: center right 40%; background-repeat: no-repeat;
+  transition: background-position 1s, opacity 1s;
+}
+.zf-block .service-card:hover {
+  padding-left: 40px; padding-right: 40px;
+  border-left: 1px solid #2d2d2d; background-color: #2d2d2d;
+}
+.zf-block .service-card:hover::before { background-position: center right 46px; opacity: 1; }
+.zf-block .service-card:hover .servic-text,
+.zf-block .service-card:hover .servic-title { color: var(--zf-white) !important; }
+.zf-block .service-card:hover .arrow-box { background-color: var(--zf-white); }
+.zf-block .service-card:hover .arrow-box svg path { stroke: #0D0D0D; }
+.zf-block .arrow-box {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1.5px solid #d7d8d4; transition: background-color 1s;
+}
+.zf-block .servic-title { margin-top: 20px; }
+
+/* ── "Our process" — rail fills as you read, plate follows ──────────── */
+.zf-block .services-content::before {
+  content: ""; position: absolute; width: 3px; height: 100%; left: 29px;
+  background: var(--zf-rail);
+}
+.zf-block .services-content::after {
+  content: ""; position: absolute; width: 3px; height: var(--scroll-height, 0);
+  max-height: 100%; top: 0; left: 29px; background: var(--zf-primary);
+}
+.zf-block .services-listing { counter-reset: service-counter; gap: 100px; }
+.zf-block .service-item { counter-increment: service-counter; position: relative; }
+.zf-block .service-item::before {
+  content: counter(service-counter, decimal-leading-zero);
+  position: absolute; left: -51px; opacity: 0;
+  font-family: Inter, sans-serif; font-size: 16px; font-weight: 500;
+  color: var(--zf-white); transition: opacity .5s linear;
+}
+.zf-block .service-item.active::before { opacity: 1; }
+.zf-block .service-item h3,
+.zf-block .service-item h4,
+.zf-block .service-item .service-desc { color: var(--zf-gray-200); transition: color .5s linear; }
+.zf-block .service-item.active h3,
+.zf-block .service-item.active .service-desc { color: var(--zf-white); }
+.zf-block .service-title { font-size: 36px; font-weight: 600; }
+.zf-block .service-tag { font-size: 18px; }
+.zf-block .image-wraper { position: sticky; top: 20vh; height: fit-content; }
+.zf-block .image-wraper img { border-radius: 16px; }
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (min-width: 769px) {
+  .zf-block .md_grid-cols-2 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 1204px) {
+  .zf-block .container { padding: 0 60px; }
+}
+@media (max-width: 991px) {
+  .zf-block .container { padding: 0 40px; }
+  .zf-block .gap-80 { gap: 40px; }
+}
+@media (max-width: 768px) {
+  .zf-block .md_hidden { display: none; }
+  .zf-block .md_block { display: block !important; }
+  .zf-block .service-card { padding-top: 24px; padding-bottom: 24px; }
+  .zf-block .services-content::before,
+  .zf-block .services-content::after,
+  .zf-block .service-item::before { display: none; }
+  .zf-block .services-content { padding-left: 0 !important; max-width: 100% !important; }
+  .zf-block .image-wraper { display: none; }
+}
+@media (max-width: 575px) {
+  .zf-block .container { padding: 0 24px; }
+  .zf-block .sm_block { display: block; }
+  .zf-block .sm_py_32 { padding-top: 32px; padding-bottom: 32px; }
+  .zf-block .sm_mt_32 { margin-top: 32px !important; }
+  .zf-block .sm_fs_14 { font-size: 14px; }
+  .zf-block .sm_fs_16 { font-size: 16px; }
+  .zf-block .sm_fs_20 { font-size: 20px; }
+  .zf-block .sm_fs_22 { font-size: 22px; }
+  .zf-block .sm_fs_28 { font-size: 28px; }
+  .zf-block .sm_lh_21 { line-height: 21px; }
+  .zf-block .sm_fw_700 { font-weight: 700; }
+  .zf-block .service-title { font-size: 20px; font-weight: 700; }
+  .zf-block .service-tag { font-size: 16px; margin-top: 2px !important; margin-bottom: 12px !important; }
+  .zf-block .servic-title { margin-top: 8px; }
+  .zf-block .services-listing { gap: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zf-block *, .zf-block *::before, .zf-block *::after {
+    transition-duration: .001ms !important; animation-duration: .001ms !important;
+  }
+}
