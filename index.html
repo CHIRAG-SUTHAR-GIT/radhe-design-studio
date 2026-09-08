@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=13">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=14">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -87,13 +87,16 @@
           <b class="hero__set"><span>Design</span></b>
           <b class="hero__set"><span><span class="hero__ruled">Studio</span></span></b>
         </h1>
-        <p class="hero__lead">Interiors drawn the way a building is &mdash; measured, detailed and handed over finished.</p>
-        <dl class="hero__meta">
-          <div><dt>Discipline</dt><dd>Interior architecture</dd></div>
-          <div><dt>Practice</dt><dd>Residential &amp; commercial</dd></div>
-          <div><dt>Location</dt><dd>Gota, Ahmedabad</dd></div>
-          <div><dt>Delivery</dt><dd>Turnkey</dd></div>
-        </dl>
+        <p class="hero__lead">Rooms that hold the light, the material and the way you live.</p>
+        <!-- The spec grid read as an architect's title block. What an interior
+             studio is actually judged on is what a room is made of. -->
+        <ul class="hero__palette" aria-label="Materials we work in">
+          <li style="--sw:#c08f57"><i aria-hidden="true"></i><span>Oak</span></li>
+          <li style="--sw:#d9cdb8"><i aria-hidden="true"></i><span>Travertine</span></li>
+          <li style="--sw:#c2a24a"><i aria-hidden="true"></i><span>Brass</span></li>
+          <li style="--sw:#e8e2d6"><i aria-hidden="true"></i><span>Linen</span></li>
+        </ul>
+        <p class="hero__fields">Homes <b>&middot;</b> Workplaces <b>&middot;</b> Hospitality</p>
         <a class="hero__go" href="projects.html">Selected work <em aria-hidden="true">&#8599;</em></a>
       </div>
 

@@ -788,3 +788,66 @@
   .pstep::before { transform: scaleY(1) !important; }
   .pstep::after { transform: scaleX(1) !important; }
 }
+
+/* ==========================================================================
+   Hero — the material palette
+   The four fields that stood here (DISCIPLINE / PRACTICE / LOCATION /
+   DELIVERY) were an architect's title block. An interior studio is judged
+   on what a room is made of, so the block now shows the materials.
+   ========================================================================== */
+.hero__palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.1rem, 2.4vw, 2rem);
+  margin: .3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hero__palette li {
+  display: grid;
+  gap: .55rem;
+  justify-items: start;
+}
+.hero__palette i {
+  display: block;
+  width: clamp(38px, 3.4vw, 48px);
+  aspect-ratio: 1;
+  border-radius: 5px;
+  /* Lit from the top left and falling away, so a flat colour reads as a
+     sample with a surface rather than a paint chip. */
+  background:
+    linear-gradient(140deg,
+      color-mix(in srgb, var(--sw) 86%, #fff) 0%,
+      var(--sw) 52%,
+      color-mix(in srgb, var(--sw) 80%, #000) 100%);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: 0 10px 22px -14px rgba(0, 0, 0, .9);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.hero__palette span {
+  font-family: var(--sans);
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted-2, rgba(255, 255, 255, .5));
+  transition: color .5s var(--ease);
+}
+.hero__palette li:hover i {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px -14px rgba(0, 0, 0, .95);
+}
+.hero__palette li:hover span { color: var(--amber); }
+
+.hero__fields {
+  margin: .2rem 0 0;
+  font-size: clamp(.82rem, 1vw, .95rem);
+  color: var(--muted, rgba(255, 255, 255, .62));
+}
+.hero__fields b { color: var(--amber); font-weight: 400; padding: 0 .2rem; }
+
+@media (max-width: 575px) {
+  .hero__palette { gap: 1rem; }
+  .hero__palette i { width: 34px; }
+  .hero__palette span { font-size: .52rem; letter-spacing: .12em; }
+}
