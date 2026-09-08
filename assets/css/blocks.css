@@ -284,7 +284,6 @@
 .map__band {
   position: relative;
   min-height: clamp(22rem, 40vw, 34rem);
-  border-radius: 18px;
   overflow: hidden;
 }
 .map__band > .map__canvas {
@@ -300,8 +299,8 @@
      same colour as the ground behind it, so there is nothing to hide. */
   /* The dissolve: the map has no edge of its own, it just stops being
      opaque before it reaches the ground colour. */
-  -webkit-mask-image: radial-gradient(122% 118% at 50% 46%, #000 52%, transparent 100%);
-          mask-image: radial-gradient(122% 118% at 50% 46%, #000 52%, transparent 100%);
+  -webkit-mask-image: radial-gradient(130% 125% at 50% 46%, #000 62%, transparent 100%);
+          mask-image: radial-gradient(130% 125% at 50% 46%, #000 62%, transparent 100%);
 }
 .map__canvas.is-ready { --map-state: ready; }
 /* If the tiles never arrive, say so and leave the directions link doing
@@ -514,41 +513,62 @@
 .enq__field select,
 .enq__field textarea {
   width: 100%;
-  padding: 1.35rem 0 .55rem;
-  border: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, .18);
-  border-radius: 0;
-  background: transparent;
+  padding: 1.7rem 1.1rem .75rem;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .035);
   color: #fff;
   font: inherit;
   font-size: .95rem;
   outline: none;
-  transition: border-color .4s var(--ease);
+  transition: border-color .45s var(--ease), background-color .45s var(--ease),
+              box-shadow .45s var(--ease), transform .45s var(--ease);
 }
-.enq__field textarea { resize: vertical; min-height: 3.4rem; line-height: 1.6; }
+.enq__field textarea { resize: vertical; min-height: 11rem; line-height: 1.6; }
 .enq__field select { appearance: none; cursor: pointer; }
 .enq__field select option { background: #141414; color: #fff; }
-.enq__field--select::after {
-  content: '';
-  position: absolute; right: .2rem; bottom: 1.1rem;
-  width: 8px; height: 8px;
-  border-right: 1.5px solid rgba(255, 255, 255, .5);
-  border-bottom: 1.5px solid rgba(255, 255, 255, .5);
-  transform: rotate(45deg);
-  pointer-events: none;
+
+/* Hover lifts the field a hair out of the ground and warms its edge. */
+.enq__field:hover input,
+.enq__field:hover select,
+.enq__field:hover textarea {
+  border-color: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, .06);
+  transform: translateY(-1px);
+}
+.enq__field input:focus,
+.enq__field select:focus,
+.enq__field textarea:focus {
+  border-color: rgba(63, 169, 255, .55);
+  background: rgba(255, 255, 255, .07);
+  box-shadow: 0 0 0 3px rgba(63, 169, 255, .12), 0 12px 34px -18px rgba(0, 0, 0, .9);
 }
 
-/* The label rides up out of the field the moment there is anything in it. */
+.enq__field--select::after {
+  content: '';
+  position: absolute; right: 1.15rem; top: 50%;
+  width: 8px; height: 8px;
+  margin-top: -6px;
+  border-right: 1.5px solid rgba(255, 255, 255, .45);
+  border-bottom: 1.5px solid rgba(255, 255, 255, .45);
+  transform: rotate(45deg);
+  pointer-events: none;
+  transition: border-color .4s var(--ease);
+}
+.enq__field--select:hover::after { border-color: rgba(255, 255, 255, .8); }
+
+/* The label starts where the value will sit, then rides up out of the way. */
 .enq__field label {
   position: absolute;
-  left: 0;
-  top: 1.35rem;
-  color: rgba(255, 255, 255, .45);
+  left: 1.15rem;
+  top: 1.28rem;
+  color: rgba(255, 255, 255, .5);
   font-size: .95rem;
   pointer-events: none;
   transform-origin: left top;
-  transition: transform .35s var(--ease), color .35s var(--ease);
+  transition: transform .38s var(--ease), color .38s var(--ease);
 }
+.enq__field--area label { top: 1.28rem; }
 .enq__field label em { font-style: normal; color: var(--amber); padding-left: .15rem; }
 .enq__field input:focus + label,
 .enq__field input:not(:placeholder-shown) + label,
@@ -556,54 +576,114 @@
 .enq__field textarea:not(:placeholder-shown) + label,
 .enq__field select:focus + label,
 .enq__field select:valid + label {
-  transform: translateY(-1.25rem) scale(.72);
-  color: rgba(255, 255, 255, .62);
+  transform: translateY(-.78rem) scale(.72);
+  color: rgba(255, 255, 255, .58);
 }
 
-/* A line that draws itself in from the left on focus. */
+/* A hairline that draws across the foot of the field on focus. */
 .enq__field i {
   position: absolute;
-  left: 0; bottom: 0;
-  height: 1px; width: 100%;
+  left: 1rem; right: 1rem; bottom: 0;
+  height: 1px;
   background: linear-gradient(90deg, #3FA9FF, var(--amber));
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform .45s var(--ease);
+  transition: transform .5s var(--ease);
+  pointer-events: none;
 }
 .enq__field input:focus ~ i,
 .enq__field select:focus ~ i,
 .enq__field textarea:focus ~ i { transform: scaleX(1); }
 .enq__field.is-bad input,
 .enq__field.is-bad select,
-.enq__field.is-bad textarea { border-bottom-color: #ff8f8f; }
+.enq__field.is-bad textarea { border-color: rgba(255, 143, 143, .7); }
 
+/* Submit: the photo's full-width white bar, with the fill wiping across. */
 .enq__send {
   position: relative;
-  justify-self: start;
-  display: inline-flex; align-items: center; gap: .7rem;
-  margin-top: .4rem;
-  padding: .85rem 1.6rem;
-  border: 1px solid rgba(255, 255, 255, .2);
-  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: .7rem;
+  width: 100%;
+  margin-top: .3rem;
+  padding: 1.15rem 1.6rem;
+  border: 1px solid #fff;
+  border-radius: 14px;
   overflow: hidden;
-  color: #fff;
-  font-size: .82rem;
-  letter-spacing: .04em;
-  transition: color .45s var(--ease), border-color .45s var(--ease);
+  background: #fff;
+  color: #0B0B0B;
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  transition: color .5s var(--ease), border-color .5s var(--ease), box-shadow .5s var(--ease);
 }
 .enq__send span, .enq__send em { position: relative; z-index: 1; font-style: normal; }
-.enq__send em { transition: transform .45s var(--ease); }
+.enq__send em { transition: transform .5s var(--ease); }
 .enq__send::before {
   content: '';
   position: absolute; inset: 0; z-index: 0;
   background: linear-gradient(100deg, #3FA9FF, var(--amber));
   transform: translateX(-101%);
-  transition: transform .55s var(--ease);
+  transition: transform .6s var(--ease);
 }
-.enq__send:hover { color: #0B0B0B; border-color: transparent; }
+.enq__send:hover { color: #0B0B0B; border-color: transparent; box-shadow: 0 18px 46px -22px rgba(63, 169, 255, .8); }
 .enq__send:hover::before { transform: translateX(0); }
-.enq__send:hover em { transform: translateX(4px); }
+.enq__send:hover em { transform: translateX(5px); }
 .enq__send[disabled] { opacity: .55; pointer-events: none; }
+
+/* ── Email / call / location cards ─────────────────────────────────────── */
+.cards { list-style: none; display: grid; gap: .8rem; margin: clamp(1.6rem, 3vw, 2.2rem) 0 0; padding: 0; }
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .028);
+  overflow: hidden;
+  transition: border-color .5s var(--ease), transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+/* A soft light follows the card up on hover rather than a flat colour change. */
+.card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(63, 169, 255, .16), rgba(189, 122, 28, .12) 60%, transparent);
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+}
+.card > * { position: relative; z-index: 1; }
+.card:hover {
+  border-color: rgba(255, 255, 255, .22);
+  transform: translateY(-2px);
+  box-shadow: 0 22px 44px -28px rgba(0, 0, 0, .95);
+}
+.card:hover::before { opacity: 1; }
+.card__ico {
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 13px;
+  transition: border-color .5s var(--ease), background-color .5s var(--ease);
+}
+.card__ico svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.card:hover .card__ico { border-color: rgba(63, 169, 255, .55); background: rgba(63, 169, 255, .1); }
+.card__txt {
+  display: grid; gap: .2rem; min-width: 0;
+  font-size: .82rem; color: rgba(255, 255, 255, .55);
+  overflow-wrap: anywhere;
+}
+.card__txt b { font-size: .95rem; font-weight: 600; color: #fff; }
+.card__go {
+  display: grid; place-items: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .07);
+  transition: background-color .5s var(--ease), transform .5s var(--ease);
+}
+.card__go svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.card:hover .card__go { background: #fff; transform: translate(2px, -2px); }
+.card:hover .card__go svg { stroke: #0B0B0B; }
 
 .enq__note { min-height: 1.2rem; font-size: .8rem; color: rgba(255, 255, 255, .55); }
 .enq__note.is-bad { color: #ff8f8f; }
@@ -616,3 +696,50 @@
 @media (max-width: 560px) {
   .enq__row { grid-template-columns: 1fr; }
 }
+
+/* ── The "Contact" badge above the heading ─────────────────────────────── */
+.deck__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .45rem 1rem .45rem .45rem;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  font-family: var(--sans);
+  font-size: .82rem;
+  color: rgba(255, 255, 255, .88);
+  transition: border-color .5s var(--ease), background-color .5s var(--ease);
+}
+.deck__pill i {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .07);
+}
+.deck__pill svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.deck__pill:hover { border-color: rgba(255, 255, 255, .24); background: rgba(255, 255, 255, .07); }
+.deck__title { margin-top: 1.2rem; }
+
+/* ── Map vignette ──────────────────────────────────────────────────────────
+   The map no longer ends on an edge. It darkens outward to exactly the
+   ground colour, so there is no rectangle to see — only a lit centre that
+   fades into the black the section already sits on.
+   ------------------------------------------------------------------------ */
+.map__band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(115% 108% at 50% 45%,
+              transparent 28%,
+              rgba(11, 11, 11, .32) 56%,
+              rgba(11, 11, 11, .8) 80%,
+              #0B0B0B 100%);
+  box-shadow: inset 0 0 74px 28px #0B0B0B;
+}
+/* Attribution is a licence condition of the CARTO and OpenStreetMap tiles,
+   so it has to stay legible above the vignette. */
+.map__canvas .maplibregl-ctrl-bottom-right,
+.map__canvas .maplibregl-ctrl-bottom-left { z-index: 3; }
