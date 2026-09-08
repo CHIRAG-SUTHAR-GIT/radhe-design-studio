@@ -186,3 +186,89 @@
     transition-duration: .001ms !important; animation-duration: .001ms !important;
   }
 }
+
+/* ==========================================================================
+   Hero figures
+   The four studio figures used to hold a section of their own, most of it
+   empty: `.statement` pads to 12rem and `.statement--stats` asks for 72vh
+   on top, so the numbers floated in a tall black gap. They now close the
+   hero as a band under the plate and the title block.
+   ========================================================================== */
+.hero {
+  /* Named so the two absolutely-positioned hero overlays can clear the
+     band without guessing at its height. */
+  --hero-stats: clamp(7rem, 9.5vw, 9rem);
+  grid-template-rows: minmax(0, 1fr) var(--hero-stats);
+}
+.hero__plate { grid-column: 1; grid-row: 1; }
+.hero__block { grid-column: 2; grid-row: 1; }
+.hero__stats { grid-column: 1 / -1; grid-row: 2; min-width: 0; }
+
+.hero__stats .statement-stats {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  border-left: 0;
+  border-bottom: 0;
+}
+.hero__stats .statement-stat {
+  min-height: 0;
+  align-content: center;
+  gap: .2rem;
+  padding: clamp(.7rem, 1.5vw, 1.05rem) clamp(.9rem, 2vw, 1.5rem);
+  border-bottom: 0;
+}
+.hero__stats .statement-stat:last-child { border-right: 0; }
+.hero__stats .statement-stat__figure strong { font-size: clamp(1.7rem, 3.1vw, 2.6rem); }
+.hero__stats .statement-stat h2 { max-width: 20ch; font-size: clamp(.72rem, .95vw, .85rem); }
+
+/* Both overlays are anchored to the hero's bottom edge, which is now the
+   band rather than the plate. */
+.hero__scroll { bottom: calc(var(--hero-stats) + 1.4rem); }
+.hero__reveal { bottom: calc(var(--hero-stats) + clamp(2rem, 6vh, 4rem)); }
+
+@media (max-width: 860px) {
+  .hero { --hero-stats: auto; }
+  .hero__stats .statement-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero__stats .statement-stat:nth-child(2n) { border-right: 0; }
+  .hero__stats .statement-stat:nth-child(-n+2) { border-bottom: 1px solid var(--hair-soft); }
+}
+@media (max-width: 760px) {
+  /* studio.css stacks the hero here; the band takes a third row. */
+  .hero { grid-template-columns: 1fr; grid-template-rows: 44svh auto auto; }
+  .hero__block { grid-column: 1; grid-row: 2; }
+  .hero__stats { grid-column: 1; grid-row: 3; }
+  .hero__reveal { bottom: clamp(2rem, 6vh, 4rem); }
+}
+
+/* ==========================================================================
+   Breathing room in the two ported blocks
+   They arrived on a flat 80px with a 100px gap between process stages —
+   spacing drawn for a page whose type ran much longer. Against this sheet
+   they read as cropped and stuck together, so both now scale with the
+   viewport the way the rest of the site does.
+   ========================================================================== */
+.zf-block.py_80 {
+  padding-top: clamp(3.5rem, 7vw, 6.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6.5rem);
+}
+.zf-block .mt_64 { margin-top: clamp(2.5rem, 5vw, 4rem); }
+
+/* Stage descriptions are half as long as they were, so the old 100px gap
+   left each stage stranded. */
+.zf-block .services-listing { gap: clamp(2.75rem, 5vw, 4.25rem); }
+.zf-block .service-item h4 { margin-bottom: 12px !important; }
+
+/* The plate was pinned to 560x600 and cropped hard on anything narrower. */
+.zf-block .image-wraper { flex: 1 1 0; min-width: 0; max-width: 560px; }
+.zf-block .image-wraper img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 14 / 15;
+  max-height: 64vh;
+}
+
+@media (max-width: 991px) {
+  .zf-block.py_80 { padding-top: clamp(2.75rem, 6vw, 4rem); padding-bottom: clamp(2.75rem, 6vw, 4rem); }
+}
