@@ -51,6 +51,7 @@
     if (!host || !window.maplibregl) return;
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine = window.matchMedia('(pointer: fine)').matches;
 
     var map = new maplibregl.Map({
       container: host,
@@ -60,8 +61,17 @@
       pitch: reduced ? 0 : 48,
       bearing: reduced ? 0 : -18,
       attributionControl: { compact: true },
-      cooperativeGestures: true,   // the page keeps the scroll wheel
-      dragRotate: !reduced
+
+      /* cooperativeGestures kept the page's scroll wheel, but it earned that
+         by printing "Use Ctrl + scroll to zoom" across the map. The wheel is
+         simply given back to the page instead: nothing to explain, so nothing
+         to print. Zoom stays on the + / - control, and pinch still works.
+
+         Dragging is for pointers only. Left on, one finger would pan the map
+         on a phone and the page would stop scrolling under it. */
+      scrollZoom: false,
+      dragPan: fine,
+      dragRotate: !reduced && fine
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
