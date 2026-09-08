@@ -1363,15 +1363,24 @@
 
   .hero__brand {
     display: grid;
-    align-content: end;
+    /* Centred in the photograph, across and down. */
+    align-content: center;
+    justify-items: center;
+    text-align: center;
     gap: .5rem;
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 60svh;
     z-index: 3;
-    padding: 0 var(--page-x) clamp(1.1rem, 3.5vh, 2rem);
+    padding: 0 var(--page-x);
     pointer-events: none;
   }
+  .hero__brand .hero__slug { justify-content: center; }
+  /* Tracking pads the right of the last letter as well, which drags centred
+     type off centre by half of it. An indent of the same size puts it back. */
+  .hero__brand .hero__title--mark .hero__set:first-child { text-indent: .155em; }
+  .hero__brand .hero__title--mark b.hero__set { text-indent: .42em; }
+  .hero__brand .hero__lead { margin-left: auto; margin-right: auto; }
 
   /* A foot of shade under the letters, or they sit on whatever happens to
      be in the picture at that moment. */
@@ -1379,12 +1388,17 @@
     content: '';
     position: absolute; inset: 0; z-index: 2;
     pointer-events: none;
-    background: linear-gradient(180deg,
-      rgba(8, 7, 6, .28) 0%,
-      rgba(8, 7, 6, .06) 22%,
-      rgba(8, 7, 6, .55) 52%,
-      rgba(8, 7, 6, .88) 78%,
-      rgba(8, 7, 6, .97) 100%);
+    /* A pool of shade behind the name where it now sits, and the foot kept
+       dark so the photograph hands over to the stone below without a seam. */
+    background:
+      radial-gradient(125% 62% at 50% 50%,
+        rgba(8, 7, 6, .74) 0%, rgba(8, 7, 6, .40) 52%, rgba(8, 7, 6, .12) 100%),
+      linear-gradient(180deg,
+        rgba(8, 7, 6, .34) 0%,
+        rgba(8, 7, 6, .10) 24%,
+        rgba(8, 7, 6, .26) 62%,
+        rgba(8, 7, 6, .72) 88%,
+        rgba(8, 7, 6, .95) 100%);
   }
 
   /* On stone the quiet grey reads; over a photograph of a bright room it
