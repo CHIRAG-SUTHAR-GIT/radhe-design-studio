@@ -66,6 +66,14 @@
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
 
+    // The band now takes its height from the form beside it, so the container
+    // can change size well after the map was built — when fonts land, or when
+    // a validation message pushes the form taller. Resizing on window alone
+    // would miss all of that and leave the canvas the wrong size.
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { map.resize(); }).observe(host);
+    }
+
     map.on('load', function () {
       // Light the through-roads. These are real OSM ways restyled, not a
       // route drawn over the top.
