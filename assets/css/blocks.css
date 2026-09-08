@@ -1059,3 +1059,56 @@
 @media (max-width: 860px) {
   .zf-block#services { display: none; }
 }
+
+/* ==========================================================================
+   The enquiry form on a phone
+   Stacked one field to a row it ran well past a screen, and a form you have
+   to scroll to see the end of reads as more work than it is. The pairs go
+   back to two across, the fields lose the padding they only need under a
+   mouse, and the message box asks for three lines rather than seven.
+   Nothing here changes above 640px.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .deck { padding: 1.75rem var(--page-x) 2rem; }
+  .deck__grid { gap: 1.5rem; }
+
+  .deck__pill { padding: .32rem .8rem .32rem .32rem; font-size: .74rem; }
+  .deck.deck .deck__title { margin-top: .7rem; font-size: 1.5rem; }
+  .deck.deck .deck__lead {
+    margin-top: .5rem;
+    font-size: .8rem;
+    line-height: 1.5;
+  }
+
+  .enq { gap: .6rem; margin-top: 1rem; }
+  /* Two across again: the pairs belong together and stacking them was most
+     of the length. Overrides the single column set at 560px above. */
+  .enq__row { grid-template-columns: 1fr 1fr; gap: .6rem; }
+
+  .enq__field input,
+  .enq__field select,
+  .enq__field textarea {
+    padding: 1.15rem .75rem .45rem;
+    border-radius: 11px;
+    font-size: .85rem;
+  }
+  .enq__field textarea { min-height: 4.6rem; }
+
+  /* The label rests centred in the field and rides up when it is filled.
+     Both positions are tied to the padding above, so shrinking one without
+     the other leaves the label sitting on the value. */
+  .enq__field label,
+  .enq__field--area label { left: .75rem; top: .88rem; font-size: .78rem; }
+  .enq__field input:focus + label,
+  .enq__field input:not(:placeholder-shown) + label,
+  .enq__field textarea:focus + label,
+  .enq__field textarea:not(:placeholder-shown) + label,
+  .enq__field select:focus + label,
+  .enq__field select:valid + label { transform: translateY(-.6rem) scale(.72); }
+
+  /* The chevron follows the field's own right-hand padding. */
+  .enq__field--select::after { right: .75rem; width: 7px; height: 7px; margin-top: -5px; }
+
+  .enq__send { margin-top: .1rem; padding: .8rem 1.2rem; border-radius: 11px; font-size: .88rem; }
+  .enq__note { min-height: .9rem; font-size: .72rem; }
+}
