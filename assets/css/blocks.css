@@ -1335,3 +1335,70 @@
   .hero .hero__about-lead { color: var(--plate-ink); }
   .hero .hero__about-body { color: rgba(243, 238, 229, .72); }
 }
+
+/* ==========================================================================
+   The signature, on the photograph
+   On a wide screen the name sits on the stone beside the room. On a phone
+   the two are stacked, and the name repeated the whole height of the plate
+   before the studio had said anything — so the three lines that are the
+   signature move up onto the photograph, and the plate below is left to
+   carry what the studio actually says.
+
+   display: contents on the wrapper means it is not there at all above this
+   width: the three lines stay exactly where they were in the plate's grid.
+   ========================================================================== */
+.hero__brand { display: contents; }
+
+@media (max-width: 760px) {
+  /* Room for the name under the room. */
+  .hero { grid-template-rows: 60svh auto auto; }
+
+  /* The plate stops being the frame of reference so the signature can be
+     placed against the hero itself, over the photograph in the row above.
+     isolation has to go with it: it makes a stacking context whatever the
+     position is, and inside one the signature's z-index counts only against
+     its siblings — leaving the whole plate, signature included, painting
+     under the shade laid over the photograph. */
+  .hero .hero__block { position: static; isolation: auto; }
+
+  .hero__brand {
+    display: grid;
+    align-content: end;
+    gap: .5rem;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60svh;
+    z-index: 3;
+    padding: 0 var(--page-x) clamp(1.1rem, 3.5vh, 2rem);
+    pointer-events: none;
+  }
+
+  /* A foot of shade under the letters, or they sit on whatever happens to
+     be in the picture at that moment. */
+  .hero__plate::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+      rgba(8, 7, 6, .28) 0%,
+      rgba(8, 7, 6, .06) 22%,
+      rgba(8, 7, 6, .55) 52%,
+      rgba(8, 7, 6, .88) 78%,
+      rgba(8, 7, 6, .97) 100%);
+  }
+
+  /* On stone the quiet grey reads; over a photograph of a bright room it
+     disappears, so the signature is set brighter here and given a shadow
+     deep enough to hold an edge against whatever is behind it. */
+  .hero__brand .hero__slug { color: rgba(243, 238, 229, .88); }
+  .hero__brand .hero__title--mark,
+  .hero__brand .hero__lead { color: #FBF8F2; }
+  .hero__brand .hero__slug,
+  .hero__brand .hero__title--mark,
+  .hero__brand .hero__lead { text-shadow: 0 2px 18px rgba(0, 0, 0, .75); }
+  .hero__brand .hero__ruled::after { background: rgba(251, 248, 242, .6); }
+
+  /* The plate below opens on the studio's own words. */
+  .hero .hero__block { padding-top: clamp(1.6rem, 4.5vh, 2.4rem); }
+  .hero .hero__about { margin-top: 0; }
+}
