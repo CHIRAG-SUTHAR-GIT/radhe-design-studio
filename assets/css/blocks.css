@@ -1015,3 +1015,14 @@
 @media (max-width: 640px) {
   .about-note { padding-top: clamp(2.4rem, 9vw, 3.2rem); }
 }
+
+/* ==========================================================================
+   Off the phone
+   Two blocks that read well across a desktop and only add scrolling on a
+   handset. The services list repeats what the about block and the plates
+   already say, so on a phone the page goes hero, about, work. Both are
+   untouched above 860px.
+   ========================================================================== */
+@media (max-width: 860px) {
+  .zf-block#services { display: none; }
+}
