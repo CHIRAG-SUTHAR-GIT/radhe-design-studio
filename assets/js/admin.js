@@ -101,7 +101,7 @@
       name: 'Radhe Design Studio',
       tagline: 'Interior architecture',
       address: 'A-1111, Money Plant High Street, Jagatpur Road,\nSarkhej – Gandhinagar Highway, nr. BSNL Office,\nGota, Ahmedabad, Gujarat 382470',
-      phone: '', email: 'radhesuthar1107@gmail.com', web: 'www.radhedesignstudio.com',
+      phone: '', email: 'info@radhedesignstudio.in', web: 'www.radhedesignstudio.com',
       gstin: '', pan: '',
       bank: 'Bank name / A/c no. / IFSC — set this in Settings',
       quotePrefix: 'RDS/Q', financialYear: '2026-27', nextNumber: 1,

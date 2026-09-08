@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Ways to reach the studio
+   A WhatsApp button that stays on screen wherever you are on the site, and
+   a row of four in the footer — call, WhatsApp, email, Instagram.
+
+   Every icon carries its own colour at rest rather than only on hover: on a
+   phone there is no hover, and an icon that only comes to life under a mouse
+   is a dead icon to most of the people who will see it.
+   ========================================================================== */
+
+/* ── The button that follows you ───────────────────────────────────────── */
+.wa-float {
+  position: fixed;
+  right: clamp(.85rem, 2vw, 1.7rem);
+  bottom: clamp(.85rem, 2vw, 1.7rem);
+  /* Above the page and the header, below the mobile drawer, so an open menu
+     is never fighting it. */
+  z-index: 1050;
+  display: grid;
+  place-items: center;
+  width: clamp(52px, 6.4vw, 60px);
+  height: clamp(52px, 6.4vw, 60px);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2BE06E 0%, #25D366 42%, #0F8A6B 100%);
+  color: #fff;
+  box-shadow: 0 14px 34px -10px rgba(15, 138, 107, .75),
+              0 3px 10px rgba(0, 0, 0, .32);
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1),
+              box-shadow .4s cubic-bezier(.22, 1, .36, 1);
+}
+.wa-float svg { width: 54%; height: 54%; fill: currentColor; display: block; }
+
+/* A ring that breathes out of the button, so the eye finds it without it
+   having to shout. */
+.wa-float::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, .55);
+  z-index: -1;
+  animation: waPulse 2.6s cubic-bezier(.22, 1, .36, 1) infinite;
+}
+@keyframes waPulse {
+  0%   { transform: scale(1);    opacity: .7; }
+  70%  { transform: scale(1.75); opacity: 0; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+.wa-float:hover, .wa-float:focus-visible {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 20px 44px -10px rgba(15, 138, 107, .9),
+              0 4px 14px rgba(0, 0, 0, .38);
+  color: #fff;
+}
+/* The label slides out from behind the button on a pointer device. */
+.wa-float__tip {
+  position: absolute; right: calc(100% + .6rem);
+  white-space: nowrap;
+  padding: .5rem .8rem;
+  border-radius: 8px;
+  background: rgba(12, 12, 12, .92);
+  color: #fff;
+  font-family: var(--sans, sans-serif);
+  font-size: .68rem; font-weight: 600; letter-spacing: .04em;
+  opacity: 0; transform: translateX(8px);
+  pointer-events: none;
+  transition: opacity .35s var(--ease, ease), transform .35s var(--ease, ease);
+}
+.wa-float:hover .wa-float__tip,
+.wa-float:focus-visible .wa-float__tip { opacity: 1; transform: translateX(0); }
+@media (hover: none) { .wa-float__tip { display: none; } }
+
+/* ── The four in the footer ────────────────────────────────────────────── */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(.7rem, 1.6vw, 1.1rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem) 0 0;
+}
+.social__link {
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: .6rem;
+  padding: .68rem 1.15rem .68rem .78rem;
+  border: 1px solid var(--hair-soft, rgba(140, 120, 96, .2));
+  border-radius: 999px;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--sans, sans-serif);
+  font-size: .66rem; font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase;
+  transition: transform .45s cubic-bezier(.22, 1, .36, 1),
+              border-color .45s ease, color .45s ease, box-shadow .45s ease;
+}
+/* The brand colour washes across from the left on hover; underneath, the
+   badge is already in colour so the row reads at a glance on a phone. */
+.social__link::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--brand);
+  transform: translateX(-101%);
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+.social__link > * { position: relative; z-index: 1; }
+.social__badge {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px var(--glow, rgba(0, 0, 0, .4));
+  transition: transform .45s cubic-bezier(.34, 1.56, .64, 1);
+}
+.social__badge svg { width: 16px; height: 16px; display: block; }
+.social__link:hover, .social__link:focus-visible {
+  transform: translateY(-3px);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 16px 34px -14px var(--glow, rgba(0, 0, 0, .5));
+}
+.social__link:hover::before,
+.social__link:focus-visible::before { transform: translateX(0); }
+.social__link:hover .social__badge,
+.social__link:focus-visible .social__badge {
+  transform: scale(1.12) rotate(-8deg);
+  background: rgba(255, 255, 255, .22);
+  box-shadow: none;
+}
+
+/* Each mark in its own colour. */
+.social__link--call { --brand: linear-gradient(140deg, #4FC77B, #1F8A4C); --glow: rgba(31, 138, 76, .8); }
+.social__link--wa   { --brand: linear-gradient(140deg, #2BE06E, #0F8A6B); --glow: rgba(15, 138, 107, .8); }
+.social__link--mail { --brand: linear-gradient(140deg, #F2A14B, #D3552F); --glow: rgba(211, 85, 47, .8); }
+.social__link--ig   { --brand: linear-gradient(135deg, #F9CE34 0%, #EE2A7B 48%, #6228D7 100%);
+                      --glow: rgba(238, 42, 123, .75); }
+
+@media (max-width: 560px) {
+  .social { gap: .55rem; }
+  .social__link { padding: .55rem .95rem .55rem .6rem; font-size: .6rem; letter-spacing: .12em; }
+  .social__badge { width: 26px; height: 26px; }
+  .social__badge svg { width: 14px; height: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-float::before { animation: none; }
+  .wa-float, .social__link, .social__badge, .social__link::before,
+  .wa-float__tip { transition: none; }
+}
+
+@media print { .wa-float { display: none; } }
