@@ -40,6 +40,40 @@
       gl_FragColor = texture2D(uTex, vec2(u, v));
     }`;
 
+  /* The same, but choosing the mip level by hand.
+
+     Longitude wraps from 1 back to 0 directly behind the camera. Left to
+     work it out itself, the hardware sees that jump as an enormous change
+     between neighbouring pixels, assumes the texture is being minified into
+     nothing and picks the smallest mip — which is the soft vertical band
+     down the seam. Undoing the wrap in the derivative fixes the band and
+     sharpens the whole frame, since the same reasoning was costing detail
+     wherever the view turned quickly. */
+  const FRAG_SHARP = `
+    #extension GL_EXT_shader_texture_lod : enable
+    #extension GL_OES_standard_derivatives : enable
+    precision highp float;
+    varying vec2 vNdc;
+    uniform sampler2D uTex;
+    uniform mat3 uRot;
+    uniform float uHalfFov;
+    uniform float uAspect;
+    const float PI = 3.14159265359;
+
+    void main() {
+      vec3 dir = normalize(vec3(vNdc.x * uAspect * uHalfFov, vNdc.y * uHalfFov, -1.0));
+      dir = uRot * dir;
+
+      vec2 uv = vec2(atan(dir.x, -dir.z) / (2.0 * PI) + 0.5,
+                     acos(clamp(dir.y, -1.0, 1.0)) / PI);
+
+      vec2 dx = dFdx(uv), dy = dFdy(uv);
+      if (abs(dx.x) > 0.5) dx.x -= sign(dx.x);
+      if (abs(dy.x) > 0.5) dy.x -= sign(dy.x);
+
+      gl_FragColor = texture2DGradEXT(uTex, uv, dx, dy);
+    }`;
+
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const DEG = Math.PI / 180;
 
@@ -106,14 +140,36 @@
     };
   }
 
-  /* The gyroscope decides where the camera points; it never decides which
-     way is up. Rebuilding the rotation from heading alone throws the roll
-     away, so the room's horizon stays level however the phone is held —
-     which is what a stabilised camera does with the frame. */
-  function levelled(quat, yawOffset, pitchOffset) {
-    const h = heading(matFromQuat(quat));
-    return rotation(h.yaw + yawOffset,
-                    clamp(h.pitch + pitchOffset, -85 * DEG, 85 * DEG));
+  /* Column-major 3x3 multiplication, matching WebGL's matrix layout. */
+  function multiplyMat3(a, b) {
+    const out = new Float32Array(9);
+    for (let col = 0; col < 3; col++) {
+      for (let row = 0; row < 3; row++) {
+        out[col * 3 + row] = a[row] * b[col * 3]
+                           + a[3 + row] * b[col * 3 + 1]
+                           + a[6 + row] * b[col * 3 + 2];
+      }
+    }
+    return out;
+  }
+
+  /* The phone's orientation, whole and unaltered, plus whatever the finger
+     has dragged on top of it.
+
+     Roll belongs in here. Hold a camera up and turn it on its own axis and
+     the room does not stay upright in the frame — the frame turns over the
+     room, which stays where it is in the world. Levelling the horizon looks
+     tidier in a screenshot and feels wrong the moment the phone moves: the
+     room slides against the hand instead of sitting still in the world. So
+     nothing is thrown away; the phone is a window onto a fixed room. */
+  function fromDevice(quat, yawOffset, pitchOffset) {
+    let out = matFromQuat(quat);
+    // Heading is added around world-up, so a drag sideways always swings the
+    // room the same way whatever angle the phone is held at.
+    if (yawOffset) out = multiplyMat3(rotation(yawOffset, 0), out);
+    // Pitch is local to the camera, for the same reason.
+    if (pitchOffset) out = multiplyMat3(out, rotation(0, pitchOffset));
+    return out;
   }
 
   class Pano {
@@ -136,6 +192,21 @@
       this.yawOffset = 0;
       this.pitchOffset = 0;
 
+      /* A panorama is a big texture and a phone can run out of room for one.
+         When that happens the browser takes the context away and the canvas
+         goes black with no error. Catch it: hold the frame, let the page
+         choose something smaller, and rebuild once the context comes back. */
+      canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();                  // or it is never restored
+        this.ready = false;
+      });
+      canvas.addEventListener('webglcontextrestored', () => {
+        this._initGL();
+        this._resize();
+        const smaller = this.onLost && this.onLost();
+        if (smaller || this.src) this.load(smaller || this.src);
+      });
+
       this._initGL();
       this._initInput();
       this._resize();
@@ -147,13 +218,30 @@
 
     _initGL() {
       const gl = this.gl;
-      const prog = gl.createProgram();
-      gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VERT));
-      gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, FRAG));
-      gl.linkProgram(prog);
-      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-        throw new Error(gl.getProgramInfoLog(prog) || 'link failed');
+      /* Both extensions have to be asked for from here before the shader is
+         allowed to name them. Where either is missing the plain shader still
+         draws the room, just with the soft seam. */
+      const sharp = gl.getExtension('EXT_shader_texture_lod')
+                 && gl.getExtension('OES_standard_derivatives');
+
+      const build = (fragSrc) => {
+        const p = gl.createProgram();
+        gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, VERT));
+        gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fragSrc));
+        gl.linkProgram(p);
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+          throw new Error(gl.getProgramInfoLog(p) || 'link failed');
+        }
+        return p;
+      };
+
+      let prog;
+      if (sharp) {
+        try { prog = build(FRAG_SHARP); this.sharp = true; }
+        catch { prog = null; }
       }
+      if (!prog) { prog = build(FRAG); this.sharp = false; }
+
       gl.useProgram(prog);
       this.prog = prog;
 
@@ -188,6 +276,7 @@
     }
 
     load(src) {
+      this.src = src;                        // remembered, to rebuild after a loss
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
@@ -218,7 +307,7 @@
             || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic'));
           if (aniso) {
             gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT,
-              Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+              gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT));
           }
           this.ready = true;
           this.dirty = true;
@@ -230,7 +319,10 @@
     }
 
     _resize() {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      // Phones run at a device pixel ratio of 3. Capping at 2 drew the room
+      // at two thirds of the screen's resolution and let the browser stretch
+      // it — soft, on the sharpest displays we have.
+      const dpr = Math.min(devicePixelRatio || 1, 3);
       const w = Math.round(this.canvas.clientWidth * dpr);
       const h = Math.round(this.canvas.clientHeight * dpr);
       if (!w || !h) return;
@@ -394,12 +486,12 @@
        1 - e^(-dt/tau) — so the same physical settling happens at 60Hz or
        120Hz, on a busy frame or an idle one.
 
-       tau is not fixed either. Held still it stretches to a third of a
-       second, and the leftover tremor is damped further still, so the room
-       sits dead in place. Turn the phone deliberately and it collapses
-       towards 50ms, so the view tracks the hand with no perceptible lag.
-       That trade — heavy when static, light when moving — is the whole idea
-       behind optical stabilisation. */
+       tau is not fixed either. Held still it opens out to 150ms and the
+       leftover tremor is damped further still, so the room sits in place.
+       Turn the phone and it closes to 30ms — near enough to direct that the
+       room feels attached to the world rather than dragged after it. Longer
+       constants stabilise better on paper and feel like lag in the hand,
+       which is the opposite of what a camera does. */
     _stabilise(dt) {
       let t = this._raw;
       if (!t || !this.quat) return;
@@ -410,9 +502,9 @@
       const angle = 2 * Math.acos(Math.min(1, Math.abs(dot)));   // left to cover
       if (angle < 2e-4) return;                                  // ~0.01 deg: there
 
-      const k = Math.min(1, (angle / dt) / 1.5);   // 1.5 rad/s reads as a real turn
+      const k = Math.min(1, (angle / dt) / 0.8);   // 0.8 rad/s reads as a real turn
       const ease = k * k * (3 - 2 * k);
-      const tau = 0.34 + (0.05 - 0.34) * ease;
+      const tau = 0.15 + (0.03 - 0.15) * ease;
       let rate = 1 - Math.exp(-dt / tau);
       if (angle < 0.0035) rate *= 0.2;             // ~0.2 deg: tremor, not intent
 
@@ -428,7 +520,8 @@
       if (this.quat) {
         // Hand the levelled view over exactly as it is on screen, so letting
         // go of the gyroscope does not swing or tilt the room.
-        const h = heading(levelled(this.quat, this.yawOffset, this.pitchOffset));
+        // Pointer control has no roll to give, so only the heading carries over.
+        const h = heading(fromDevice(this.quat, this.yawOffset, this.pitchOffset));
         this.yaw = h.yaw;
         this.pitch = clamp(h.pitch, -85 * DEG, 85 * DEG);
         this.quat = null;
@@ -462,7 +555,7 @@
       const gl = this.gl;
       let m;
       if (this.quat) {
-        m = levelled(this.quat, this.yawOffset, this.pitchOffset);
+        m = fromDevice(this.quat, this.yawOffset, this.pitchOffset);
       } else {
         m = rotation(this.yaw, this.pitch);
       }

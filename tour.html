@@ -167,7 +167,7 @@
     <p><a href="index.html">Go to radhedesignstudio.com →</a></p>
   </div>
 
-  <script src="assets/js/pano.js?v=20260908-pot"></script>
+  <script src="assets/js/pano.js?v=20260908-cam"></script>
   <script>
   (() => {
     'use strict';
@@ -188,11 +188,18 @@
     try { pano = new RadhePano($('#view')); window.tour = pano; }
     catch (e) { die('This browser cannot display 360° tours.'); return; }
 
-    // Serve the largest panorama this GPU takes without a main-thread rescale.
+    /* Detail is decided by what the GPU can hold, not by how wide the window
+       is. Ruling phones out by width was the whole of the softness: 4096
+       pixels of longitude spread over a full circle leaves under 900 across
+       a 75 degree view, on a screen with 1100 to show it with. Modern phones
+       carry 8192 textures perfectly well, and that is what they now get. */
     const max = RadhePano.maxTexture();
-    const slowLink = navigator.connection
-      && /^(slow-)?2g$|^3g$/.test(navigator.connection.effectiveType || '');
-    const tier = (max >= 8192 && !slowLink && innerWidth > 900) ? '8k' : '4k';
+    const conn = navigator.connection || {};
+    const thrifty = conn.saveData === true
+      || /^(slow-)?2g$|^3g$/.test(conn.effectiveType || '');
+    // deviceMemory is Chrome's; iOS omits it, and iPhones are not the worry.
+    const roomy = !(navigator.deviceMemory && navigator.deviceMemory < 4);
+    let tier = (max >= 8192 && roomy && !thrifty) ? '8k' : '4k';
 
     let scenes = [], index = -1;
 
@@ -208,11 +215,20 @@
         b.setAttribute('aria-selected', String(n === i));
       });
       const src = scene.src || `assets/pano/${scene.file}-${tier}.webp`;
+      pano.src = src;
       veilBar.style.width = '55%';
       pano.load(src).then(() => {
         veilBar.style.width = '100%';
         setTimeout(() => veil.classList.add('is-gone'), 260);
       }).catch(() => die('That scene could not be loaded.'));
+    };
+
+    /* If the big panorama is too much for this phone, come back with the
+       small one rather than leaving a black screen. */
+    pano.onLost = () => {
+      if (tier !== '8k' || !scenes[index]) return null;
+      tier = '4k';
+      return `assets/pano/${scenes[index].file}-4k.webp`;
     };
 
     const buildStrip = () => {
