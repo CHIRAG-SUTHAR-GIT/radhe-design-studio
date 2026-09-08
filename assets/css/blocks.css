@@ -272,3 +272,344 @@
 @media (max-width: 991px) {
   .zf-block.py_80 { padding-top: clamp(2.75rem, 6vw, 4rem); padding-bottom: clamp(2.75rem, 6vw, 4rem); }
 }
+
+/* ==========================================================================
+   Studio map
+   The Google iframe was a framed, rounded card sitting on the page. This is
+   a full-bleed band on its own dark ground, with the map's edges dissolved
+   into that ground so there is no boundary to read as a box. It stays dark
+   in both themes, the way the process block does.
+   ========================================================================== */
+/* superseded by .deck below */
+.map__band {
+  position: relative;
+  min-height: clamp(22rem, 40vw, 34rem);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.map__canvas {
+  position: absolute;
+  inset: 0;
+  background: #0B0B0B;
+  /* Deliberately not hidden until the map reports itself loaded. Tiles can
+     take seconds on a slow connection, and gating on that event leaves a
+     black band on screen until it fires. It paints progressively onto the
+     same colour as the ground behind it, so there is nothing to hide. */
+  /* The dissolve: the map has no edge of its own, it just stops being
+     opaque before it reaches the ground colour. */
+  -webkit-mask-image: radial-gradient(122% 118% at 50% 46%, #000 52%, transparent 100%);
+          mask-image: radial-gradient(122% 118% at 50% 46%, #000 52%, transparent 100%);
+}
+.map__canvas.is-ready { --map-state: ready; }
+/* If the tiles never arrive, say so and leave the directions link doing
+   the work, rather than showing an unexplained black rectangle. */
+.map__canvas.is-failed::after {
+  content: 'Map unavailable 4 use Directions below';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: .78rem;
+  letter-spacing: .04em;
+  color: rgba(255, 255, 255, .45);
+}
+
+/* MapLibre's own furniture, dressed down to suit the band. */
+.map__canvas .maplibregl-ctrl-attrib {
+  background: rgba(0, 0, 0, .55);
+  color: rgba(255, 255, 255, .55);
+  font-size: 10px;
+}
+.map__canvas .maplibregl-ctrl-attrib a { color: rgba(255, 255, 255, .75); }
+.map__canvas .maplibregl-ctrl-group {
+  background: rgba(12, 12, 12, .82);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: none;
+}
+.map__canvas .maplibregl-ctrl-group button + button { border-top-color: rgba(255, 255, 255, .12); }
+.map__canvas .maplibregl-ctrl-group button span { filter: invert(1); }
+
+/* ── The studio marker ─────────────────────────────────────────────────── */
+.map__marker { position: relative; width: 22px; height: 22px; }
+.map__marker-dot {
+  position: absolute; inset: 6px;
+  border-radius: 50%;
+  background: #3FA9FF;
+  box-shadow: 0 0 0 3px rgba(11, 11, 11, .9), 0 0 18px 4px rgba(63, 169, 255, .8);
+}
+.map__marker-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(63, 169, 255, .8);
+  animation: mapPing 2.6s cubic-bezier(.22, 1, .36, 1) infinite;
+}
+@keyframes mapPing {
+  0%   { transform: scale(.5); opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── Floating cards ────────────────────────────────────────────────────── */
+.map__hud {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  font-family: var(--sans);
+}
+.map__hud--top {
+  top: clamp(1rem, 3vw, 1.9rem);
+  left: 50%;
+  transform: translateX(-50%);
+  gap: clamp(.7rem, 2vw, 1.2rem);
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  background: rgba(10, 12, 16, .72);
+  border: 1px solid rgba(255, 255, 255, .1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+.map__place, .map__weather {
+  display: flex; align-items: center; gap: .45rem;
+  margin: 0;
+  font-size: clamp(.74rem, 1.05vw, .88rem);
+  color: #fff;
+}
+.map__weather { padding-left: clamp(.7rem, 2vw, 1.2rem); border-left: 1px solid rgba(255, 255, 255, .16); }
+.map__weather[hidden] { display: none; }
+.map__hud--top svg { width: 15px; height: 15px; fill: none; stroke: #3FA9FF; stroke-width: 1.6; }
+
+.map__hud--pin {
+  top: clamp(4.6rem, 11vw, 7rem);
+  left: 50%;
+  transform: translateX(-50%);
+  gap: .8rem;
+  padding: .7rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(10, 12, 16, .78);
+  border: 1px solid rgba(255, 255, 255, .1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.map__pin-arrow svg { display: block; width: 22px; height: 22px; fill: none; stroke: #3FA9FF; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.map__pin-text { display: grid; gap: .15rem; line-height: 1.25; }
+.map__pin-text b { font-size: clamp(.9rem, 1.3vw, 1.05rem); font-weight: 600; color: #fff; }
+.map__pin-text { font-size: clamp(.68rem, .95vw, .78rem); color: rgba(255, 255, 255, .6); }
+
+.map__hud--foot {
+  left: clamp(1rem, 2.5vw, 1.6rem);
+  right: clamp(1rem, 2.5vw, 1.6rem);
+  bottom: clamp(1rem, 3vw, 1.8rem);
+  gap: clamp(.8rem, 2.5vw, 1.8rem);
+  flex-wrap: wrap;
+}
+.map__stat {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: clamp(.66rem, .92vw, .76rem);
+  letter-spacing: .04em;
+  color: rgba(255, 255, 255, .72);
+}
+.map__stat i {
+  font-style: normal; font-size: .58rem; font-weight: 700; letter-spacing: .12em;
+  padding: .2rem .4rem; border-radius: 4px;
+  background: rgba(63, 169, 255, .16); color: #3FA9FF;
+}
+.map__stat--go {
+  pointer-events: auto;
+  margin-left: auto;
+  color: #fff;
+  transition: color .3s var(--ease);
+}
+.map__stat--go:hover { color: #3FA9FF; }
+.map__stat--go em { font-style: normal; }
+
+@media (max-width: 760px) {
+  .map__band { height: clamp(20rem, 74vw, 26rem); }
+  .map__hud--pin { display: none; }
+  .map__hud--foot { justify-content: center; row-gap: .5rem; }
+  .map__stat--go { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .map__marker-ring { animation: none; opacity: .5; }
+}
+
+/* ==========================================================================
+   Enquiry & location
+   The standalone "Do you have a project?" panel and the location header were
+   two blocks saying the same thing in sequence. They are now one dark spread:
+   the form on one side, the map on the other, on a single ground.
+   ========================================================================== */
+.deck {
+  position: relative;
+  background: #0B0B0B;
+  color: #fff;
+  padding: clamp(3.5rem, 8vw, 7rem) var(--page-x);
+  overflow: hidden;
+}
+/* A slow wash of light behind the spread so the ground is not flat black. */
+.deck::before {
+  content: '';
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 130%;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 52% at 18% 18%, rgba(63, 169, 255, .12), transparent 70%),
+    radial-gradient(40% 46% at 84% 72%, rgba(189, 122, 28, .14), transparent 72%);
+  animation: deckDrift 22s var(--ease-io) infinite alternate;
+}
+@keyframes deckDrift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.08); }
+}
+.deck__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 4.5vw, 4rem);
+  align-items: start;
+}
+.deck .tag { color: rgba(255, 255, 255, .8); }
+.deck .tag::before, .deck .tag::after,
+.deck .tag > i::before, .deck .tag > i::after { border-color: currentColor; }
+.deck__title {
+  margin-top: 1.1rem;
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  color: #fff;
+}
+.deck__lead {
+  max-width: 46ch;
+  margin-top: .9rem;
+  color: rgba(255, 255, 255, .58);
+  font-size: clamp(.9rem, 1.1vw, 1rem);
+  line-height: 1.65;
+}
+.deck__address {
+  margin-top: 1.6rem;
+  max-width: 52ch;
+  font-style: normal;
+  font-size: .78rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, .38);
+}
+
+/* ── The form ──────────────────────────────────────────────────────────── */
+.enq { display: grid; gap: clamp(1.1rem, 2vw, 1.5rem); margin-top: clamp(1.8rem, 3.5vw, 2.6rem); }
+.enq__row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.1rem, 2vw, 1.5rem); }
+.enq__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.enq__field { position: relative; margin: 0; }
+.enq__field input,
+.enq__field select,
+.enq__field textarea {
+  width: 100%;
+  padding: 1.35rem 0 .55rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: .95rem;
+  outline: none;
+  transition: border-color .4s var(--ease);
+}
+.enq__field textarea { resize: vertical; min-height: 3.4rem; line-height: 1.6; }
+.enq__field select { appearance: none; cursor: pointer; }
+.enq__field select option { background: #141414; color: #fff; }
+.enq__field--select::after {
+  content: '';
+  position: absolute; right: .2rem; bottom: 1.1rem;
+  width: 8px; height: 8px;
+  border-right: 1.5px solid rgba(255, 255, 255, .5);
+  border-bottom: 1.5px solid rgba(255, 255, 255, .5);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* The label rides up out of the field the moment there is anything in it. */
+.enq__field label {
+  position: absolute;
+  left: 0;
+  top: 1.35rem;
+  color: rgba(255, 255, 255, .45);
+  font-size: .95rem;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform .35s var(--ease), color .35s var(--ease);
+}
+.enq__field label em { font-style: normal; color: var(--amber); padding-left: .15rem; }
+.enq__field input:focus + label,
+.enq__field input:not(:placeholder-shown) + label,
+.enq__field textarea:focus + label,
+.enq__field textarea:not(:placeholder-shown) + label,
+.enq__field select:focus + label,
+.enq__field select:valid + label {
+  transform: translateY(-1.25rem) scale(.72);
+  color: rgba(255, 255, 255, .62);
+}
+
+/* A line that draws itself in from the left on focus. */
+.enq__field i {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px; width: 100%;
+  background: linear-gradient(90deg, #3FA9FF, var(--amber));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .45s var(--ease);
+}
+.enq__field input:focus ~ i,
+.enq__field select:focus ~ i,
+.enq__field textarea:focus ~ i { transform: scaleX(1); }
+.enq__field.is-bad input,
+.enq__field.is-bad select,
+.enq__field.is-bad textarea { border-bottom-color: #ff8f8f; }
+
+.enq__send {
+  position: relative;
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: .7rem;
+  margin-top: .4rem;
+  padding: .85rem 1.6rem;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 999px;
+  overflow: hidden;
+  color: #fff;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  transition: color .45s var(--ease), border-color .45s var(--ease);
+}
+.enq__send span, .enq__send em { position: relative; z-index: 1; font-style: normal; }
+.enq__send em { transition: transform .45s var(--ease); }
+.enq__send::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(100deg, #3FA9FF, var(--amber));
+  transform: translateX(-101%);
+  transition: transform .55s var(--ease);
+}
+.enq__send:hover { color: #0B0B0B; border-color: transparent; }
+.enq__send:hover::before { transform: translateX(0); }
+.enq__send:hover em { transform: translateX(4px); }
+.enq__send[disabled] { opacity: .55; pointer-events: none; }
+
+.enq__note { min-height: 1.2rem; font-size: .8rem; color: rgba(255, 255, 255, .55); }
+.enq__note.is-bad { color: #ff8f8f; }
+.enq__note.is-good { color: #7ee0a5; }
+
+@media (max-width: 980px) {
+  .deck__grid { grid-template-columns: 1fr; }
+  .map__band { order: -1; }
+}
+@media (max-width: 560px) {
+  .enq__row { grid-template-columns: 1fr; }
+}
