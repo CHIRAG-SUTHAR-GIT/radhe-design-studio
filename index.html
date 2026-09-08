@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=25">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=26">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -83,6 +83,13 @@
         </h1>
         <p class="hero__lead">Interiors &amp; turnkey projects</p>
         <p class="hero__fields">Homes <b>&middot;</b> Workplaces <b>&middot;</b> Hospitality</p>
+        <!-- On a phone the studio introduces itself here rather than in a
+             block of its own further down. Hidden on the desktop, where the
+             about block below still carries these lines. -->
+        <div class="hero__about">
+          <p class="hero__about-lead">We create spaces that feel right, beautiful, comfortable, and made for you.</p>
+          <p class="hero__about-body">With 8+ years of experience, we bring together interior design, architecture, and complete project execution to create spaces that feel truly yours.</p>
+        </div>
         <a class="hero__go" href="projects.html">Selected work <em aria-hidden="true">&#8599;</em></a>
       </div>
 

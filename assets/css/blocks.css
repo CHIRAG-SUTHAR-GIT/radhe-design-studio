@@ -1112,3 +1112,43 @@
   .enq__send { margin-top: .1rem; padding: .8rem 1.2rem; border-radius: 11px; font-size: .88rem; }
   .enq__note { min-height: .9rem; font-size: .72rem; }
 }
+
+/* ==========================================================================
+   The studio introduces itself in the hero, on a phone
+   Two blocks were saying the same thing one after the other: the trades
+   line under the wordmark, then an about block a screen below it. On a
+   phone the about lines go straight into the hero and both of the others
+   stand down. The desktop keeps its own arrangement.
+   ========================================================================== */
+.hero__about { display: none; }
+
+@media (max-width: 860px) {
+  .hero__fields { display: none; }
+  .about-note { display: none; }
+
+  .hero__about {
+    display: grid;
+    gap: .6rem;
+    max-width: 36ch;
+    margin-top: 1rem;
+    /* Arrives with the rest of the block rather than snapping in after it. */
+    opacity: 0;
+    animation: heroRise .9s var(--ease-io) .12s forwards;
+  }
+  .hero__about p { margin: 0; }
+  .hero__about-lead {
+    color: var(--ink);
+    font-size: 1.02rem;
+    line-height: 1.42;
+    letter-spacing: -.01em;
+  }
+  .hero__about-body {
+    color: var(--muted);
+    font-size: .86rem;
+    line-height: 1.62;
+  }
+}
+/* If the animation never runs, the lines are simply there. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__about { opacity: 1; animation: none; }
+}
