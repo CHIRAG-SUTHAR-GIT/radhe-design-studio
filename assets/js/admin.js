@@ -135,6 +135,73 @@
 
   const save = () => Store.write(S);
 
+  /* ── The website's enquiries ────────────────────────────────────────
+     Everything the contact form takes goes into the inquiries table on
+     the server. This pulls that across and folds anything new into the
+     desk's own list.
+
+     It only ever ADDS. An enquiry already on the desk is left exactly as
+     it is, so a stage, a follow-up date or notes written here survive
+     every later sync. Nothing is sent back the other way.
+
+     Where there is no PHP behind the page — the GitHub copy — or no
+     config.php yet, this quietly does nothing. It is not an error to
+     preview a site that has no database. */
+  const webLead = (r) => ({
+    id: 'web-' + r.id,
+    name: (r.name || '').trim() || 'Website enquiry',
+    phone: r.phone || '',
+    email: r.email || '',
+    property: '',
+    area: '',
+    source: 'Website enquiry',
+    stage: 'New enquiry',
+    value: '',
+    followUp: '',
+    address: '',
+    notes: [
+      r.project_type ? 'Project type: ' + r.project_type : '',
+      r.budget ? 'Budget: ' + r.budget : '',
+      r.timeline ? 'Timeline: ' + r.timeline : '',
+      (r.message || '').trim()
+    ].filter(Boolean).join('\n'),
+    created: (r.created_at || '').slice(0, 10) || today()
+  });
+
+  async function pullWeb(loud) {
+    let data;
+    try {
+      const res = await fetch('enquiries.php', { credentials: 'same-origin', cache: 'no-store' });
+      data = await res.json();
+    } catch (e) {
+      if (loud) toast('Could not reach the website\u2019s enquiries.');
+      return 0;
+    }
+    if (!data || !data.ok) {
+      if (loud) {
+        toast(data && data.reason === 'no-config'
+          ? 'The site has no config.php yet, so there is no database to read.'
+          : data && data.reason === 'auth'
+            ? 'Signed out \u2014 open the desk again.'
+            : 'The website\u2019s enquiries could not be read.');
+      }
+      return 0;
+    }
+    const have = new Set(S.leads.map((l) => l.id));
+    const fresh = data.rows.filter((r) => !have.has('web-' + r.id)).map(webLead);
+    if (fresh.length) {
+      S.leads = S.leads.concat(fresh);
+      save();
+      render();
+    }
+    if (loud) {
+      toast(fresh.length
+        ? fresh.length + (fresh.length === 1 ? ' new enquiry from the website.' : ' new enquiries from the website.')
+        : 'Nothing new from the website.');
+    }
+    return fresh.length;
+  }
+
   let toastTimer = 0;
   function toast(msg) {
     const el = $('#toast');
@@ -357,7 +424,8 @@
   let leadFilter = 'open';
   views.leads = {
     title: 'Enquiries',
-    actions: () => `<button class="btn btn--go" id="add-lead">+ New enquiry</button>`,
+    actions: () => `<button class="btn" id="pull-web">Sync website</button>
+      <button class="btn btn--go" id="add-lead">+ New enquiry</button>`,
     html() {
       const list = S.leads.filter((l) =>
         leadFilter === 'all' ? true :
@@ -390,6 +458,8 @@
     },
     wire() {
       $('#add-lead').onclick = () => editLead(null);
+      const pull = $('#pull-web');
+      if (pull) pull.onclick = () => { pull.disabled = true; pullWeb(true).finally(() => { pull.disabled = false; }); };
       $$('[data-filter]').forEach((b) => b.onclick = () => { leadFilter = b.dataset.filter; render(); });
       $$('[data-edit]').forEach((b) => b.onclick = () => editLead(b.dataset.edit));
     }
@@ -1544,4 +1614,7 @@ ${c.gstin ? 'GSTIN ' + esc(c.gstin) : ''}</div></header>`));
 
   window.RDS_DESK = { state: () => S, totals, takeOff, words, fmtQty };
   render();
+  /* And check the website once on opening, so the desk is current without
+     anyone having to ask it. Quiet either way. */
+  pullWeb(false);
 })();

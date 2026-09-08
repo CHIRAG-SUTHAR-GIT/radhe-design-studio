@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geologica:wght@300;400;600;700&display=swap">
-  <link rel="stylesheet" href="../assets/css/admin.css?v=20260901-desk5">
+  <link rel="stylesheet" href="../assets/css/admin.css?v=20260901-desk6">
 </head>
 <body>
 
@@ -51,8 +51,8 @@
 <div class="modal" id="modal" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="../assets/js/admin-catalogue.js?v=20260901-desk5"></script>
-<script src="../assets/js/admin-materials.js?v=20260901-desk5"></script>
-<script src="../assets/js/admin.js?v=20260901-desk5"></script>
+<script src="../assets/js/admin-catalogue.js?v=20260901-desk6"></script>
+<script src="../assets/js/admin-materials.js?v=20260901-desk6"></script>
+<script src="../assets/js/admin.js?v=20260901-desk6"></script>
 </body>
 </html>

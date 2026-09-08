@@ -1,0 +1,63 @@
+/* ==========================================================================
+   The photograph, on its own
+   Clicking a plate used to open a project page that always described the
+   same house. It opens the photograph now: the file itself, at the size it
+   was made, on a dark ground with nothing else on the screen.
+   ========================================================================== */
+.pv {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: clamp(.6rem, 2.5vw, 2.2rem);
+  background: rgba(6, 6, 6, .94);
+  opacity: 0;
+  transition: opacity .32s cubic-bezier(.22, 1, .36, 1);
+}
+.pv.is-open { opacity: 1; }
+.pv[hidden] { display: none; }
+
+.pv__img {
+  display: block;
+  /* Whole photograph on screen, never upscaled past its own pixels. */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform: scale(.985);
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1);
+  cursor: zoom-out;
+}
+.pv.is-open .pv__img { transform: scale(1); }
+
+.pv__close {
+  position: absolute;
+  top: clamp(.5rem, 2vw, 1.4rem);
+  right: clamp(.5rem, 2vw, 1.4rem);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .4);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .3s ease, border-color .3s ease, transform .3s ease;
+}
+.pv__close:hover {
+  background: rgba(255, 255, 255, .14);
+  border-color: rgba(255, 255, 255, .5);
+  transform: rotate(90deg);
+}
+
+/* While it is open the page behind must not scroll under it. */
+.pv-lock { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pv, .pv__img, .pv__close { transition: none; }
+}
