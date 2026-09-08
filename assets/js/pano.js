@@ -293,9 +293,10 @@
           return;
         }
         if (!dragging) return;
-        // Touch content follows the finger; mouse dragging keeps its familiar
-        // click-and-look direction on desktop.
-        const direction = e.pointerType === 'touch' ? 1 : -1;
+        // The room follows the pointer, mouse and finger alike. It used to
+        // invert for a mouse — drag left, the room swung right — which reads
+        // as broken rather than as a convention.
+        const direction = 1;
         look(e.clientX - lastX, e.clientY - lastY, direction);
         lastX = e.clientX; lastY = e.clientY;
       }, { passive: true });

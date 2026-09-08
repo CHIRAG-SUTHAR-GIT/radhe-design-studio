@@ -1,12 +1,35 @@
 {
-  "_note": "One entry per client. The slug is the share link: tour.html?c=<slug>. Anyone with the link can view that client's scenes and nothing else.",
+  "_note": "One entry per client. The slug is the share link: tour.html?c=<slug>. A single scene opens directly: tour.html?c=<slug>&s=<file>.",
   "clients": {
     "demo": {
-      "name": "Radhe Studio — Demo",
-      "created": "2026-08-21",
+      "name": "Radhe Design Studio",
+      "created": "2026-09-08",
       "scenes": [
-        { "title": "Kitchen",     "file": "kitchen",     "thumb": "assets/pano/kitchen-thumb.webp" },
-        { "title": "Living Area", "file": "living-area", "thumb": "assets/pano/living-area-thumb.webp" }
+        {
+          "title": "Living Room",
+          "file": "living-room",
+          "thumb": "assets/pano/living-room-thumb.webp"
+        },
+        {
+          "title": "Bedroom 01",
+          "file": "bedroom-01",
+          "thumb": "assets/pano/bedroom-01-thumb.webp"
+        },
+        {
+          "title": "Bedroom 02",
+          "file": "bedroom-02",
+          "thumb": "assets/pano/bedroom-02-thumb.webp"
+        },
+        {
+          "title": "Bedroom 03",
+          "file": "bedroom-03",
+          "thumb": "assets/pano/bedroom-03-thumb.webp"
+        },
+        {
+          "title": "Bedroom 04",
+          "file": "bedroom-04",
+          "thumb": "assets/pano/bedroom-04-thumb.webp"
+        }
       ]
     }
   }
