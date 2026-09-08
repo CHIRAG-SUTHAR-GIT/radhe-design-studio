@@ -852,3 +852,70 @@
   .hero__title--mark .hero__set:first-child { letter-spacing: .13em; }
   .hero__title--mark b.hero__set { letter-spacing: .34em; }
 }
+
+/* ==========================================================================
+   Services in dark mode
+   The block was cream in both themes, so in dark mode it was a sheet of
+   paper in the middle of a dark page. It now takes the same ground as the
+   rest of the sheet, and everything set for dark text on cream is inverted.
+
+   Scoped with the block class doubled: studio.css repaints every heading
+   white under [data-theme='dark'] at (0,2,1), and these have to outrank it.
+   ========================================================================== */
+[data-theme='dark'] .zf-block--cream { background-color: #0B0B0B; color: #fff; }
+
+[data-theme='dark'] .zf-block.zf-block .text_black { color: #fff; }
+[data-theme='dark'] .zf-block.zf-block .text_gray_03 { color: #fff; }
+[data-theme='dark'] .zf-block.zf-block .text_gray_02 { color: rgba(255, 255, 255, .55); }
+[data-theme='dark'] .zf-block.zf-block .text_gray_muted_dark { color: rgba(255, 255, 255, .5); }
+[data-theme='dark'] .zf-block.zf-block .text_gray_muted_light { color: rgba(255, 255, 255, .55); }
+
+[data-theme='dark'] .zf-block .service-card {
+  border-top-color: rgba(255, 255, 255, .12);
+  border-bottom-color: rgba(255, 255, 255, .12);
+}
+[data-theme='dark'] .zf-block .arrow-box { border-color: rgba(255, 255, 255, .22); }
+[data-theme='dark'] .zf-block .arrow-box svg path { stroke: #fff; }
+
+/* On a dark ground the hover cannot darken further, so it lifts instead. */
+[data-theme='dark'] .zf-block .service-card:hover {
+  background-color: #1b1b1b;
+  border-left-color: #1b1b1b;
+}
+[data-theme='dark'] .zf-block .service-card::before {
+  background-image:
+    radial-gradient(circle at 78% 50%, rgba(243, 254, 0, .22) 0%, transparent 42%),
+    linear-gradient(90deg, #262626 0%, #161616 100%);
+}
+
+/* ==========================================================================
+   Services on a touch screen
+   There is no hover on a phone, so the whole reveal — the dark wash, the
+   white type, the inverted arrow — is unreachable, and worse, tapping a
+   card leaves :hover stuck on it afterwards. On touch the cards stay in
+   their resting state and the arrow does the inviting instead.
+   ========================================================================== */
+@media (hover: none) {
+  .zf-block .service-card:hover {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
+    background-color: transparent;
+  }
+  .zf-block .service-card:hover::before { opacity: 0; }
+  .zf-block .service-card:hover .servic-text,
+  .zf-block .service-card:hover .servic-title { color: inherit !important; }
+  .zf-block .service-card:hover .arrow-box { background-color: transparent; }
+  .zf-block .service-card:hover .arrow-box svg path { stroke: currentColor; }
+
+  /* Standing invitation rather than one that only appears under a pointer. */
+  .zf-block .arrow-box {
+    border-color: var(--amber);
+    background-color: color-mix(in srgb, var(--amber) 12%, transparent);
+  }
+  .zf-block .arrow-box svg path { stroke: var(--amber); }
+
+  /* Something has to answer the finger, since nothing else will. */
+  .zf-block .service-card:active { background-color: rgba(0, 0, 0, .05); }
+  [data-theme='dark'] .zf-block .service-card:active { background-color: rgba(255, 255, 255, .06); }
+}
