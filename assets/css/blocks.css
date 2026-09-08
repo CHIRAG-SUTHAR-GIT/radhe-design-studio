@@ -285,19 +285,29 @@
 .map__canvas .maplibregl-ctrl-group button span { filter: invert(1); }
 
 /* ── The studio marker ─────────────────────────────────────────────────── */
-.map__marker { position: relative; width: 22px; height: 22px; }
+/* 37px against the old 22 — seventy per cent larger, with the dot and its
+   halo scaled by the same factor so the proportions hold. Gold rather than
+   the road blue: #e3c05b is the gold the studio figures are already set in,
+   and it lifts the studio off a map whose roads are blue. */
+.map__marker { position: relative; width: 37px; height: 37px; }
 .map__marker-dot {
-  position: absolute; inset: 6px;
+  position: absolute; inset: 10px;
   border-radius: 50%;
-  background: #3FA9FF;
-  box-shadow: 0 0 0 3px rgba(11, 11, 11, .9), 0 0 18px 4px rgba(63, 169, 255, .8);
+  background: #e3c05b;
+  box-shadow: 0 0 0 4px rgba(11, 11, 11, .9), 0 0 26px 7px rgba(227, 192, 91, .75);
 }
-.map__marker-ring {
+/* Two rings on the same loop, half a cycle apart, so one is always
+   travelling — the pulse never lands on an empty beat. */
+.map__marker-ring,
+.map__marker::after {
+  content: '';
   position: absolute; inset: 0;
   border-radius: 50%;
-  border: 1px solid rgba(63, 169, 255, .8);
+  border: 1.5px solid rgba(227, 192, 91, .85);
   animation: mapPing 2.6s cubic-bezier(.22, 1, .36, 1) infinite;
+  pointer-events: none;
 }
+.map__marker::after { animation-delay: -1.3s; }
 @keyframes mapPing {
   0%   { transform: scale(.5); opacity: 1; }
   100% { transform: scale(2.6); opacity: 0; }
@@ -388,7 +398,8 @@
   .map__stat--go { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .map__marker-ring { animation: none; opacity: .5; }
+  .map__marker-ring,
+  .map__marker::after { animation: none; opacity: .45; }
 }
 
 /* ==========================================================================
