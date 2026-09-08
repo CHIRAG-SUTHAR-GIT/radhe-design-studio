@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=19">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=21">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -69,12 +69,10 @@
     <!-- ══ 01 · Hero ══ -->
     <section class="hero" aria-label="Radhe Design Studio">
       <div class="hero__plate">
-        <figure class="hero__figure hero__figure--film">
-          <video src="assets/hero.mp4" autoplay muted loop playsinline
-                 preload="auto" aria-label="The studio's work, on a loop"></video>
+        <figure class="hero__figure hero__figure--still">
+          <img src="assets/hero.webp" alt="A Radhe Design Studio interior"
+               fetchpriority="high" decoding="async">
         </figure>
-        <!-- A shaft of daylight crossing the room, on a long loop. -->
-        <div class="hero__sun" aria-hidden="true"></div>
       </div>
 
       <div class="hero__block">
@@ -590,7 +588,7 @@
   <script src="assets/vendor/lenis.min.js"></script>
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/js/studio.js?v=20260908-pin"></script>
+  <script src="assets/js/studio.js?v=20260908-scroll"></script>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
   <script src="assets/js/process.js?v=2" defer></script>
   <script src="assets/js/map.js?v=5" defer></script>

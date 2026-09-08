@@ -727,7 +727,18 @@
      scroll. Phones keep their own scrolling; mice and trackpads get the
      eased one, where it genuinely helps. */
   if (motion && window.Lenis && matchMedia('(pointer: fine)').matches) {
-    const lenis = new Lenis({ duration: 1.05, wheelMultiplier: .9, smoothWheel: true, syncTouch: false });
+    /* lerp rather than duration: a fixed duration restarts its easing on
+       every notch of the wheel, which is what makes a long scroll feel
+       like a series of small arrivals. Interpolating toward the target
+       each frame instead keeps one continuous glide however fast the
+       wheel is turned. 0.085 is slow enough to read as smooth without
+       feeling like the page is lagging behind the hand. */
+    const lenis = new Lenis({
+      lerp: .085,
+      wheelMultiplier: .9,
+      smoothWheel: true,
+      syncTouch: false        // phones already have momentum of their own
+    });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);

@@ -942,3 +942,36 @@
 @media (prefers-reduced-motion: reduce) {
   .hero__figure--film video { transform: none; }
 }
+
+/* ==========================================================================
+   Hero still
+   One photograph, one effect: it eases in when the pointer is over it and
+   eases back when it leaves. No drift, no light sweep — studio.js still
+   writes --px/--py for the old parallax and nothing reads them now.
+   ========================================================================== */
+.hero__figure--still { position: absolute; inset: 0; overflow: hidden; margin: 0; }
+.hero__figure--still img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* studio.css starts every .hero__figure img at opacity 0 and reveals the
+     current slide with .is-active. There are no slides any more, so this one
+     has to say it is visible or the plate stays empty. */
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: center;
+  /* Long and eased, so it reads as the room opening up rather than a jump. */
+  transition: transform 1.6s cubic-bezier(.22, 1, .36, 1);
+}
+.hero__plate:hover .hero__figure--still img { transform: scale(1.08); }
+
+/* A touch screen has no hover; leaving it in would latch the zoom on tap. */
+@media (hover: none) {
+  .hero__plate:hover .hero__figure--still img { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__figure--still img { transition: none; }
+  .hero__plate:hover .hero__figure--still img { transform: scale(1); }
+}
