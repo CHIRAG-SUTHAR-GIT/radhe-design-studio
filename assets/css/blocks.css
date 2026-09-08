@@ -1183,3 +1183,172 @@
 /* The rule stays: it is the process block's own mark, and the contact block
    has its pill in the same place. */
 .proc-row__rule { margin-top: clamp(1rem, 1.8vw, 1.4rem); }
+
+/* ==========================================================================
+   The hero name plate
+   The half of the hero that carries the name is a dark stone panel: a warm
+   pool of light falling across the top corner, two faint shafts crossing it,
+   and a fine grain so a large flat area does not band. The name itself is
+   set in a high-contrast serif, which is what makes it read as a mark rather
+   than as a heading.
+
+   The panel keeps its own colours in both themes, the way the contact block
+   does — it is a plate, not a page.
+   ========================================================================== */
+.hero .hero__block {
+  --plate-ink: #F3EEE5;
+  --plate-gold: #C9A24A;
+  --plate-dim: rgba(243, 238, 229, .58);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--plate-ink);
+  background:
+    radial-gradient(88% 62% at 14% 2%, rgba(198, 158, 96, .20), transparent 62%),
+    radial-gradient(70% 50% at 96% 92%, rgba(150, 116, 62, .12), transparent 68%),
+    linear-gradient(158deg, #16140F 0%, #100E0B 44%, #080706 100%);
+  padding: clamp(3rem, 9vh, 7.5rem) clamp(1.6rem, 4.2vw, 4.5rem);
+}
+/* Two shafts of light crossing the stone, and the grain over both. */
+.hero .hero__block::before {
+  content: '';
+  position: absolute; inset: -10% -20%; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(108deg, transparent 26%, rgba(255, 233, 198, .07) 37%, transparent 46%),
+    linear-gradient(108deg, transparent 52%, rgba(255, 233, 198, .04) 60%, transparent 67%);
+}
+.hero .hero__block::after {
+  content: '';
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  opacity: .5; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* ── Est. line ─────────────────────────────────────────────────────────── */
+.hero .hero__slug {
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .3em;
+  color: var(--plate-dim);
+}
+.hero .hero__slug i { width: 34px; background: var(--plate-gold); }
+
+/* ── The name ──────────────────────────────────────────────────────────── */
+.hero .hero__title--mark {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  color: var(--plate-ink);
+}
+.hero .hero__title--mark .hero__set:first-child {
+  font-size: clamp(2.9rem, 7vw, 6.1rem);
+  font-weight: 300;
+  letter-spacing: .155em;
+  line-height: 1;
+}
+.hero .hero__title--mark b.hero__set {
+  margin-top: clamp(.35rem, .9vw, .7rem);
+  font-size: clamp(.8rem, 1.55vw, 1.32rem);
+  font-weight: 300;
+  letter-spacing: .42em;
+  color: var(--plate-ink);
+}
+.hero .hero__title--mark .hero__ruled::after {
+  height: 1px;
+  background: rgba(243, 238, 229, .38);
+}
+
+/* The gold stroke laid through the A. It is drawn over the letter rather
+   than beside it, so it reads as one mark and not as a stray rule. */
+.hero .hero__a { position: relative; display: inline-block; font-style: normal; }
+.hero .hero__a svg {
+  position: absolute; left: -9%; top: 5%;
+  width: 118%; height: 88%;
+  overflow: visible;
+  fill: var(--plate-gold);
+  pointer-events: none;
+}
+
+/* ── The two lines under the name ──────────────────────────────────────── */
+.hero .hero__lead {
+  max-width: 34ch;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.05rem, 1.55vw, 1.42rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: .015em;
+  color: rgba(243, 238, 229, .9);
+}
+.hero .hero__fields {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: clamp(.7rem, 1.5vw, 1.35rem);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1rem, 1.45vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: rgba(243, 238, 229, .82);
+}
+.hero .hero__fields b {
+  width: 1px; height: 1.15em;
+  background: rgba(201, 162, 74, .55);
+}
+
+/* ── The way through ───────────────────────────────────────────────────── */
+.hero .hero__go {
+  margin-top: clamp(.4rem, 1.4vh, 1rem);
+  padding: 1rem 1.9rem;
+  border: 1px solid rgba(201, 162, 74, .55);
+  border-radius: 0;
+  color: var(--plate-gold);
+  font-size: .63rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  transition: background-color .5s var(--ease), color .5s var(--ease),
+              border-color .5s var(--ease);
+}
+.hero .hero__go em { transition: transform .5s var(--ease); }
+.hero .hero__go:hover {
+  background: var(--plate-gold);
+  border-color: var(--plate-gold);
+  color: #14120E;
+}
+.hero .hero__go:hover em { transform: translateX(5px); }
+
+/* ── The decoration ────────────────────────────────────────────────────── */
+.hero .hero__edge {
+  position: absolute; right: clamp(.9rem, 1.6vw, 1.7rem); top: 50%;
+  z-index: 2;
+  display: flex; align-items: center; gap: 1.1rem;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--sans);
+  font-size: .54rem; font-weight: 500;
+  letter-spacing: .34em; text-transform: uppercase;
+  color: rgba(243, 238, 229, .34);
+  pointer-events: none;
+}
+.hero .hero__edge::before,
+.hero .hero__edge::after {
+  content: ''; width: 1px; height: clamp(28px, 5vh, 54px);
+  background: rgba(243, 238, 229, .2);
+}
+.hero .hero__sprig {
+  position: absolute; right: clamp(4.5rem, 7.5vw, 9rem); bottom: 0;
+  z-index: 1;
+  width: clamp(100px, 11.5vw, 168px); height: auto;
+  color: #8A6F3C;
+  opacity: .55;
+  pointer-events: none;
+}
+
+/* On a phone the plate is the whole width and the decoration only crowds
+   the lines that matter, so it stands down. */
+@media (max-width: 860px) {
+  .hero .hero__edge,
+  .hero .hero__sprig { display: none; }
+  /* The plate's own rule for this line is more specific than the one that
+     retired it on a phone, so it has to be said again here: the about lines
+     below carry this ground already. */
+  .hero .hero__fields { display: none; }
+  .hero .hero__block { padding: clamp(2rem, 5vh, 3rem) var(--page-x) clamp(2.4rem, 6vh, 3.5rem); }
+  .hero .hero__about-lead { color: var(--plate-ink); }
+  .hero .hero__about-body { color: rgba(243, 238, 229, .72); }
+}

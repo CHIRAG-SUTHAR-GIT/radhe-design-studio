@@ -9,12 +9,12 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ececec'/%3E%3Ctext x='32' y='46' font-family='Inter,sans-serif' font-size='42' font-weight='700' text-anchor='middle' fill='%239d7460'%3ER%3C/text%3E%3Crect x='20' y='9' width='24' height='6' fill='%23d98e36'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700;800&family=Geologica:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700;800&family=Geologica:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="assets/vendor/lenis.css">
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=27">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=28">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -78,11 +78,11 @@
       <div class="hero__block">
         <p class="hero__slug"><i></i>Est. Ahmedabad, Gujarat</p>
         <h1 class="hero__title hero__title--mark">
-          <span class="hero__set"><span>Radhe</span></span>
+          <span class="hero__set"><span>R<i class="hero__a">A<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M5 96 C20 72 44 44 86 11 C89 8 93 11 90 14 C52 46 27 71 12 97 C10 100 3 100 5 96 Z"/></svg></i>DHE</span></span>
           <b class="hero__set"><span><span class="hero__ruled">Design Studio</span></span></b>
         </h1>
         <p class="hero__lead">Interiors &amp; turnkey projects</p>
-        <p class="hero__fields">Homes <b>&middot;</b> Workplaces <b>&middot;</b> Hospitality</p>
+        <p class="hero__fields">Homes <b aria-hidden="true"></b> Workplaces <b aria-hidden="true"></b> Hospitality</p>
         <!-- On a phone the studio introduces itself here rather than in a
              block of its own further down. Hidden on the desktop, where the
              about block below still carries these lines. -->
@@ -90,7 +90,12 @@
           <p class="hero__about-lead">We create spaces that feel right, beautiful, comfortable, and made for you.</p>
           <p class="hero__about-body">With 8+ years of experience, we bring together interior design, architecture, and complete project execution to create spaces that feel truly yours.</p>
         </div>
-        <a class="hero__go" href="projects.html">Selected work <em aria-hidden="true">&#8599;</em></a>
+        <a class="hero__go" href="projects.html">Explore our work <em aria-hidden="true">&#8594;</em></a>
+
+        <!-- Set along the right edge of the plate, and an olive sprig in the
+             corner: both are decoration, and both stand down on a phone. -->
+        <span class="hero__edge" aria-hidden="true">Space &middot; People &middot; Lifestyle</span>
+        <svg class="hero__sprig" viewBox="0 0 200 240" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M10 214 Q72 150 168 88"/></g><g fill="currentColor"><path d="M0 0 Q20.0 -9.4 40.0 0 Q20.0 9.4 0 0 Z" transform="translate(17.6 206.3) rotate(-96.9)"/><path d="M0 0 Q20.0 -9.4 40.0 0 Q20.0 9.4 0 0 Z" transform="translate(17.6 206.3) rotate(7.1)"/><path d="M0 0 Q18.3 -8.6 36.6 0 Q18.3 8.6 0 0 Z" transform="translate(40.0 184.9) rotate(-94.3)"/><path d="M0 0 Q18.3 -8.6 36.6 0 Q18.3 8.6 0 0 Z" transform="translate(40.0 184.9) rotate(9.7)"/><path d="M0 0 Q16.6 -7.8 33.2 0 Q16.6 7.8 0 0 Z" transform="translate(64.4 163.6) rotate(-91.9)"/><path d="M0 0 Q16.6 -7.8 33.2 0 Q16.6 7.8 0 0 Z" transform="translate(64.4 163.6) rotate(12.1)"/><path d="M0 0 Q14.9 -7.0 29.8 0 Q14.9 7.0 0 0 Z" transform="translate(90.8 142.4) rotate(-89.8)"/><path d="M0 0 Q14.9 -7.0 29.8 0 Q14.9 7.0 0 0 Z" transform="translate(90.8 142.4) rotate(14.2)"/><path d="M0 0 Q13.2 -6.2 26.4 0 Q13.2 6.2 0 0 Z" transform="translate(119.0 121.4) rotate(-87.7)"/><path d="M0 0 Q13.2 -6.2 26.4 0 Q13.2 6.2 0 0 Z" transform="translate(119.0 121.4) rotate(16.3)"/><path d="M0 0 Q11.5 -5.4 23.0 0 Q11.5 5.4 0 0 Z" transform="translate(149.1 100.4) rotate(18.1)"/><path d="M0 0 Q17.0 -8.0 34.0 0 Q17.0 8.0 0 0 Z" transform="translate(164.0 90.0) rotate(-36.9)"/></g></svg>
       </div>
 
       <!-- The studio figures, formerly their own section, now close
