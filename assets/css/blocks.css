@@ -851,3 +851,29 @@
   .hero__palette i { width: 34px; }
   .hero__palette span { font-size: .52rem; letter-spacing: .12em; }
 }
+
+/* ==========================================================================
+   Hero on narrow screens
+   The hero's pinned scrub is only built above 860px, but it is never torn
+   down when the window is narrowed afterwards — so its inline fades survive
+   into the stacked layout. The title block is left faded to nothing, leaving
+   a hole between the photograph and the figures, and the reveal line, which
+   on desktop sits clear above the figures, lands straight on top of them.
+
+   Neither belongs at this width, so both are put back by hand.
+   ========================================================================== */
+@media (max-width: 860px) {
+  .hero__block {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero__caption { opacity: 1 !important; }
+  /* Decorative, and the only thing it can overlap here is the figures. */
+  .hero__reveal { display: none !important; }
+  /* The scrub tweens the plate to the desktop viewport in explicit pixels;
+     the grid row owns its size at this width. */
+  .hero__plate {
+    width: auto !important;
+    height: auto !important;
+  }
+}
