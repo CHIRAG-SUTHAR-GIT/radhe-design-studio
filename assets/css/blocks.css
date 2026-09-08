@@ -919,3 +919,26 @@
   .zf-block .service-card:active { background-color: rgba(0, 0, 0, .05); }
   [data-theme='dark'] .zf-block .service-card:active { background-color: rgba(255, 255, 255, .06); }
 }
+
+/* ==========================================================================
+   Hero film
+   Three photographs and a blind became one looping shot. The video fills
+   the plate the way the stills did — cover, so it crops rather than letter-
+   boxes at any window shape — and carries the same slow pointer drift the
+   photographs had, since studio.js sets --px/--py on the figure's children.
+   ========================================================================== */
+.hero__figure--film { position: absolute; inset: 0; overflow: hidden; margin: 0; }
+.hero__figure--film video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Matches the still plates: a touch oversized so the drift has somewhere
+     to travel without showing an edge. */
+  transform: scale(1.05) translate3d(var(--px, 0px), var(--py, 0px), 0);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__figure--film video { transform: none; }
+}

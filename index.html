@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=17">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=19">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -69,15 +69,12 @@
     <!-- ══ 01 · Hero ══ -->
     <section class="hero" aria-label="Radhe Design Studio">
       <div class="hero__plate">
-        <figure class="hero__figure" id="hero-figure">
-          <img src="assets/images/earth-house.webp" alt="The Earth House" class="is-active" fetchpriority="high" decoding="async"><img src="assets/images/hero-radhe.webp" alt="Serein" loading="lazy" decoding="async"><img src="assets/images/courtyard-house-hero.jpg" alt="Courtyard House" loading="lazy" decoding="async">
+        <figure class="hero__figure hero__figure--film">
+          <video src="assets/hero.mp4" autoplay muted loop playsinline
+                 preload="auto" aria-label="The studio's work, on a loop"></video>
         </figure>
         <!-- A shaft of daylight crossing the room, on a long loop. -->
         <div class="hero__sun" aria-hidden="true"></div>
-        <p class="hero__caption">
-          <span class="annot">FIG. <b data-slide-index>01</b> / 03</span>
-          <button type="button" id="slides-toggle" aria-label="Pause slideshow">&#10073;&#10073;</button>
-        </p>
       </div>
 
       <div class="hero__block">
