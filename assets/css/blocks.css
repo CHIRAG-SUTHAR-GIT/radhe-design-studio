@@ -657,6 +657,13 @@
 .map__canvas .maplibregl-ctrl-bottom-right,
 .map__canvas .maplibregl-ctrl-bottom-left { z-index: 3; }
 
+/* The eyebrow, the display heading and the subtitle are the phone's. */
+.proc-row__eyebrow, .proc-row__sub, .proc-row__t-mob,
+.pstep__no, .pstep__go { display: none; }
+/* Doubled: .pstep__ico sets display below this, and one class each would
+   leave both marks showing on the desktop. */
+.pstep__ico.pstep__ico--m { display: none; }
+
 /* ==========================================================================
    Our process
    Five stages as a row of line icons on a cream ground. This replaces the
@@ -726,99 +733,200 @@
 @media (max-width: 1100px) {
   .proc-row__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(2rem, 5vw, 3rem); }
 }
-/* ── Narrow screens: the stages step down a zigzag bar ─────────────────
-   Five equal columns cannot survive a phone, and stacking them plainly left
-   the last stage stranded beside an empty half-row. Instead each stage takes
-   a side, and the bar between them turns at every step. ------------------ */
-@media (max-width: 640px) {
-  /* The whole block is meant to be taken in at once, so it is sized to the
-     screen and centred in it rather than running past the bottom edge. Every
-     measurement below is cut to make the five stages and the heading add up
-     to less than one screenful on the smallest phone still in use. */
+/* ── The phone: a lit rail down a photograph ──────────────────────────
+   The stages step down a thin gold line laid over a room, each one marked
+   by a glowing point on the line, a ringed icon, its number, its name and
+   a way on. The line draws itself as you reach each stage and the point
+   lights when it arrives, so the block is read at the pace it is scrolled.
+   -------------------------------------------------------------------- */
+@media (max-width: 760px) {
   .proc-row {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100svh;
-    padding: 1.5rem var(--page-x);
+    display: block;
+    min-height: 0;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(2.4rem, 8vw, 3.4rem) var(--page-x) clamp(2.8rem, 9vw, 3.8rem);
+    background-color: #0A0807;
+    background-image: url('../process-bg.webp');
+    background-size: cover;
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    color: #F4EEE4;
   }
-  .proc-row.proc-row .proc-row__title { font-size: 1.7rem; }
-  .proc-row__rule { width: 46px; height: 2px; margin-top: .75rem; }
+  /* The room is the ground, not the subject: enough of it to feel the
+     space, dark enough under the stages to read every line. */
+  .proc-row::before {
+    content: '';
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg,
+      rgba(10, 8, 7, .34) 0%,
+      rgba(10, 8, 7, .48) 20%,
+      rgba(10, 8, 7, .70) 42%,
+      rgba(10, 8, 7, .82) 64%,
+      rgba(10, 8, 7, .90) 100%);
+  }
+
+  .proc-row__eyebrow {
+    display: flex; align-items: center; gap: .9rem;
+    margin: 0 0 clamp(.9rem, 3vw, 1.3rem);
+    font-family: var(--sans);
+    font-size: .6rem; font-weight: 500;
+    letter-spacing: .3em; text-transform: uppercase;
+    color: rgba(244, 238, 228, .82);
+  }
+  .proc-row__eyebrow i { width: clamp(48px, 16vw, 84px); height: 1px; background: rgba(214, 176, 106, .75); }
+
+  .proc-row.proc-row .proc-row__title { margin: 0; }
+  .proc-row__t-desk { display: none; }
+  .proc-row__t-mob {
+    display: block;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.15rem, 10vw, 3rem);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -.005em;
+    text-transform: none;
+    color: #FCF8F1;
+  }
+  .proc-row__sub {
+    display: block;
+    margin: clamp(.75rem, 2.6vw, 1.05rem) 0 0;
+    font-family: var(--sans);
+    font-size: clamp(.85rem, 3.6vw, .98rem);
+    font-weight: 300;
+    letter-spacing: .01em;
+    color: rgba(244, 238, 228, .66);
+  }
+  /* The amber bar belongs to the cream sheet, not to this. */
+  .proc-row__rule { display: none; }
 
   .proc-row__grid {
-    --zig: 56px;              /* the column the icon and the bar share */
-    --bar: rgba(20, 19, 15, .16);
+    position: relative;
     grid-template-columns: 1fr;
     gap: 0;
-    margin-top: 1rem;
+    margin-top: clamp(2.2rem, 9vw, 3.2rem);
   }
+
+  /* The line arcs in from the heading before it turns down the page. */
+  .proc-row__grid::before {
+    content: '';
+    position: absolute; left: 9px; top: -26px;
+    width: 68px; height: 42px;
+    border-left: 1px solid rgba(214, 176, 106, .55);
+    border-top: 1px solid rgba(214, 176, 106, .55);
+    border-top-left-radius: 42px;
+    pointer-events: none;
+  }
+
   .pstep {
     position: relative;
     display: grid;
-    grid-template-columns: var(--zig) 1fr;
-    column-gap: 14px;
-    padding-bottom: 20px;
+    grid-template-columns: 60px minmax(0, 1fr) 36px;
+    column-gap: clamp(.7rem, 3.4vw, 1.05rem);
+    align-items: start;
+    padding: 0 0 clamp(2.3rem, 8.5vw, 3.1rem) 30px;
   }
-  /* One line each. The full sentences stay on the desktop, where there are
-     five columns to hold them; here they would each run to three lines and
-     the block would be over two screens before the last stage arrived. */
+  .pstep__ico { display: none; }
+  .pstep__ico.pstep__ico--m {
+    display: grid; place-items: center;
+    grid-column: 1; grid-row: 1 / span 3;
+    width: 60px; height: 60px;
+    max-width: none;
+    border: 1px solid rgba(214, 176, 106, .5);
+    border-radius: 50%;
+    background: rgba(10, 8, 7, .32);
+    color: #DCBC80;
+  }
+  .pstep__ico--m svg { width: 29px; height: 29px; }
+
+  .pstep__no {
+    display: flex; align-items: center; gap: .7rem;
+    grid-column: 2; grid-row: 1;
+    margin-bottom: .38rem;
+    font-family: var(--sans);
+    font-size: .66rem; font-weight: 500;
+    letter-spacing: .2em;
+    color: #D6B06A;
+  }
+  .pstep__no::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(214, 176, 106, .55), rgba(214, 176, 106, 0));
+  }
+
+  .proc-row.proc-row .pstep__name {
+    grid-column: 2; grid-row: 2;
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.5rem, 6.6vw, 1.95rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0;
+    color: #FCF8F1;
+  }
+  .pstep__text {
+    grid-column: 2; grid-row: 3;
+    margin-top: .3rem;
+    font-family: var(--sans);
+    font-size: clamp(.8rem, 3.4vw, .9rem);
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(244, 238, 228, .62);
+  }
   .pstep__long { display: none; }
   .pstep__short { display: inline; }
-  /* Three children, so each is placed by hand — left to flow, the text
-     drops into the icon's narrow column and wraps two words to a line. */
-  /* Centred in the column the bar runs down, so icon and bar share an axis.
-     Stretching the icon to the full column left the two a few pixels apart
-     and the zigzag looked like it missed. */
-  .pstep__ico  {
-    grid-column: 1; grid-row: 1 / span 2;
-    width: 42px; max-width: none;
-    justify-self: center;
-  }
-  .pstep__name { grid-column: 2; grid-row: 1; margin-top: 0; font-size: 1rem; }
-  .pstep__text {
-    grid-column: 2; grid-row: 2;
-    margin-top: .28rem;
-    font-size: .78rem;
-    line-height: 1.45;
+
+  .pstep__go {
+    display: grid; place-items: center;
+    grid-column: 3; grid-row: 1 / span 3;
+    align-self: center;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(214, 176, 106, .45);
+    border-radius: 50%;
+    color: #D6B06A;
+    font-size: .85rem;
+    font-style: normal;
   }
 
-  .pstep:nth-child(even) { grid-template-columns: 1fr var(--zig); }
-  .pstep:nth-child(even) .pstep__ico { grid-column: 2; justify-self: center; }
-  .pstep:nth-child(even) .pstep__name,
-  .pstep:nth-child(even) .pstep__text { grid-column: 1; text-align: right; }
-
-  /* Down from this icon, then across to the side the next one sits on. */
-  .pstep::before,
-  .pstep::after { content: ''; position: absolute; background: var(--bar); }
-  .pstep::before { top: 48px; bottom: 2px; left: calc(var(--zig) / 2 - 1px); width: 2px; }
-  .pstep:nth-child(even)::before { left: auto; right: calc(var(--zig) / 2 - 1px); }
+  /* The rail, and the point that lights on it. */
+  .pstep::before {
+    content: '';
+    position: absolute; left: 9px; top: 40px; bottom: -26px;
+    width: 1px;
+    background: linear-gradient(180deg, rgba(214, 176, 106, .8), rgba(214, 176, 106, .28));
+    transform-origin: top center;
+  }
+  .pstep:last-child::before { display: none; }
   .pstep::after {
-    bottom: 0; height: 2px;
-    left: calc(var(--zig) / 2 - 1px);
-    right: calc(var(--zig) / 2 - 1px);
+    content: '';
+    position: absolute; left: 5.5px; top: 26px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #F6E3B4;
+    box-shadow: 0 0 10px 2px rgba(240, 202, 128, .75),
+                0 0 22px 6px rgba(240, 202, 128, .28);
   }
-  .pstep:last-child::before,
-  .pstep:last-child::after { display: none; }
 
-  /* Held back until the stage arrives, so the bar is drawn as you scroll.
-     Gated on .is-anim, which the script adds: if it never runs, or fails,
-     the stages are simply there rather than invisible. */
+  /* Held back until the stage arrives, so the line is drawn as it is read.
+     Gated on .is-anim, which the script adds: if it never runs the stages
+     are simply there rather than invisible. */
   .proc-row.is-anim .pstep {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .55s var(--ease) var(--step-delay, 0ms),
-                transform .55s var(--ease) var(--step-delay, 0ms);
+    transform: translateY(14px);
+    transition: opacity .6s var(--ease) var(--step-delay, 0ms),
+                transform .6s var(--ease) var(--step-delay, 0ms);
   }
-  .proc-row.is-anim .pstep::before { transform: scaleY(0); transform-origin: top center; }
-  .proc-row.is-anim .pstep::after  { transform: scaleX(0); transform-origin: left center; }
-  .proc-row.is-anim .pstep:nth-child(even)::after { transform-origin: right center; }
-  .pstep::before { transition: transform .5s var(--ease) calc(var(--step-delay, 0ms) + 180ms); }
-  .pstep::after  { transition: transform .45s var(--ease) calc(var(--step-delay, 0ms) + 480ms); }
+  .proc-row.is-anim .pstep::before { transform: scaleY(0); }
+  .proc-row.is-anim .pstep::after  { transform: scale(0); opacity: 0; }
+  .pstep::before { transition: transform .65s var(--ease) calc(var(--step-delay, 0ms) + 200ms); }
+  .pstep::after  { transition: transform .5s cubic-bezier(.34, 1.56, .64, 1) calc(var(--step-delay, 0ms) + 120ms),
+                               opacity .4s var(--ease) calc(var(--step-delay, 0ms) + 120ms); }
 
   .proc-row.is-anim .pstep.is-in { opacity: 1; transform: none; }
   .proc-row.is-anim .pstep.is-in::before { transform: scaleY(1); }
-  .proc-row.is-anim .pstep.is-in::after  { transform: scaleX(1); }
+  .proc-row.is-anim .pstep.is-in::after  { transform: scale(1); opacity: 1; }
 }
+
 @media (prefers-reduced-motion: reduce) {
   .pstep:hover .pstep__ico { transform: none; }
   .pstep { opacity: 1 !important; transform: none !important; }

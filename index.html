@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="assets/css/photo.css?v=1">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="assets/css/blocks.css?v=31">
+  <link rel="stylesheet" href="assets/css/blocks.css?v=32">
   <script>
     // Applied before first paint so the sheet never flashes the wrong colour.
     (function () {
@@ -439,50 +439,72 @@
 
     <!-- ══ 04 · Process ══ -->
     <section class="proc-row" id="process" aria-label="How we work">
-      <h2 class="proc-row__title">Our process</h2>
+      <!-- The eyebrow, the display heading and the line under it belong to
+           the phone; the desktop keeps the plain title it has always had. -->
+      <p class="proc-row__eyebrow"><span>Our process</span><i aria-hidden="true"></i></p>
+      <h2 class="proc-row__title">
+        <span class="proc-row__t-desk">Our process</span>
+        <span class="proc-row__t-mob">The Process<br>Behind Every<br>Space</span>
+      </h2>
+      <p class="proc-row__sub">Thoughtful. Personal. Seamless.</p>
       <span class="proc-row__rule" aria-hidden="true"></span>
       <ol class="proc-row__grid">
         <li class="pstep">
+          <span class="pstep__no" aria-hidden="true">01</span>
           <span class="pstep__ico" aria-hidden="true">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
                  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M32 3.5v5M13.5 9 16.5 14M50.5 9 47.5 14M3.5 25h5M55.5 25h5"/><path d="M32 17c-4.2 0-6.6 2.4-7 5.2-2.7.5-4.3 2.6-4.3 5.1 0 1.5.6 2.9 1.5 3.9-.8.9-1.3 2.1-1.3 3.4 0 2.8 2.2 5 5 5.2.6 2 2.4 3.4 4.7 3.4"/><path d="M32 17c4.2 0 6.6 2.4 7 5.2 2.7.5 4.3 2.6 4.3 5.1 0 1.5-.6 2.9-1.5 3.9.8.9 1.3 2.1 1.3 3.4 0 2.8-2.2 5-5 5.2-.6 2-2.4 3.4-4.7 3.4"/><path d="M32 17v26.2"/><path d="M26.5 23.5c1.8.4 2.8 1.6 3 3.2M25.2 32.4c1.9.3 3.2 1.5 3.4 3.3"/><path d="M37.5 23.5c-1.8.4-2.8 1.6-3 3.2M38.8 32.4c-1.9.3-3.2 1.5-3.4 3.3"/><path d="M27 48.5h10M28.5 53.5h7"/></svg>
           </span>
+          <span class="pstep__ico pstep__ico--m" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.2 18.2h5.6"/><path d="M10.2 21.3h3.6"/><path d="M12 2.6a6.6 6.6 0 0 0-4.1 11.8c.7.5 1.1 1.3 1.1 2.1v.3h6v-.3c0-.8.4-1.6 1.1-2.1A6.6 6.6 0 0 0 12 2.6Z"/></svg></span>
           <h3 class="pstep__name">Concept</h3>
           <p class="pstep__text"><span class="pstep__long">We create concept designs based on our clients needs and personal style.</span><span class="pstep__short">Designed around how you live.</span></p>
+          <span class="pstep__go" aria-hidden="true">&#8594;</span>
         </li>
         <li class="pstep">
+          <span class="pstep__no" aria-hidden="true">02</span>
           <span class="pstep__ico" aria-hidden="true">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
                  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="15.5" r="7" fill="currentColor" stroke="none"/><path d="M21.5 33.5a10.5 10.5 0 0 1 21 0z" fill="currentColor" stroke="none"/><rect x="23.5" y="33.5" width="17" height="10.5" rx="1" fill="currentColor" stroke="none"/><path d="M14 51h36l-4.5-7h-27z" fill="currentColor" stroke="none"/></svg>
           </span>
+          <span class="pstep__ico pstep__ico--m" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.4 3.6H5.6a2 2 0 0 0-2 2v12.8a2 2 0 0 0 2 2h12.8a2 2 0 0 0 2-2v-5.8"/><path d="M17.5 2.8a2 2 0 0 1 2.8 2.8l-8.1 8.1-3.5.7.7-3.5z"/></svg></span>
           <h3 class="pstep__name">Design</h3>
           <p class="pstep__text"><span class="pstep__long">We design as per clients choices, preferences, and color selections.</span><span class="pstep__short">Your choices, colours and materials.</span></p>
+          <span class="pstep__go" aria-hidden="true">&#8594;</span>
         </li>
         <li class="pstep">
+          <span class="pstep__no" aria-hidden="true">03</span>
           <span class="pstep__ico" aria-hidden="true">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
                  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="8.5"/><circle cx="32" cy="32" r="3.4"/><path d="M32 23.5v-5.2M32 40.5v5.2M40.5 32h5.2M23.5 32h-5.2" stroke-width="3.4"/><path d="m38 26 3.7-3.7M26 38l-3.7 3.7M38 38l3.7 3.7M26 26l-3.7-3.7" stroke-width="3.4"/><circle cx="32" cy="7.5" r="3.6"/><path d="M26.6 16.5a5.4 5.4 0 0 1 10.8 0"/><circle cx="9" cy="45.5" r="3.6"/><path d="M3.6 54.5a5.4 5.4 0 0 1 10.8 0"/><circle cx="55" cy="45.5" r="3.6"/><path d="M49.6 54.5a5.4 5.4 0 0 1 10.8 0"/></svg>
           </span>
+          <span class="pstep__ico pstep__ico--m" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.20 10.09 L21.20 13.91 L18.77 14.44 L18.51 15.07 L19.86 17.16 L17.16 19.86 L15.07 18.51 L14.44 18.77 L13.91 21.20 L10.09 21.20 L9.56 18.77 L8.93 18.51 L6.84 19.86 L4.14 17.16 L5.49 15.07 L5.23 14.44 L2.80 13.91 L2.80 10.09 L5.23 9.56 L5.49 8.93 L4.14 6.84 L6.84 4.14 L8.93 5.49 L9.56 5.23 L10.09 2.80 L13.91 2.80 L14.44 5.23 L15.07 5.49 L17.16 4.14 L19.86 6.84 L18.51 8.93 L18.77 9.56 Z"/><path d="M12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2Z"/></svg></span>
           <h3 class="pstep__name">Execute</h3>
           <p class="pstep__text"><span class="pstep__long">We execute projects on site with precision quality control, and timely delivery.</span><span class="pstep__short">Built on site, on time.</span></p>
+          <span class="pstep__go" aria-hidden="true">&#8594;</span>
         </li>
         <li class="pstep">
+          <span class="pstep__no" aria-hidden="true">04</span>
           <span class="pstep__ico" aria-hidden="true">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
                  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9h26v46H12z"/><rect x="17" y="17" width="6.5" height="6.5" rx="1"/><rect x="17" y="29" width="6.5" height="6.5" rx="1"/><rect x="17" y="41" width="6.5" height="6.5" rx="1"/><path d="m18.6 20.3 1.6 1.6 2.6-2.9M18.6 32.3l1.6 1.6 2.6-2.9"/><path d="M27.5 20.3h6M27.5 32.3h6M27.5 44.3h6"/><path d="m50 12 5 5-16 16-6.6 1.6L34 28z"/></svg>
           </span>
+          <span class="pstep__ico pstep__ico--m" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 3.4h13.2a1.6 1.6 0 0 1 1.6 1.6v14a1.6 1.6 0 0 1-1.6 1.6H5.4A1.6 1.6 0 0 1 3.8 19V5a1.6 1.6 0 0 1 1.6-1.6Z"/><path d="m7 8.6 1.3 1.3 2.4-2.6"/><path d="m7 14 1.3 1.3 2.4-2.6"/><path d="M13.2 8.4h4"/><path d="M13.2 13.8h4"/></svg></span>
           <h3 class="pstep__name">Quality Check</h3>
           <p class="pstep__text"><span class="pstep__long">We carry out quality checks before final handover.</span><span class="pstep__short">Checked before handover.</span></p>
+          <span class="pstep__go" aria-hidden="true">&#8594;</span>
         </li>
         <li class="pstep">
+          <span class="pstep__no" aria-hidden="true">05</span>
           <span class="pstep__ico" aria-hidden="true">
             <!-- handshake: Lucide (ISC), drawn on a 24 grid and scaled into the 64 the other four use -->
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
                  stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><!-- handshake: Lucide (ISC), drawn on a 24 grid and scaled into the 64 the other four use -->
               <g transform="scale(2.6667)" stroke-width="0.638"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></g></svg>
           </span>
+          <span class="pstep__ico pstep__ico--m" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span>
           <h3 class="pstep__name">Handover</h3>
           <p class="pstep__text"><span class="pstep__long">We ensure a smooth and happy project handover experience.</span><span class="pstep__short">Handed over complete.</span></p>
+          <span class="pstep__go" aria-hidden="true">&#8594;</span>
         </li>
       </ol>
     </section>
