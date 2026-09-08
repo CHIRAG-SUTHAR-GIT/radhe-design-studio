@@ -23,6 +23,64 @@
       } catch (e) { }
     })();
   </script>
+  <style>
+  /* ── Projects, as a vertical wall ──────────────────────────────────────
+     The rail cropped every render to 3:4 and scrolled sideways, so a 16:9
+     room arrived as a strip. These keep their own proportions — the column
+     sets the width, the picture decides its own height — and the page
+     scrolls down like any other.
+     -------------------------------------------------------------------- */
+  .pwall { padding: calc(var(--head-h) + 2rem) var(--page-x) clamp(4rem, 8vw, 7rem); }
+  .pwall__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: clamp(1.6rem, 3vw, 2.6rem); }
+  .pwall__count { font-family: var(--sans); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted-2); }
+
+  /* Columns rather than a grid: a grid would force a row height and start
+     cropping again. Each picture drops into the shortest column as it is. */
+  .pwall__cols { column-count: 3; column-gap: clamp(.9rem, 1.8vw, 1.5rem); }
+  @media (max-width: 1100px) { .pwall__cols { column-count: 2; } }
+  @media (max-width: 640px)  { .pwall__cols { column-count: 1; } }
+
+  .pw__item {
+    display: block;
+    break-inside: avoid;
+    margin: 0 0 clamp(.9rem, 1.8vw, 1.5rem);
+    color: inherit;
+    text-decoration: none;
+  }
+  .pw__frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--plate);
+    border: 1px solid var(--hair-soft);
+  }
+  .pw__frame img {
+    display: block;
+    width: 100%;
+    height: auto;          /* never cropped: the file's own ratio is kept */
+    transition: transform 1.2s var(--ease), filter .6s var(--ease);
+  }
+  .pw__item:hover .pw__frame img { transform: scale(1.03); }
+  .pw__badge {
+    position: absolute; top: .7rem; right: .7rem;
+    padding: .3rem .5rem;
+    background: rgba(6, 6, 6, .8);
+    color: #fff;
+    font-family: var(--sans); font-size: .5rem; font-weight: 600;
+    letter-spacing: .14em;
+  }
+  .pw__cap {
+    display: flex; align-items: baseline; justify-content: space-between; gap: .8rem;
+    padding: .7rem .1rem 0;
+  }
+  .pw__cap b { font-weight: 500; font-size: .92rem; letter-spacing: -.01em; }
+  .pw__cap i {
+    font-style: normal; font-family: var(--sans);
+    font-size: .55rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .pw__item.is-out { display: none; }
+  </style>
 </head>
 <body data-page="projects">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -64,176 +122,140 @@
 
   <main id="main" class="page">
 
-    <section class="rail" id="rail" aria-label="Projects">
-      <div style="padding: calc(var(--head-h) + 2rem) var(--page-x) 1.5rem">
+    <section class="pwall" id="projects-wall" aria-label="Projects">
+      <div class="pwall__head">
         <span class="tag">projects<i></i></span>
+        <span class="pwall__count" id="pwall-count"></span>
       </div>
-      <div class="rail__scroll" aria-hidden="true"><span>SCROLL</span><i></i></div>
-      <div class="rail__track">
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Living Room</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/living-room-01.webp" alt="Living Room" loading="eager" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+      <div class="pwall__cols">
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/living-room-01.webp" alt="Living Room" loading="eager" decoding="async"></span>
+          <span class="pw__cap"><b>Living Room</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-01.webp" alt="Bedroom" loading="eager" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-01.webp" alt="Bedroom" loading="eager" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Kitchen</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/kitchen-01.webp" alt="Kitchen" loading="eager" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/kitchen-01.webp" alt="Kitchen" loading="eager" decoding="async"></span>
+          <span class="pw__cap"><b>Kitchen</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Living Room</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/living-room-02.webp" alt="Living Room" loading="eager" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/living-room-02.webp" alt="Living Room" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Living Room</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-02.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-02.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Living Room</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/living-room-03.webp" alt="Living Room" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/living-room-03.webp" alt="Living Room" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Living Room</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Living Room</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/living-room-04.webp" alt="Living Room" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/living-room-04.webp" alt="Living Room" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Living Room</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-03.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-03.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Study</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/study-01.webp" alt="Study" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/study-01.webp" alt="Study" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Study</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Living Room</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/living-room-05.webp" alt="Living Room" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/living-room-05.webp" alt="Living Room" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Living Room</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-04.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-04.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Foyer</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/foyer-01.webp" alt="Foyer" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/foyer-01.webp" alt="Foyer" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Foyer</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-05.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-05.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-06.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-06.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-07.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-07.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Home Theatre</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/home-theatre-01.webp" alt="Home Theatre" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/home-theatre-01.webp" alt="Home Theatre" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Home Theatre</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Home Theatre</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/home-theatre-02.webp" alt="Home Theatre" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/home-theatre-02.webp" alt="Home Theatre" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Home Theatre</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="residence" href="project-detail.html">
-          <span class="rail__label">Bedroom</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/residence/thumb/bedroom-08.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Residence</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="residence" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/residence/bedroom-08.webp" alt="Bedroom" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Bedroom</b><i>Residence</i></span>
         </a>
-        <a class="rail__item plate" data-cat="hospitality" href="project-detail.html">
-          <span class="rail__label">Reception Lounge</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/reception-lounge-01.webp" alt="Reception Lounge" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="hospitality" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/reception-lounge-01.webp" alt="Reception Lounge" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Reception Lounge</b><i>Hospitality</i></span>
         </a>
-        <a class="rail__item plate" data-cat="hospitality" href="project-detail.html">
-          <span class="rail__label">Reception Lounge</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/reception-lounge-02.webp" alt="Reception Lounge" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="hospitality" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/reception-lounge-02.webp" alt="Reception Lounge" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Reception Lounge</b><i>Hospitality</i></span>
         </a>
-        <a class="rail__item plate" data-cat="hospitality" href="project-detail.html">
-          <span class="rail__label">Waiting Lounge</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/waiting-lounge-01.webp" alt="Waiting Lounge" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="hospitality" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/waiting-lounge-01.webp" alt="Waiting Lounge" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Waiting Lounge</b><i>Hospitality</i></span>
         </a>
-        <a class="rail__item plate" data-cat="workplace" href="project-detail.html">
-          <span class="rail__label">Office Cafe</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/office-cafe-01.webp" alt="Office Cafe" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="workplace" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/office-cafe-01.webp" alt="Office Cafe" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Office Cafe</b><i>Commercial</i></span>
         </a>
-        <a class="rail__item plate" data-cat="workplace" href="project-detail.html">
-          <span class="rail__label">Workstations</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/workstations-01.webp" alt="Workstations" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="workplace" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/workstations-01.webp" alt="Workstations" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Workstations</b><i>Commercial</i></span>
         </a>
-        <a class="rail__item plate" data-cat="detail" href="project-detail.html">
-          <span class="rail__label">Facade</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/facade-01.webp" alt="Facade" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="detail" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/facade-01.webp" alt="Facade" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Facade</b><i>Facades</i></span>
         </a>
-        <a class="rail__item plate" data-cat="detail" href="project-detail.html">
-          <span class="rail__label">Facade</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/facade-02.webp" alt="Facade" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="detail" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/facade-02.webp" alt="Facade" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Facade</b><i>Facades</i></span>
         </a>
-        <a class="rail__item plate" data-cat="detail" href="project-detail.html">
-          <span class="rail__label">Facade</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/facade-03.webp" alt="Facade" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="detail" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/facade-03.webp" alt="Facade" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Facade</b><i>Facades</i></span>
         </a>
-        <a class="rail__item plate" data-cat="detail" href="project-detail.html">
-          <span class="rail__label">Facade</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/commercial/thumb/facade-04.webp" alt="Facade" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">Commercial</span><span class="annot">Interiors</span></span>
+        <a class="pw__item" data-cat="detail" href="project-detail.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/commercial/facade-04.webp" alt="Facade" loading="lazy" decoding="async"></span>
+          <span class="pw__cap"><b>Facade</b><i>Facades</i></span>
         </a>
-        <a class="rail__item plate" data-cat="tour" href="experience.html">
-          <span class="rail__label">Living Room · 360°</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/360/thumb/living-room.webp" alt="Living Room panorama" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">360°</span><span class="annot">Walkthrough</span></span>
+        <a class="pw__item" data-cat="tour" href="experience.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/360/living-room.webp" alt="Living Room panorama" loading="lazy" decoding="async"><span class="pw__badge">360°</span></span>
+          <span class="pw__cap"><b>Living Room</b><i>360°</i></span>
         </a>
-        <a class="rail__item plate" data-cat="tour" href="experience.html">
-          <span class="rail__label">Bedroom · 360°</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/360/thumb/bedroom-01.webp" alt="Bedroom panorama" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">360°</span><span class="annot">Walkthrough</span></span>
+        <a class="pw__item" data-cat="tour" href="experience.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/360/bedroom-01.webp" alt="Bedroom panorama" loading="lazy" decoding="async"><span class="pw__badge">360°</span></span>
+          <span class="pw__cap"><b>Bedroom</b><i>360°</i></span>
         </a>
-        <a class="rail__item plate" data-cat="tour" href="experience.html">
-          <span class="rail__label">Bedroom · 360°</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/360/thumb/bedroom-02.webp" alt="Bedroom panorama" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">360°</span><span class="annot">Walkthrough</span></span>
+        <a class="pw__item" data-cat="tour" href="experience.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/360/bedroom-02.webp" alt="Bedroom panorama" loading="lazy" decoding="async"><span class="pw__badge">360°</span></span>
+          <span class="pw__cap"><b>Bedroom</b><i>360°</i></span>
         </a>
-        <a class="rail__item plate" data-cat="tour" href="experience.html">
-          <span class="rail__label">Bedroom · 360°</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/360/thumb/bedroom-03.webp" alt="Bedroom panorama" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">360°</span><span class="annot">Walkthrough</span></span>
+        <a class="pw__item" data-cat="tour" href="experience.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/360/bedroom-03.webp" alt="Bedroom panorama" loading="lazy" decoding="async"><span class="pw__badge">360°</span></span>
+          <span class="pw__cap"><b>Bedroom</b><i>360°</i></span>
         </a>
-        <a class="rail__item plate" data-cat="tour" href="experience.html">
-          <span class="rail__label">Bedroom · 360°</span>
-          <span class="plate__frame"><img src="assets/images/portfolio/360/thumb/bedroom-04.webp" alt="Bedroom panorama" loading="lazy" decoding="async"></span>
-          <span class="plate__cap"><span class="plate__name">360°</span><span class="annot">Walkthrough</span></span>
+        <a class="pw__item" data-cat="tour" href="experience.html">
+          <span class="pw__frame"><img src="assets/images/portfolio/360/bedroom-04.webp" alt="Bedroom panorama" loading="lazy" decoding="async"><span class="pw__badge">360°</span></span>
+          <span class="pw__cap"><b>Bedroom</b><i>360°</i></span>
         </a>
-      </div>
-      <div class="rail__progress">
-        <span class="annot">FIG. <b data-rail-fig>01</b> / <b data-rail-total>09</b></span>
-        <span class="rail__bar"><i></i></span>
       </div>
     </section>
   </main>
@@ -263,5 +285,22 @@
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
   <script src="assets/js/studio.js?v=20260908-pin"></script>
+  <script>
+  /* The rail's own filtering lived in studio.js and only ran for #rail.
+     This wall is not that, so it reads ?filter= for itself. */
+  (function () {
+    var wall = document.getElementById('projects-wall');
+    if (!wall) return;
+    var items = [].slice.call(wall.querySelectorAll('.pw__item'));
+    var want = new URLSearchParams(location.search).get('filter');
+    var known = want && items.some(function (el) { return el.dataset.cat === want; });
+    items.forEach(function (el) {
+      el.classList.toggle('is-out', !!known && el.dataset.cat !== want);
+    });
+    var shown = items.filter(function (el) { return !el.classList.contains('is-out'); });
+    var out = document.getElementById('pwall-count');
+    if (out) out.textContent = String(shown.length).padStart(2, '0') + ' of ' + String(items.length).padStart(2, '0');
+  })();
+  </script>
 </body>
 </html>
