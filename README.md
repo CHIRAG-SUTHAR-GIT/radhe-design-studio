@@ -9,7 +9,7 @@ Upload the contents of this folder to Hostinger `public_html`. The site is stati
 - Section-aware blueprint canvases animate behind every plain ink or paper block, pause off-screen, and run at a lightweight 30 fps.
 - Filterable project collections, horizontal showcases, service accordions, animated metrics, page transitions, and a full-screen mobile menu.
 - Native browser scrolling with lightweight requestAnimationFrame and IntersectionObserver enhancements—no scroll-jacking libraries.
-- Seven responsive public pages: Home, Studio, Projects, Services, Journal, Project Detail, and Contact.
+- Four responsive public pages: Home, Projects, Project Detail, and the 360 Studio (plus its tour viewer). Services, process, and the enquiry form all live on the Home page and are reached by anchor.
 - Original generated PNG masters plus production WebP derivatives in `assets/images/`: `hero-radhe`, `earth-house`, `sandstone-courtyard`, `noma-studio`, and `material-detail`.
 - Reduced-motion support, keyboard-visible focus states, semantic landmarks, and responsive layouts without horizontal overflow.
 - A Kuula-inspired `360 Studio` route powered by the bundled panorama-to-depth engine, with inertial drag/swipe, scroll and button zoom, auto-rotation, fullscreen, keyboard navigation, optional gyroscope control, collapsible depth settings, and a multi-scene thumbnail strip when several panorama files are opened together.
