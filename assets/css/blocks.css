@@ -27,7 +27,6 @@
 }
 
 .zf-block--cream { background-color: var(--zf-cream); color: var(--zf-ink); }
-.zf-block--ink   { background-color: var(--zf-ink);   color: var(--zf-white); }
 
 /* ── Undo the site-wide rules that would otherwise reach in ─────────── */
 .zf-block img { filter: none; transition: none; }
@@ -115,34 +114,6 @@
 }
 .zf-block .servic-title { margin-top: 20px; }
 
-/* ── "Our process" — rail fills as you read, plate follows ──────────── */
-.zf-block .services-content::before {
-  content: ""; position: absolute; width: 3px; height: 100%; left: 29px;
-  background: var(--zf-rail);
-}
-.zf-block .services-content::after {
-  content: ""; position: absolute; width: 3px; height: var(--scroll-height, 0);
-  max-height: 100%; top: 0; left: 29px; background: var(--zf-primary);
-}
-.zf-block .services-listing { counter-reset: service-counter; gap: 100px; }
-.zf-block .service-item { counter-increment: service-counter; position: relative; }
-.zf-block .service-item::before {
-  content: counter(service-counter, decimal-leading-zero);
-  position: absolute; left: -51px; opacity: 0;
-  font-family: Inter, sans-serif; font-size: 16px; font-weight: 500;
-  color: var(--zf-white); transition: opacity .5s linear;
-}
-.zf-block .service-item.active::before { opacity: 1; }
-.zf-block .service-item h3,
-.zf-block .service-item h4,
-.zf-block .service-item .service-desc { color: var(--zf-gray-200); transition: color .5s linear; }
-.zf-block .service-item.active h3,
-.zf-block .service-item.active .service-desc { color: var(--zf-white); }
-.zf-block .service-title { font-size: 36px; font-weight: 600; }
-.zf-block .service-tag { font-size: 18px; }
-.zf-block .image-wraper { position: sticky; top: 20vh; height: fit-content; }
-.zf-block .image-wraper img { border-radius: 16px; }
-
 /* ── Responsive ─────────────────────────────────────────────────────── */
 @media (min-width: 769px) {
   .zf-block .md_grid-cols-2 { grid-template-columns: 1fr 1fr; }
@@ -158,11 +129,6 @@
   .zf-block .md_hidden { display: none; }
   .zf-block .md_block { display: block !important; }
   .zf-block .service-card { padding-top: 24px; padding-bottom: 24px; }
-  .zf-block .services-content::before,
-  .zf-block .services-content::after,
-  .zf-block .service-item::before { display: none; }
-  .zf-block .services-content { padding-left: 0 !important; max-width: 100% !important; }
-  .zf-block .image-wraper { display: none; }
 }
 @media (max-width: 575px) {
   .zf-block .container { padding: 0 24px; }
@@ -176,10 +142,7 @@
   .zf-block .sm_fs_28 { font-size: 28px; }
   .zf-block .sm_lh_21 { line-height: 21px; }
   .zf-block .sm_fw_700 { font-weight: 700; }
-  .zf-block .service-title { font-size: 20px; font-weight: 700; }
-  .zf-block .service-tag { font-size: 16px; margin-top: 2px !important; margin-bottom: 12px !important; }
   .zf-block .servic-title { margin-top: 8px; }
-  .zf-block .services-listing { gap: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .zf-block *, .zf-block *::before, .zf-block *::after {
@@ -255,19 +218,6 @@
 }
 .zf-block .mt_64 { margin-top: clamp(2.5rem, 5vw, 4rem); }
 
-/* Stage descriptions are half as long as they were, so the old 100px gap
-   left each stage stranded. */
-.zf-block .services-listing { gap: clamp(2.75rem, 5vw, 4.25rem); }
-.zf-block .service-item h4 { margin-bottom: 12px !important; }
-
-/* The plate was pinned to 560x600 and cropped hard on anything narrower. */
-.zf-block .image-wraper { flex: 1 1 0; min-width: 0; max-width: 560px; }
-.zf-block .image-wraper img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 14 / 15;
-  max-height: 64vh;
-}
 
 @media (max-width: 991px) {
   .zf-block.py_80 { padding-top: clamp(2.75rem, 6vw, 4rem); padding-bottom: clamp(2.75rem, 6vw, 4rem); }
@@ -430,9 +380,11 @@
 .map__stat--go em { font-style: normal; }
 
 @media (max-width: 760px) {
-  .map__band { height: clamp(20rem, 74vw, 26rem); }
+  .map__band { min-height: clamp(20rem, 74vw, 26rem); }
   .map__hud--pin { display: none; }
-  .map__hud--foot { justify-content: center; row-gap: .5rem; }
+  /* Lifted clear of the CARTO / OpenStreetMap credit, which sits along the
+     bottom edge and was being written straight through. */
+  .map__hud--foot { bottom: 2.5rem; justify-content: center; row-gap: .5rem; }
   .map__stat--go { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -689,3 +641,81 @@
    so it has to stay legible above the vignette. */
 .map__canvas .maplibregl-ctrl-bottom-right,
 .map__canvas .maplibregl-ctrl-bottom-left { z-index: 3; }
+
+/* ==========================================================================
+   Our process
+   Five stages as a row of line icons on a cream ground. This replaces the
+   scroll-driven rail and its five photographs: the photographs were doing
+   the explaining, and an icon says the same thing in a tenth of the weight.
+   ========================================================================== */
+.proc-row {
+  background: #EDEBE6;
+  color: #14130f;
+  padding: clamp(3.5rem, 7vw, 6.5rem) var(--page-x);
+}
+.proc-row.proc-row .proc-row__title {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: clamp(2.2rem, 5.4vw, 4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  color: #111;
+}
+.proc-row__rule {
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: clamp(1.1rem, 2vw, 1.6rem);
+  background: #C1712C;
+}
+
+.proc-row__grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  margin: clamp(2.6rem, 6vw, 5rem) 0 0;
+  padding: 0;
+}
+.pstep { min-width: 0; }
+.pstep__ico {
+  display: block;
+  width: clamp(56px, 5.4vw, 74px);
+  color: #14130f;
+}
+.pstep__ico svg { width: 100%; height: auto; display: block; }
+.proc-row.proc-row .pstep__name {
+  margin: clamp(.9rem, 1.8vw, 1.4rem) 0 0;
+  font-family: var(--sans);
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: #111;
+}
+.pstep__text {
+  margin: clamp(.7rem, 1.4vw, 1.1rem) 0 0;
+  font-size: clamp(.86rem, 1.02vw, .95rem);
+  line-height: 1.6;
+  color: #6f6257;
+}
+
+/* The icon lifts and warms as you pass it, the way the service cards do. */
+.pstep__ico, .pstep__name { transition: transform .5s var(--ease), color .5s var(--ease); }
+.pstep:hover .pstep__ico { transform: translateY(-4px); color: #C1712C; }
+.proc-row.proc-row .pstep:hover .pstep__name { color: #C1712C; }
+
+@media (max-width: 1100px) {
+  .proc-row__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(2rem, 5vw, 3rem); }
+}
+@media (max-width: 640px) {
+  .proc-row__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Five into two leaves the last stage alone beside an empty half-row. */
+  .pstep:last-child { grid-column: 1 / -1; }
+  .pstep:last-child .pstep__text { max-width: 34ch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pstep:hover .pstep__ico { transform: none; }
+}
