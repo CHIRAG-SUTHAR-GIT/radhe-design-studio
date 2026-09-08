@@ -790,69 +790,6 @@
 }
 
 /* ==========================================================================
-   Hero — the material palette
-   The four fields that stood here (DISCIPLINE / PRACTICE / LOCATION /
-   DELIVERY) were an architect's title block. An interior studio is judged
-   on what a room is made of, so the block now shows the materials.
-   ========================================================================== */
-.hero__palette {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(1.1rem, 2.4vw, 2rem);
-  margin: .3rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-.hero__palette li {
-  display: grid;
-  gap: .55rem;
-  justify-items: start;
-}
-.hero__palette i {
-  display: block;
-  width: clamp(38px, 3.4vw, 48px);
-  aspect-ratio: 1;
-  border-radius: 5px;
-  /* Lit from the top left and falling away, so a flat colour reads as a
-     sample with a surface rather than a paint chip. */
-  background:
-    linear-gradient(140deg,
-      color-mix(in srgb, var(--sw) 86%, #fff) 0%,
-      var(--sw) 52%,
-      color-mix(in srgb, var(--sw) 80%, #000) 100%);
-  border: 1px solid rgba(255, 255, 255, .16);
-  box-shadow: 0 10px 22px -14px rgba(0, 0, 0, .9);
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
-}
-.hero__palette span {
-  font-family: var(--sans);
-  font-size: .58rem;
-  font-weight: 600;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--muted-2, rgba(255, 255, 255, .5));
-  transition: color .5s var(--ease);
-}
-.hero__palette li:hover i {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 28px -14px rgba(0, 0, 0, .95);
-}
-.hero__palette li:hover span { color: var(--amber); }
-
-.hero__fields {
-  margin: .2rem 0 0;
-  font-size: clamp(.82rem, 1vw, .95rem);
-  color: var(--muted, rgba(255, 255, 255, .62));
-}
-.hero__fields b { color: var(--amber); font-weight: 400; padding: 0 .2rem; }
-
-@media (max-width: 575px) {
-  .hero__palette { gap: 1rem; }
-  .hero__palette i { width: 34px; }
-  .hero__palette span { font-size: .52rem; letter-spacing: .12em; }
-}
-
-/* ==========================================================================
    Hero on narrow screens
    The hero's pinned scrub is only built above 860px, but it is never torn
    down when the window is narrowed afterwards — so its inline fades survive
@@ -876,4 +813,42 @@
     width: auto !important;
     height: auto !important;
   }
+}
+
+/* ==========================================================================
+   The name as a wordmark
+   Three heavy lines stacked tight is a headline, not a mark. A studio name
+   is set the way it would go on the wall: one word held open on wide
+   tracking, the descriptor smaller and wider still beneath it, and the rule
+   carrying the full width of the lockup rather than one word of it.
+
+   Typographic, not calligraphic — the site's own sans, only spaced and
+   weighted like an identity instead of a heading.
+   ========================================================================== */
+.hero__title--mark {
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: normal;
+  text-transform: uppercase;
+}
+.hero__title--mark .hero__set:first-child {
+  font-size: clamp(2.3rem, 5.4vw, 4.4rem);
+  font-weight: 300;
+  /* Tracking pads the right of the last letter too, so the block is pulled
+     back by the same amount to keep its left edge true. */
+  letter-spacing: .17em;
+  margin-left: -.02em;
+}
+.hero__title--mark b.hero__set {
+  margin-top: clamp(.5rem, 1.1vw, .85rem);
+  font-size: clamp(.72rem, 1.35vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: .44em;
+}
+.hero__title--mark .hero__ruled { padding-bottom: .5em; }
+.hero__title--mark .hero__ruled::after { height: 2px; }
+
+@media (max-width: 575px) {
+  .hero__title--mark .hero__set:first-child { letter-spacing: .13em; }
+  .hero__title--mark b.hero__set { letter-spacing: .34em; }
 }

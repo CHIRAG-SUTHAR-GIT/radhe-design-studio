@@ -252,7 +252,10 @@
       scrollTrigger: {
         trigger: heroPin,
         start: 'top top',
-        end: '+=2100',
+        /* Was 2100, which meant two full screens of scrolling before the
+           plates came into view. Long enough for the plate to open, no
+           longer. */
+        end: '+=820',
         pin: true,
         pinSpacing: true,
         scrub: .8,
