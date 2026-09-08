@@ -193,6 +193,10 @@
 
 @media (max-width: 860px) {
   .hero { --hero-stats: auto; }
+  /* The figures are a desktop flourish. On a phone they pushed the hero to
+     nearly two screens before a single room was in view, so they stand down
+     and the about block below carries the same ground in words. */
+  .hero__stats { display: none; }
   .hero__stats .statement-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero__stats .statement-stat:nth-child(2n) { border-right: 0; }
   .hero__stats .statement-stat:nth-child(-n+2) { border-bottom: 1px solid var(--hair-soft); }
@@ -974,4 +978,40 @@
 @media (prefers-reduced-motion: reduce) {
   .hero__figure--still img { transition: none; }
   .hero__plate:hover .hero__figure--still img { transform: scale(1); }
+}
+
+/* ==========================================================================
+   About us
+   A quiet block between the hero and the plates: a label, the line that
+   says what the studio is for, and a short paragraph under it. It borrows
+   the page's own type and rules rather than introducing a look of its own,
+   so it reads as part of the sheet and not as a panel dropped onto it.
+   ========================================================================== */
+.about-note {
+  padding: clamp(3rem, 6.5vw, 5.5rem) var(--page-x);
+  border-top: 1px solid var(--hair-soft);
+}
+.about-note__inner {
+  display: grid;
+  gap: clamp(.9rem, 2vw, 1.4rem);
+  max-width: 64ch;
+}
+/* studio.css gives paragraphs a bottom margin; the grid gap does it here. */
+.about-note.about-note p { margin: 0; }
+.about-note.about-note .about-note__lead {
+  color: var(--ink);
+  font-size: clamp(1.12rem, 2.3vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.about-note.about-note .about-note__body {
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: clamp(.95rem, 1.3vw, 1.02rem);
+  line-height: 1.75;
+}
+@media (max-width: 640px) {
+  .about-note { padding-top: clamp(2.4rem, 9vw, 3.2rem); }
 }
