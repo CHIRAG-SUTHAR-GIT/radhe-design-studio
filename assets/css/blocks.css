@@ -1152,3 +1152,34 @@
 @media (prefers-reduced-motion: reduce) {
   .hero__about { opacity: 1; animation: none; }
 }
+
+/* ==========================================================================
+   One title for every block
+   Three blocks were each announcing themselves differently: the work and
+   about blocks with the corner-bracket label, the contact block with a
+   heading at 2.8rem, the services block with a grey uppercase eyebrow over
+   a 36px heading in a heavier weight, and the process block shouting in
+   uppercase at 4rem. The two imported blocks are brought onto the contact
+   block's heading — the one the site already treats as its title — so a
+   reader meets the same voice at every stop down the page.
+
+   Doubled class names throughout: the imported blocks carry their own
+   utility classes, and [data-theme='dark'] :is(h1,h2,...) sits at (0,2,1).
+   ========================================================================== */
+.zf-block.zf-block .section-heading,
+.proc-row.proc-row .proc-row__title {
+  font-family: var(--sans);
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  text-transform: none;
+}
+
+/* The label sits above the title with the same air the other blocks give it. */
+.zf-block.zf-block .tag { margin-bottom: 1.1rem; }
+.zf-block.zf-block .section-heading { margin-top: 0; }
+
+/* The rule stays: it is the process block's own mark, and the contact block
+   has its pill in the same place. */
+.proc-row__rule { margin-top: clamp(1rem, 1.8vw, 1.4rem); }
