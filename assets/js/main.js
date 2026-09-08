@@ -292,7 +292,7 @@
     } catch {
       notice.hidden = false;
       notice.dataset.state = 'error';
-      notice.textContent = 'Something went wrong. Please email hello@radhedesignstudio.com.';
+      notice.textContent = 'Something went wrong. Please email radhesuthar1107@gmail.com.';
     } finally {
       button.disabled = false;
       button.textContent = originalText;

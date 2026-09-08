@@ -187,12 +187,12 @@
           say(res.data.message || 'Thank you — we reply within two working days.', 'good');
         } else {
           say((res.data && res.data.message)
-              || 'That did not send. Please email hello@radhedesignstudio.com.', 'bad');
+              || 'That did not send. Please email radhesuthar1107@gmail.com.', 'bad');
         }
       })
       .catch(function () {
         // Opening the page from disk, or PHP not running, lands here.
-        say('That did not send. Please email hello@radhedesignstudio.com.', 'bad');
+        say('That did not send. Please email radhesuthar1107@gmail.com.', 'bad');
       })
       .then(function () { if (button) button.disabled = false; });
   });
