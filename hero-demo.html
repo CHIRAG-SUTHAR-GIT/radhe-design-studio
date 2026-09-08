@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Hero demo — Radhe Design Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@200;300;400;500&display=swap">
+  <style>
+  /* ======================================================================
+     A demo only. Nothing here is linked from the site and nothing here
+     touches studio.css or blocks.css — it is entirely self-contained, so
+     it can be deleted without leaving a trace.
+     ====================================================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; padding: 0; }
+  body { background: #14110d; font-family: Inter, sans-serif; }
+
+  .note {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.4rem;
+    padding: .7rem clamp(1rem, 4vw, 2.5rem);
+    background: #14110d; color: rgba(255,255,255,.62);
+    font-size: .72rem; letter-spacing: .06em;
+  }
+  .note b { color: #e3c05b; font-weight: 500; }
+  .note a { color: rgba(255,255,255,.62); }
+
+  /* ── Shared stone ground ─────────────────────────────────────────────
+     Plaster is never one colour: a warm pool where the light lands, a
+     cooler fall-off away from it, and a fine grain over the whole thing so
+     large flat areas do not band on a good screen. */
+  .stone {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(120% 95% at 24% 6%,  rgba(255,242,219,.72), transparent 56%),
+      radial-gradient(85% 75% at 86% 96%, rgba(108, 86, 62, .22), transparent 62%),
+      linear-gradient(158deg, #eae1d3 0%, #ded2c0 46%, #cec0aa 100%);
+  }
+  .stone::after {
+    content: ''; position: absolute; inset: 0; z-index: 3;
+    pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  }
+  /* The light crossing the wall, on a long slow loop. */
+  .stone .sun {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(38% 46% at 50% 50%, rgba(255,236,198,.62), rgba(255,228,180,.16) 48%, transparent 72%);
+    background-repeat: no-repeat; background-size: 150% 150%;
+    background-position: -20% -10%;
+    mix-blend-mode: soft-light;
+    animation: wallLight 26s cubic-bezier(.65,0,.35,1) infinite alternate;
+  }
+  @keyframes wallLight {
+    from { background-position: -20% -10%; }
+    to   { background-position: 110% 70%; }
+  }
+
+  /* ── The signage ─────────────────────────────────────────────────────
+     Cut into the wall rather than printed on it: a light top edge and a
+     dark drop below, which is what reads as relief. */
+  .sign { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+  .sign .mark { width: clamp(64px, 7vw, 104px); margin-bottom: clamp(1.2rem, 2.6vw, 2.2rem); }
+  .sign .mark path { fill: none; stroke: #4a3f33; stroke-width: 4; }
+
+  .sign .name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 8vw, 6.4rem);
+    line-height: .96;
+    letter-spacing: .16em;
+    text-indent: .16em;            /* letter-spacing pads the right edge only */
+    color: #4a3f33;
+    text-shadow: 0 1px 0 rgba(255,255,255,.55), 0 2px 5px rgba(60,45,30,.22);
+  }
+  .sign .sub {
+    margin-top: clamp(.5rem, 1.2vw, .9rem);
+    font-size: clamp(.72rem, 1.5vw, 1.15rem);
+    font-weight: 300;
+    letter-spacing: .44em;
+    text-indent: .44em;
+    color: #5b4e40;
+  }
+  .sign .rule {
+    width: clamp(64px, 9vw, 120px); height: 1px;
+    margin: clamp(1.3rem, 3vw, 2.4rem) 0;
+    background: rgba(74,63,51,.42);
+  }
+  .sign .role {
+    font-size: clamp(.62rem, 1.05vw, .8rem);
+    font-weight: 400; letter-spacing: .34em; text-indent: .34em;
+    color: #5b4e40;
+  }
+  .sign .three {
+    margin-top: .85rem;
+    display: flex; gap: clamp(.7rem, 1.6vw, 1.3rem);
+    font-size: clamp(.55rem, .85vw, .68rem);
+    font-weight: 300; letter-spacing: .3em;
+    color: rgba(74,63,51,.62);
+  }
+  .sign .three i { font-style: normal; color: rgba(74,63,51,.34); }
+
+  /* The line on the column, set vertically as it is on the wall. */
+  .creed {
+    position: absolute; left: clamp(1.2rem, 4vw, 3.4rem); top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    display: grid; gap: .9rem; justify-items: start;
+    font-size: clamp(.56rem, .82vw, .7rem);
+    font-weight: 300; letter-spacing: .34em; line-height: 2.1;
+    color: rgba(74,63,51,.6);
+  }
+  .creed b { display: block; font-weight: 300; }
+  .creed span { width: 34px; height: 1px; background: rgba(74,63,51,.4); }
+
+  .enter {
+    margin-top: clamp(2rem, 4vw, 3.2rem);
+    display: inline-flex; align-items: center; gap: .7rem;
+    padding: .95rem 1.9rem;
+    border: 1px solid rgba(74,63,51,.36);
+    border-radius: 999px;
+    font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+    color: #4a3f33; text-decoration: none;
+    transition: background-color .5s cubic-bezier(.22,1,.36,1), color .5s, border-color .5s;
+  }
+  .enter:hover { background: #4a3f33; border-color: #4a3f33; color: #f0e7d9; }
+
+  /* ── A · the whole wall ──────────────────────────────────────────── */
+  .demoA { min-height: 100svh; display: grid; place-items: center; padding: clamp(3rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
+
+  /* ── B · photograph beside the signage ───────────────────────────── */
+  .demoB { min-height: 100svh; display: grid; grid-template-columns: 1.05fr .95fr; }
+  .demoB .shot { position: relative; overflow: hidden; background: #b9ac98; }
+  .demoB .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .demoB .shot::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 60%, rgba(222,210,192,.85) 100%);
+  }
+  .demoB .panel { display: grid; place-items: center; padding: clamp(2.5rem, 5vw, 5rem); }
+  .demoB .sign .name { font-family: Inter, sans-serif; font-weight: 200; letter-spacing: .13em; text-indent: .13em; font-size: clamp(2.2rem, 5vw, 4.2rem); }
+  .demoB .sign .sub { font-weight: 300; }
+
+  @media (max-width: 860px) {
+    .demoB { grid-template-columns: 1fr; grid-template-rows: 38svh auto; min-height: 0; }
+    .demoB .shot::after { background: linear-gradient(180deg, transparent 55%, rgba(222,210,192,.9) 100%); }
+    .demoB .panel { padding: clamp(2.5rem, 8vw, 4rem) 1.5rem clamp(3.5rem, 10vw, 5rem); }
+    .creed { display: none; }
+  }
+  </style>
+</head>
+<body>
+
+  <p class="note">
+    <b>DEMO ONLY</b> — nothing on the live site has changed.
+    <a href="#a">A · full wall</a>
+    <a href="#b">B · photograph beside signage</a>
+    <a href="index.html">back to the site</a>
+  </p>
+
+  <!-- ══ A · the signage wall, edge to edge ══════════════════════════ -->
+  <section class="stone demoA" id="a">
+    <div class="sun" aria-hidden="true"></div>
+
+    <div class="creed" aria-hidden="true">
+      <b>BETTER SPACES</b><b>FOR A BRIGHTER</b><b>TOMORROW</b>
+      <span></span>
+    </div>
+
+    <div class="sign">
+      <svg class="mark" viewBox="0 0 100 110" aria-hidden="true">
+        <path d="M26 100V16h30a24 24 0 0 1 0 48H30" />
+        <path d="M56 64l24 36" />
+      </svg>
+      <h1 class="name">RADHE</h1>
+      <p class="sub">DESIGN STUDIO</p>
+      <span class="rule"></span>
+      <p class="role">INTERIOR DESIGNERS</p>
+      <p class="three"><span>SPACES</span><i>|</i><span>PEOPLE</span><i>|</i><span>STORIES</span></p>
+      <a class="enter" href="projects.html">Selected work</a>
+    </div>
+  </section>
+
+  <!-- ══ B · a room on one side, the signage on the other ════════════ -->
+  <section class="demoB" id="b">
+    <div class="shot">
+      <img src="assets/images/earth-house.webp" alt="The Earth House, Ahmedabad">
+    </div>
+    <div class="stone panel">
+      <div class="sun" aria-hidden="true"></div>
+      <div class="sign">
+        <svg class="mark" viewBox="0 0 100 110" aria-hidden="true">
+          <path d="M26 100V16h30a24 24 0 0 1 0 48H30" />
+          <path d="M56 64l24 36" />
+        </svg>
+        <h1 class="name">RADHE</h1>
+        <p class="sub">DESIGN STUDIO</p>
+        <span class="rule"></span>
+        <p class="role">INTERIOR DESIGNERS</p>
+        <p class="three"><span>SPACES</span><i>|</i><span>PEOPLE</span><i>|</i><span>STORIES</span></p>
+        <a class="enter" href="projects.html">Selected work</a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
