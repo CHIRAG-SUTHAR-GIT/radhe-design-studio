@@ -649,7 +649,7 @@
    the explaining, and an icon says the same thing in a tenth of the weight.
    ========================================================================== */
 .proc-row {
-  background: #EDEBE6;
+  background: #E8E6E1;
   color: #14130f;
   padding: clamp(3.5rem, 7vw, 6.5rem) var(--page-x);
 }
@@ -682,7 +682,7 @@
 .pstep { min-width: 0; }
 .pstep__ico {
   display: block;
-  width: clamp(56px, 5.4vw, 74px);
+  width: clamp(62px, 6vw, 86px);
   color: #14130f;
 }
 .pstep__ico svg { width: 100%; height: auto; display: block; }
@@ -710,12 +710,70 @@
 @media (max-width: 1100px) {
   .proc-row__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(2rem, 5vw, 3rem); }
 }
+/* ── Narrow screens: the stages step down a zigzag bar ─────────────────
+   Five equal columns cannot survive a phone, and stacking them plainly left
+   the last stage stranded beside an empty half-row. Instead each stage takes
+   a side, and the bar between them turns at every step. ------------------ */
 @media (max-width: 640px) {
-  .proc-row__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* Five into two leaves the last stage alone beside an empty half-row. */
-  .pstep:last-child { grid-column: 1 / -1; }
-  .pstep:last-child .pstep__text { max-width: 34ch; }
+  .proc-row__grid {
+    --zig: 66px;              /* the column the icon and the bar share */
+    --bar: rgba(20, 19, 15, .16);
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .pstep {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--zig) 1fr;
+    column-gap: 18px;
+    padding-bottom: 40px;
+  }
+  /* Three children, so each is placed by hand — left to flow, the text
+     drops into the icon's narrow column and wraps two words to a line. */
+  .pstep__ico  { grid-column: 1; grid-row: 1 / span 2; width: 100%; max-width: 58px; }
+  .pstep__name { grid-column: 2; grid-row: 1; margin-top: 0; }
+  .pstep__text { grid-column: 2; grid-row: 2; margin-top: .5rem; }
+
+  .pstep:nth-child(even) { grid-template-columns: 1fr var(--zig); }
+  .pstep:nth-child(even) .pstep__ico { grid-column: 2; margin-left: auto; }
+  .pstep:nth-child(even) .pstep__name,
+  .pstep:nth-child(even) .pstep__text { grid-column: 1; text-align: right; }
+
+  /* Down from this icon, then across to the side the next one sits on. */
+  .pstep::before,
+  .pstep::after { content: ''; position: absolute; background: var(--bar); }
+  .pstep::before { top: 68px; bottom: 2px; left: calc(var(--zig) / 2 - 1px); width: 2px; }
+  .pstep:nth-child(even)::before { left: auto; right: calc(var(--zig) / 2 - 1px); }
+  .pstep::after {
+    bottom: 0; height: 2px;
+    left: calc(var(--zig) / 2 - 1px);
+    right: calc(var(--zig) / 2 - 1px);
+  }
+  .pstep:last-child::before,
+  .pstep:last-child::after { display: none; }
+
+  /* Held back until the stage arrives, so the bar is drawn as you scroll.
+     Gated on .is-anim, which the script adds: if it never runs, or fails,
+     the stages are simply there rather than invisible. */
+  .proc-row.is-anim .pstep {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .55s var(--ease) var(--step-delay, 0ms),
+                transform .55s var(--ease) var(--step-delay, 0ms);
+  }
+  .proc-row.is-anim .pstep::before { transform: scaleY(0); transform-origin: top center; }
+  .proc-row.is-anim .pstep::after  { transform: scaleX(0); transform-origin: left center; }
+  .proc-row.is-anim .pstep:nth-child(even)::after { transform-origin: right center; }
+  .pstep::before { transition: transform .5s var(--ease) calc(var(--step-delay, 0ms) + 180ms); }
+  .pstep::after  { transition: transform .45s var(--ease) calc(var(--step-delay, 0ms) + 480ms); }
+
+  .proc-row.is-anim .pstep.is-in { opacity: 1; transform: none; }
+  .proc-row.is-anim .pstep.is-in::before { transform: scaleY(1); }
+  .proc-row.is-anim .pstep.is-in::after  { transform: scaleX(1); }
 }
 @media (prefers-reduced-motion: reduce) {
   .pstep:hover .pstep__ico { transform: none; }
+  .pstep { opacity: 1 !important; transform: none !important; }
+  .pstep::before { transform: scaleY(1) !important; }
+  .pstep::after { transform: scaleX(1) !important; }
 }
