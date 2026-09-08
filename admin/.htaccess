@@ -1,0 +1,7 @@
+DirectoryIndex index.php
+
+# The gate is included by the pages; there is nothing to gain by fetching it
+# on its own, so it is not served directly.
+<FilesMatch "^auth\.php$">
+  Require all denied
+</FilesMatch>

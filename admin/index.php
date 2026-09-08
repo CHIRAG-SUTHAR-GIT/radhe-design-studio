@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/auth.php'; ?>
 <!doctype html>
 <html lang="en" data-theme="light">
 <head>
@@ -28,8 +29,9 @@
 
     <div class="side__group">Desk</div>
     <button class="nav-item" data-route="settings"><i>⚙</i>Settings</button>
-    <a class="nav-item" href="tours.html"><i>◉</i>Tour manager</a>
+    <a class="nav-item" href="tours.php"><i>◉</i>Tour manager</a>
     <a class="nav-item" href="../index.html"><i>↗</i>View the site</a>
+    <a class="nav-item" href="?logout=1"><i>⏻</i>Sign out</a>
 
     <div style="margin-top:auto;padding:.9rem .55rem 0">
       <button class="btn btn--sm" id="theme" style="width:100%">Light / dark</button>
