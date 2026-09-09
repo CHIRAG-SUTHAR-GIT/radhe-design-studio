@@ -81,9 +81,10 @@
   gap: clamp(.7rem, 2.4vw, 1.05rem);
   padding: clamp(1.4rem, 3vw, 2.2rem) 0 0;
 }
-/* The marks close the page. studio.css leaves a strip of footer under them;
-   nothing belongs there now that the drafting block has gone. */
-.foot { padding-bottom: 0; }
+/* The marks close the page. studio.css left a whole strip of footer under
+   them; a little under six millimetres is enough to sit them off the edge
+   without the band of nothing that was there before. */
+.foot { padding-bottom: .6cm; }
 .social__link {
   position: relative;
   display: grid;

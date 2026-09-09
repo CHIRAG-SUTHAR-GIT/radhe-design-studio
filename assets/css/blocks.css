@@ -740,12 +740,16 @@
   --pr-ink: #14130F;
   --pr-dim: rgba(20, 19, 15, .62);
   --pr-line: rgba(20, 19, 15, .14);
+  /* The soft gold all but disappears on white; this one is darker and
+     carries. On black the lighter of the two is the legible one. */
+  --pr-gold: #A9741F;
 }
 [data-theme='dark'] .proc-row {
   --pr-bg: #000000;
   --pr-ink: #F4EEE4;
   --pr-dim: rgba(244, 238, 228, .62);
   --pr-line: rgba(244, 238, 228, .16);
+  --pr-gold: #D6B06A;
 }
 
 /* ── The phone: a lit rail on a plain sheet ──────────────────────────
@@ -774,7 +778,7 @@
     letter-spacing: 0.21em; text-transform: uppercase;
     color: var(--pr-dim);
   }
-  .proc-row__eyebrow i { width: clamp(33.6px, 11.52vw, 58.8px); height: 0.7px; background: rgba(214, 176, 106, .75); }
+  .proc-row__eyebrow i { width: clamp(33.6px, 11.52vw, 58.8px); height: 0.7px; background: color-mix(in srgb, var(--pr-gold) 75%, transparent); }
 
   .proc-row.proc-row .proc-row__title { margin: 0; }
   .proc-row__t-desk { display: none; }
@@ -803,6 +807,8 @@
   .proc-row__grid {
     position: relative;
     grid-template-columns: 1fr;
+    max-width: 21rem;
+    margin-inline: auto;
     gap: 0;
     margin-top: clamp(1.54rem, 6.48vw, 2.24rem);
   }
@@ -812,8 +818,8 @@
     content: '';
     position: absolute; left: 6.3px; top: -18.2px;
     width: 47.6px; height: 29.4px;
-    border-left: 1px solid rgba(214, 176, 106, .55);
-    border-top: 1px solid rgba(214, 176, 106, .55);
+    border-left: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
     border-top-left-radius: 29.4px;
     pointer-events: none;
   }
@@ -821,7 +827,9 @@
   .pstep {
     position: relative;
     display: grid;
-    grid-template-columns: 60px minmax(0, 1fr) 36px;
+    /* 42px, to match the ring that stands in it: the earlier pass that
+       took a third off the block scaled the ring but not its column. */
+    grid-template-columns: 42px minmax(0, 1fr);
     column-gap: clamp(0.49rem, 2.45vw, 0.735rem);
     align-items: start;
     padding: 0 0 clamp(1.61rem, 6.12vw, 2.17rem) 21px;
@@ -832,10 +840,10 @@
     grid-column: 1; grid-row: 1 / span 3;
     width: 42px; height: 42px;
     max-width: none;
-    border: 1px solid rgba(214, 176, 106, .5);
+    border: 1px solid color-mix(in srgb, var(--pr-gold) 50%, transparent);
     border-radius: 50%;
     background: transparent;
-    color: #DCBC80;
+    color: var(--pr-gold);
   }
   .pstep__ico--m svg { width: 20.3px; height: 20.3px; }
 
@@ -846,11 +854,11 @@
     font-family: var(--sans);
     font-size: 0.462rem; font-weight: 500;
     letter-spacing: 0.14em;
-    color: #D6B06A;
+    color: var(--pr-gold);
   }
   .pstep__no::after {
     content: ''; flex: 1; height: 0.7px;
-    background: linear-gradient(90deg, rgba(214, 176, 106, .55), rgba(214, 176, 106, 0));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--pr-gold) 55%, transparent), transparent);
   }
 
   .proc-row.proc-row .pstep__name {
@@ -875,14 +883,17 @@
   .pstep__long { display: none; }
   .pstep__short { display: inline; }
 
-  .pstep__go {
+  /* The arrows led nowhere, so they go, and the two columns that remain
+     take the width between them. */
+  .pstep__go { display: none; }
+  .pstep__go--unused {
     display: grid; place-items: center;
     grid-column: 3; grid-row: 1 / span 3;
     align-self: center;
     width: 25.2px; height: 25.2px;
-    border: 1px solid rgba(214, 176, 106, .45);
+    border: 1px solid color-mix(in srgb, var(--pr-gold) 45%, transparent);
     border-radius: 50%;
-    color: #D6B06A;
+    color: var(--pr-gold);
     font-size: 0.595rem;
     font-style: normal;
   }
@@ -892,7 +903,7 @@
     content: '';
     position: absolute; left: 6.3px; top: 28px; bottom: -18.2px;
     width: 0.7px;
-    background: linear-gradient(180deg, rgba(214, 176, 106, .8), rgba(214, 176, 106, .28));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--pr-gold) 80%, transparent), color-mix(in srgb, var(--pr-gold) 28%, transparent));
     transform-origin: top center;
   }
   .pstep:last-child::before { display: none; }
@@ -1451,10 +1462,10 @@
   --hero-quiet: rgba(246, 241, 233, .9);
 }
 [data-theme='light'] .hero {
-  --hero-veil: rgba(255, 255, 255, .70);
-  --hero-ink: #14130F;
-  --hero-dim: rgba(20, 19, 15, .70);
-  --hero-quiet: rgba(20, 19, 15, .82);
+  --hero-veil: rgba(255, 255, 255, .74);
+  --hero-ink: #0A0907;
+  --hero-dim: rgba(16, 15, 12, .86);
+  --hero-quiet: rgba(16, 15, 12, .9);
 }
 
 /* ==========================================================================
@@ -1524,8 +1535,11 @@
 
   .hero .hero__title--mark .hero__set:first-child { font-size: clamp(2.75rem, 12.6vw, 3.5rem); }
   .hero .hero__title--mark b.hero__set { font-size: clamp(.86rem, 3.9vw, 1.1rem); }
-  .hero .hero__title--mark { color: var(--hero-ink); }
-  .hero .hero__ruled::after { background: rgba(252, 249, 244, .5); }
+  /* The second line and the rule kept the stone plate's cream, which
+     vanishes once the light theme pales the room behind them. */
+  .hero .hero__title--mark,
+  .hero .hero__title--mark b.hero__set { color: var(--hero-ink); }
+  .hero .hero__ruled::after { background: color-mix(in srgb, var(--hero-ink) 45%, transparent); }
 
   .hero .hero__lead {
     margin-top: clamp(.85rem, 3.4vw, 1.25rem);
@@ -1593,4 +1607,29 @@
     border-bottom: 1.5px solid #D6A85C;
     transform: rotate(45deg);
   }
+}
+
+/* The same two grounds, declared on the document so blocks other than the
+   process one can take them — the plates and the services do, on a phone. */
+:root {
+  --pr-bg: #FFFFFF;
+  --pr-ink: #14130F;
+  --pr-dim: rgba(20, 19, 15, .62);
+  --pr-gold: #A9741F;
+}
+[data-theme='dark'] {
+  --pr-bg: #000000;
+  --pr-ink: #F4EEE4;
+  --pr-dim: rgba(244, 238, 228, .62);
+  --pr-gold: #D6B06A;
+}
+
+/* ==========================================================================
+   One ground from the work to the process
+   The plates and the services ran over whatever the page was under them.
+   On a phone they take the process block's own sheet, so the run reads as
+   one surface: black under the dark theme, white under the light.
+   ========================================================================== */
+@media (max-width: 760px) {
+  .folio, .zf-block#services { background: var(--pr-bg); color: var(--pr-ink); }
 }
