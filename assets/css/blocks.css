@@ -773,7 +773,7 @@
   }
 
   .proc-row__eyebrow {
-    display: flex; align-items: center; gap: 0.63rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.63rem;
     margin: 0 0 clamp(0.63rem, 2.16vw, 0.91rem);
     font-family: var(--sans);
     font-size: 0.42rem; font-weight: 500;
@@ -782,8 +782,11 @@
   }
   .proc-row__eyebrow i { width: clamp(33.6px, 11.52vw, 58.8px); height: 0.7px; background: color-mix(in srgb, var(--pr-gold) 75%, transparent); }
 
-  .proc-row.proc-row .proc-row__title { margin: 0; }
+  /* The label is the whole heading here; the display line and the three
+     words under it are gone. */
+  .proc-row.proc-row .proc-row__title { display: none; }
   .proc-row__t-desk { display: none; }
+  .proc-row__sub { display: none; }
   .proc-row__t-mob {
     display: block;
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -793,15 +796,6 @@
     letter-spacing: -0.003em;
     text-transform: none;
     color: var(--pr-ink);
-  }
-  .proc-row__sub {
-    display: block;
-    margin: clamp(0.525rem, 1.87vw, 0.735rem) 0 0;
-    font-family: var(--sans);
-    font-size: clamp(0.595rem, 2.59vw, 0.686rem);
-    font-weight: 300;
-    letter-spacing: 0.007em;
-    color: var(--pr-dim);
   }
   /* The amber bar belongs to the cream sheet, not to this. */
   .proc-row__rule { display: none; }
@@ -815,16 +809,6 @@
     margin-top: clamp(1.54rem, 6.48vw, 2.24rem);
   }
 
-  /* The line arcs in from the heading before it turns down the page. */
-  .proc-row__grid::before {
-    content: '';
-    position: absolute; left: 6.3px; top: -18.2px;
-    width: 47.6px; height: 29.4px;
-    border-left: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
-    border-top: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
-    border-top-left-radius: 29.4px;
-    pointer-events: none;
-  }
 
   .pstep {
     position: relative;
@@ -834,7 +818,7 @@
     grid-template-columns: 42px minmax(0, 1fr);
     column-gap: clamp(0.49rem, 2.45vw, 0.735rem);
     align-items: start;
-    padding: 0 0 clamp(1.61rem, 6.12vw, 2.17rem) 21px;
+    padding: 0 0 clamp(1.61rem, 6.12vw, 2.17rem);
   }
   .pstep__ico { display: none; }
   .pstep__ico.pstep__ico--m {
@@ -900,24 +884,6 @@
     font-style: normal;
   }
 
-  /* The rail, and the point that lights on it. */
-  .pstep::before {
-    content: '';
-    position: absolute; left: 6.3px; top: 28px; bottom: -18.2px;
-    width: 0.7px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--pr-gold) 80%, transparent), color-mix(in srgb, var(--pr-gold) 28%, transparent));
-    transform-origin: top center;
-  }
-  .pstep:last-child::before { display: none; }
-  .pstep::after {
-    content: '';
-    position: absolute; left: 3.85px; top: 18.2px;
-    width: 5.6px; height: 5.6px;
-    border-radius: 50%;
-    background: #F6E3B4;
-    box-shadow: 0 0 10px 2px rgba(240, 202, 128, .75),
-                0 0 22px 6px rgba(240, 202, 128, .28);
-  }
 
   /* Held back until the stage arrives, so the line is drawn as it is read.
      Gated on .is-anim, which the script adds: if it never runs the stages
@@ -928,15 +894,7 @@
     transition: opacity .6s var(--ease) var(--step-delay, 0ms),
                 transform .6s var(--ease) var(--step-delay, 0ms);
   }
-  .proc-row.is-anim .pstep::before { transform: scaleY(0); }
-  .proc-row.is-anim .pstep::after  { transform: scale(0); opacity: 0; }
-  .pstep::before { transition: transform .65s var(--ease) calc(var(--step-delay, 0ms) + 200ms); }
-  .pstep::after  { transition: transform .5s cubic-bezier(.34, 1.56, .64, 1) calc(var(--step-delay, 0ms) + 120ms),
-                               opacity .4s var(--ease) calc(var(--step-delay, 0ms) + 120ms); }
-
   .proc-row.is-anim .pstep.is-in { opacity: 1; transform: none; }
-  .proc-row.is-anim .pstep.is-in::before { transform: scaleY(1); }
-  .proc-row.is-anim .pstep.is-in::after  { transform: scale(1); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
