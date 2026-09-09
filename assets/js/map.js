@@ -10,7 +10,10 @@
 (function () {
   'use strict';
 
-  var STUDIO = [72.538706, 23.114382];   // lng, lat — Money Plant High Street
+  /* lng, lat. Read off the studio's own Google listing — Moneyplant
+     Highstreet A-1111, Jagatpur Road, Gota. The pair that stood here
+     before was some 440 metres east of it. */
+  var STUDIO = [72.53441735, 23.1149769];
   var NEON = '#3FA9FF';
 
   /* ── Live local time, the honest version of the dashboard clock ─────── */
@@ -33,7 +36,7 @@
     var out = document.getElementById('map-temp');
     if (!wrap || !out) return;
 
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=23.1144&longitude=72.5387'
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=23.1150&longitude=72.5344'
           + '&current=temperature_2m&timezone=Asia%2FKolkata')
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (d) {
