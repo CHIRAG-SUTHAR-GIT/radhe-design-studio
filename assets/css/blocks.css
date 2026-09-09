@@ -1443,6 +1443,20 @@
   .hero .hero__about-body { color: rgba(243, 238, 229, .72); }
 }
 
+/* The veil over the hero photograph, and the ink that has to read on it. */
+.hero {
+  --hero-veil: rgba(9, 8, 7, .70);
+  --hero-ink: #FCF9F4;
+  --hero-dim: rgba(240, 234, 225, .72);
+  --hero-quiet: rgba(246, 241, 233, .9);
+}
+[data-theme='light'] .hero {
+  --hero-veil: rgba(255, 255, 255, .70);
+  --hero-ink: #14130F;
+  --hero-dim: rgba(20, 19, 15, .70);
+  --hero-quiet: rgba(20, 19, 15, .82);
+}
+
 /* ==========================================================================
    The hero on a phone: one photograph, everything on it
    The wide screen sets the room beside the name on stone. Stacked, that was
@@ -1477,12 +1491,13 @@
     content: '';
     position: absolute; inset: 0; z-index: 0;
     pointer-events: none;
-    background: linear-gradient(180deg,
-      rgba(9, 8, 7, .40) 0%,
-      rgba(9, 8, 7, .30) 18%,
-      rgba(9, 8, 7, .58) 44%,
-      rgba(9, 8, 7, .80) 72%,
-      rgba(9, 8, 7, .90) 100%);
+    /* An even veil at seven tenths across the whole picture, black under the
+       dark theme and white under the light one, with a little more of it
+       gathered at the corners so the room falls away at the edges. */
+    background:
+      radial-gradient(130% 78% at 50% 42%,
+        transparent 0%, rgba(0, 0, 0, .16) 62%, rgba(0, 0, 0, .34) 100%),
+      var(--hero-veil);
   }
 
   .hero .hero__block {
@@ -1503,19 +1518,19 @@
     margin-bottom: clamp(.55rem, 2vw, .85rem);
     font-size: .59rem;
     letter-spacing: .26em;
-    color: rgba(246, 241, 233, .9);
+    color: var(--hero-quiet);
   }
   .hero .hero__slug i { width: 30px; background: #D6A85C; }
 
   .hero .hero__title--mark .hero__set:first-child { font-size: clamp(2.75rem, 12.6vw, 3.5rem); }
   .hero .hero__title--mark b.hero__set { font-size: clamp(.86rem, 3.9vw, 1.1rem); }
-  .hero .hero__title--mark { color: #FCF9F4; }
+  .hero .hero__title--mark { color: var(--hero-ink); }
   .hero .hero__ruled::after { background: rgba(252, 249, 244, .5); }
 
   .hero .hero__lead {
     margin-top: clamp(.85rem, 3.4vw, 1.25rem);
     font-size: clamp(1.02rem, 4.5vw, 1.3rem);
-    color: #F2EBE0;
+    color: var(--hero-ink);
   }
 
   /* ── What the studio says ──────────────────────────────────────────── */
@@ -1530,7 +1545,7 @@
     font-weight: 400;
     line-height: 1.38;
     letter-spacing: -.005em;
-    color: #FBF7F1;
+    color: var(--hero-ink);
   }
   /* The short gold rule that separates the promise from the explanation. */
   .hero .hero__about-body::before {
@@ -1543,7 +1558,7 @@
   .hero .hero__about-body {
     font-size: clamp(.88rem, 3.7vw, .98rem);
     line-height: 1.62;
-    color: rgba(240, 234, 225, .72);
+    color: var(--hero-dim);
   }
 
   /* ── The way through ───────────────────────────────────────────────── */
