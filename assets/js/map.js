@@ -90,7 +90,42 @@
       new ResizeObserver(function () { map.resize(); }).observe(host);
     }
 
+    /* A handle on the map, the way the desk keeps one on its state. Useful
+       from the console when a layer needs checking. */
+    window.RDS_MAP = map;
+
     map.on('load', function () {
+      /* Take the ground to black.
+
+         CARTO's dark matter is not black — its background is around #1a1a1a
+         with the land, parks and buildings sitting a shade either side of
+         it. On a section that is itself pure black the map read as a grey
+         rectangle laid on top. Every ground layer goes to #000; the roads,
+         the water and the labels are left alone, so the map still reads as
+         a map rather than as an empty field.
+
+         Layer names are read from the style rather than listed here: they
+         are CARTO's to change, and a name that has moved should cost the
+         map nothing. */
+      var GROUND = /^(background|landuse|landcover|park|wood|grass|nature|pitch|sand|cliff|building|boundary_|place_|water_name)/;
+      try {
+        map.getStyle().layers.forEach(function (layer) {
+          if (!GROUND.test(layer.id)) return;
+          if (layer.type === 'background') {
+            map.setPaintProperty(layer.id, 'background-color', '#000000');
+          } else if (layer.type === 'fill') {
+            map.setPaintProperty(layer.id, 'fill-color', '#000000');
+            map.setPaintProperty(layer.id, 'fill-outline-color', '#000000');
+          } else if (layer.type === 'line') {
+            map.setPaintProperty(layer.id, 'line-color', '#000000');
+          }
+        });
+      } catch (e) {
+        /* A style that has been rearranged should not take the map with it;
+           a grey ground is a far smaller fault than no map at all. */
+        console.warn('[map] could not take the ground to black:', e);
+      }
+
       // Light the through-roads. These are real OSM ways restyled, not a
       // route drawn over the top.
       var lit = [
