@@ -85,6 +85,13 @@
    them; a little under six millimetres is enough to sit them off the edge
    without the band of nothing that was there before. */
 .foot { padding-bottom: .6cm; }
+
+/* The wordmark and the marks are centred, so the lines between them are
+   too — contact, telephone, address and place on one axis. */
+.foot__row {
+  justify-content: center;
+  text-align: center;
+}
 .social__link {
   position: relative;
   display: grid;
