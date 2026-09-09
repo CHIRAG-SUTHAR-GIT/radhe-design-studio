@@ -1,0 +1,18 @@
+/* ==========================================================================
+   A margin down both sides of the phone
+   The page is held six millimetres off either edge, so every block — the
+   photograph, the sheets, the footer — stops short of the screen and the
+   ground shows through beside them.
+
+   The header and the WhatsApp button are fixed, so they answer to the
+   viewport rather than to the page and have to be brought in by hand.
+   ========================================================================== */
+@media (max-width: 760px) {
+  body { padding-inline: .6cm; }
+
+  .head { left: .6cm; right: .6cm; width: auto; }
+  .wa-float { right: calc(.6cm + clamp(.85rem, 2vw, 1.7rem)); }
+
+  /* The sheet over the page is a screen of its own and keeps the full
+     width; its own inset frame already holds it off the edge. */
+}
