@@ -60,7 +60,9 @@
       zoom: 14.1,
       pitch: reduced ? 0 : 48,
       bearing: reduced ? 0 : -18,
-      attributionControl: { compact: true },
+      /* Off the map itself. The credit the tiles require is set in the
+         page instead — see the line under the map in index.html. */
+      attributionControl: false,
 
       /* cooperativeGestures kept the page's scroll wheel, but it earned that
          by printing "Use Ctrl + scroll to zoom" across the map. The wheel is
