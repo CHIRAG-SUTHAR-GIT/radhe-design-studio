@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="assets/vendor/lenis.css">
   <link rel="stylesheet" href="assets/css/studio.css?v=20260826-blind2">
   <link rel="stylesheet" href="assets/css/social.css?v=6">
-  <link rel="stylesheet" href="assets/css/intro.css?v=1">
+  <link rel="stylesheet" href="assets/css/intro.css?v=3">
   <link rel="stylesheet" href="assets/css/photo.css?v=1">
   <link rel="stylesheet" href="assets/css/panels.css?v=20260826-blind2">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -35,6 +35,10 @@
        until this class exists, so a browser without scripts never sees it. */
     if (matchMedia('(max-width: 760px)').matches) {
       document.documentElement.classList.add('is-intro');
+      /* The moment the sheet goes up. The 1.2 seconds it stands for are
+         counted from here rather than from whenever the script at the foot
+         of the page happens to run, which is a good deal later. */
+      window.__introUp = performance.now();
     }
   </script>
 </head>
@@ -95,9 +99,11 @@
 
     <div class="intro__foot">
       <span>Interiors &amp; turnkey projects</span>
-      <span class="intro__cue">Scroll to enter<i aria-hidden="true"></i></span>
     </div>
   </div>
+  <!-- Straight after the sheet, so its 1.2 seconds start when the reader
+       first sees it rather than after every other script on the page. -->
+  <script src="assets/js/intro.js?v=4"></script>
 
   <main id="main" class="page">
 
@@ -694,6 +700,5 @@
     <span class="wa-float__tip">Chat on WhatsApp</span>
   </a>
   <script src="assets/js/photo.js?v=1" defer></script>
-  <script src="assets/js/intro.js?v=1"></script>
 </body>
 </html>

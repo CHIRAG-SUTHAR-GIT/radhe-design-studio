@@ -62,8 +62,8 @@
     -webkit-mask-composite: source-over;
     mask-composite: add;
 
-    transition: transform .8s cubic-bezier(.76, 0, .24, 1),
-                opacity .5s linear .45s;
+    transition: transform .62s cubic-bezier(.76, 0, .24, 1),
+                opacity .4s linear .34s;
   }
   [data-theme='light'] html.is-intro .intro,
   html.is-intro[data-theme='light'] .intro {
@@ -147,7 +147,7 @@
     pointer-events: none;
   }
 
-  /* A line that fills while the sheet waits, and a word to say what ends it. */
+  /* A line that fills for as long as the sheet stands. */
   .intro__bar {
     position: relative;
     width: 1px; height: clamp(46px, 9vh, 74px);
@@ -159,7 +159,8 @@
     position: absolute; inset: 0;
     background: var(--gold);
     transform: translateY(-100%);
-    animation: introFill 1.6s cubic-bezier(.65, 0, .35, 1) .25s forwards;
+    /* Full by the time the sheet goes, not cut off half drawn. */
+    animation: introFill 1.05s cubic-bezier(.65, 0, .35, 1) .1s forwards;
   }
   @keyframes introFill { to { transform: translateY(0); } }
 
@@ -169,24 +170,6 @@
     font-size: .55rem; font-weight: 500;
     letter-spacing: .28em; text-transform: uppercase;
     color: var(--dim);
-  }
-  .intro__cue {
-    display: grid; gap: .45rem; justify-items: center;
-    color: var(--gold);
-    opacity: 0;
-    animation: introCue .7s var(--ease, ease) 1.7s forwards;
-  }
-  @keyframes introCue { to { opacity: 1; } }
-  .intro__cue i {
-    width: 9px; height: 9px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg);
-    animation: introNudge 1.8s ease-in-out 2.4s infinite;
-  }
-  @keyframes introNudge {
-    0%, 100% { transform: rotate(45deg) translate(0, 0); }
-    50%      { transform: rotate(45deg) translate(3px, 3px); }
   }
 
   /* ── The opening ─────────────────────────────────────────────────── */
@@ -213,7 +196,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     html.is-intro .intro { transition: opacity .3s linear; }
-    .intro__bar::after, .intro__cue, .intro__cue i { animation: none; }
-    .intro__cue { opacity: 1; }
+    .intro__bar::after { animation: none; }
   }
 }

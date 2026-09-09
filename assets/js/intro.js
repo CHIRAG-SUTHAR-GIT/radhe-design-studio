@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════
    RADHE — the way in
 
-   The sheet is held over the page until the reader asks to come in. Any
-   gesture that means "onward" counts: a scroll, a wheel, a swipe up, a
-   press of the arrow or space, or a tap on the cue at the foot.
+   The sheet stands over the page for 1.2 seconds and then opens on its
+   own. Any gesture that means "onward" opens it sooner: a scroll, a wheel,
+   a swipe up, a press of the arrow or space, or a tap.
 
    The page underneath does not scroll while it waits, and the scroll
    position is pinned at the top, so nothing has moved when the sheet
@@ -26,7 +26,7 @@
 
     // The arch climbs first; the flanks lift once it has.
     root.classList.add('is-opening');
-    setTimeout(() => root.classList.add('is-gone'), 620);
+    setTimeout(() => root.classList.add('is-gone'), 520);
 
     // Give the page back only once the sheet is out of the way, so the
     // reader cannot scroll the hero up behind a panel still crossing it.
@@ -37,7 +37,7 @@
       // page that could not scroll; tell it to look again.
       dispatchEvent(new Event('resize'));
       if (window.ScrollTrigger && ScrollTrigger.refresh) ScrollTrigger.refresh();
-    }, 1500);
+    }, 1150);
 
     off();
   }
@@ -84,7 +84,13 @@
     y0 = null;
   }, { passive: true });
 
-  /* Nothing should be able to strand a reader behind it. If the sheet is
-     still up after eight seconds, it opens itself. */
-  setTimeout(open, 8000);
+  /* The sheet is shown, not waited on: a second and a fifth of the studio's
+     name and it opens itself. A scroll, a swipe or a tap before that opens
+     it sooner — nothing has to be done, and doing something is not ignored.
+
+     Counted from when the sheet went up, not from now: this script sits at
+     the foot of the page and runs a few hundred milliseconds after the
+     reader is already looking at it. */
+  const up = window.__introUp || performance.now();
+  setTimeout(open, Math.max(0, 1200 - (performance.now() - up)));
 })();
