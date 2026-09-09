@@ -1532,8 +1532,7 @@
     background: none;
     align-content: center;
     gap: 0;
-    padding: clamp(5.5rem, 17vh, 8rem) clamp(1.55rem, 7.5vw, 2.6rem)
-             clamp(4.5rem, 13vh, 6rem);
+    padding: clamp(5.5rem, 17vh, 8rem) var(--page-x) clamp(4.5rem, 13vh, 6rem);
   }
 
   /* ── The signature ─────────────────────────────────────────────────── */
