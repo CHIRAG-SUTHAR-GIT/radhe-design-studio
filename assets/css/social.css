@@ -77,9 +77,13 @@
 .social {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: clamp(.7rem, 2.4vw, 1.05rem);
   padding: clamp(1.4rem, 3vw, 2.2rem) 0 0;
 }
+/* The marks close the page. studio.css leaves a strip of footer under them;
+   nothing belongs there now that the drafting block has gone. */
+.foot { padding-bottom: 0; }
 .social__link {
   position: relative;
   display: grid;
