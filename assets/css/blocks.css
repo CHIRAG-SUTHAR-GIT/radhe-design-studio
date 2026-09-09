@@ -816,11 +816,11 @@
   /* The line arcs in from the heading before it turns down the page. */
   .proc-row__grid::before {
     content: '';
-    position: absolute; left: 6.3px; top: -18.2px;
+    position: absolute; right: 6.3px; top: -18.2px;
     width: 47.6px; height: 29.4px;
-    border-left: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
     border-top: 1px solid color-mix(in srgb, var(--pr-gold) 55%, transparent);
-    border-top-left-radius: 29.4px;
+    border-top-right-radius: 29.4px;
     pointer-events: none;
   }
 
@@ -829,15 +829,16 @@
     display: grid;
     /* 42px, to match the ring that stands in it: the earlier pass that
        took a third off the block scaled the ring but not its column. */
-    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 42px;
+    text-align: right;
     column-gap: clamp(0.49rem, 2.45vw, 0.735rem);
     align-items: start;
-    padding: 0 0 clamp(1.61rem, 6.12vw, 2.17rem) 21px;
+    padding: 0 21px clamp(1.61rem, 6.12vw, 2.17rem) 0;
   }
   .pstep__ico { display: none; }
   .pstep__ico.pstep__ico--m {
     display: grid; place-items: center;
-    grid-column: 1; grid-row: 1 / span 3;
+    grid-column: 2; grid-row: 1 / span 3;
     width: 42px; height: 42px;
     max-width: none;
     border: 1px solid color-mix(in srgb, var(--pr-gold) 50%, transparent);
@@ -849,7 +850,8 @@
 
   .pstep__no {
     display: flex; align-items: center; gap: 0.49rem;
-    grid-column: 2; grid-row: 1;
+    grid-column: 1; grid-row: 1;
+    flex-direction: row-reverse;
     margin-bottom: 0.266rem;
     font-family: var(--sans);
     font-size: 0.462rem; font-weight: 500;
@@ -858,11 +860,11 @@
   }
   .pstep__no::after {
     content: ''; flex: 1; height: 0.7px;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--pr-gold) 55%, transparent), transparent);
+    background: linear-gradient(270deg, color-mix(in srgb, var(--pr-gold) 55%, transparent), transparent);
   }
 
   .proc-row.proc-row .pstep__name {
-    grid-column: 2; grid-row: 2;
+    grid-column: 1; grid-row: 2;
     margin: 0;
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: clamp(1.05rem, 4.75vw, 1.365rem);
@@ -872,7 +874,7 @@
     color: var(--pr-ink);
   }
   .pstep__text {
-    grid-column: 2; grid-row: 3;
+    grid-column: 1; grid-row: 3;
     margin-top: 0.21rem;
     font-family: var(--sans);
     font-size: clamp(0.56rem, 2.45vw, 0.63rem);
@@ -901,7 +903,7 @@
   /* The rail, and the point that lights on it. */
   .pstep::before {
     content: '';
-    position: absolute; left: 6.3px; top: 28px; bottom: -18.2px;
+    position: absolute; right: 6.3px; top: 28px; bottom: -18.2px;
     width: 0.7px;
     background: linear-gradient(180deg, color-mix(in srgb, var(--pr-gold) 80%, transparent), color-mix(in srgb, var(--pr-gold) 28%, transparent));
     transform-origin: top center;
@@ -909,7 +911,7 @@
   .pstep:last-child::before { display: none; }
   .pstep::after {
     content: '';
-    position: absolute; left: 3.85px; top: 18.2px;
+    position: absolute; right: 3.85px; top: 18.2px;
     width: 5.6px; height: 5.6px;
     border-radius: 50%;
     background: #F6E3B4;
