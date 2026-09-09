@@ -1414,18 +1414,14 @@
   .hero .hero__about-body { color: rgba(243, 238, 229, .72); }
 }
 
-/* The veil over the hero photograph, and the ink that has to read on it. */
+/* The photograph carries the hero on its own — no veil over it. The room
+   is dark at either setting of the theme (its mean luminance is 38 of 255,
+   28 across the top third), so the ink stays light in both rather than
+   turning dark under the light theme and disappearing into the floor. */
 .hero {
-  --hero-veil: rgba(9, 8, 7, .70);
   --hero-ink: #FCF9F4;
-  --hero-dim: rgba(240, 234, 225, .72);
-  --hero-quiet: rgba(246, 241, 233, .9);
-}
-[data-theme='light'] .hero {
-  --hero-veil: rgba(255, 255, 255, .74);
-  --hero-ink: #0A0907;
-  --hero-dim: rgba(16, 15, 12, .86);
-  --hero-quiet: rgba(16, 15, 12, .9);
+  --hero-dim: rgba(240, 234, 225, .78);
+  --hero-quiet: rgba(246, 241, 233, .92);
 }
 
 /* ==========================================================================
@@ -1458,18 +1454,6 @@
 
   /* Enough shade to read every line, and least of it across the top where
      the room should still be a room. */
-  .hero::after {
-    content: '';
-    position: absolute; inset: 0; z-index: 0;
-    pointer-events: none;
-    /* An even veil at seven tenths across the whole picture, black under the
-       dark theme and white under the light one, with a little more of it
-       gathered at the corners so the room falls away at the edges. */
-    background:
-      radial-gradient(130% 78% at 50% 42%,
-        transparent 0%, rgba(0, 0, 0, .16) 62%, rgba(0, 0, 0, .34) 100%),
-      var(--hero-veil);
-  }
 
   .hero .hero__block {
     grid-column: 1; grid-row: 1;
