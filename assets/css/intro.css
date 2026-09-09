@@ -72,20 +72,50 @@
     --dim: rgba(20, 19, 15, .55);
   }
 
+  /* A hairline held in from the edge with its corners cut away — an
+     octagon rather than a rectangle. Two clipped layers make the outline:
+     the lower one is the line, the upper one is the sheet again, inset by
+     a pixel, and what survives between them is the frame. A clipped border
+     would lose its own corners; this keeps them. */
+  .intro__frame {
+    position: absolute;
+    inset: clamp(9px, 3.2vw, 16px);
+    z-index: 0;
+    background: color-mix(in srgb, var(--ink) 22%, transparent);
+    clip-path: polygon(
+      26px 0, calc(100% - 26px) 0, 100% 26px, 100% calc(100% - 26px),
+      calc(100% - 26px) 100%, 26px 100%, 0 calc(100% - 26px), 0 26px);
+    pointer-events: none;
+  }
+  .intro__frame::after {
+    content: '';
+    position: absolute; inset: 1px;
+    background: var(--sheet);
+    clip-path: polygon(
+      25px 0, calc(100% - 25px) 0, 100% 25px, 100% calc(100% - 25px),
+      calc(100% - 25px) 100%, 25px 100%, 0 calc(100% - 25px), 0 25px);
+  }
+  /* Everything else stands over it. */
+  .intro__top, .intro__mid, .intro__foot { position: relative; z-index: 1; }
+
   /* ── What it carries ─────────────────────────────────────────────── */
   .intro__top,
   .intro__foot { text-align: center; }
 
   /* A span is inline, and width means nothing to an inline box — without
      this the mark filled the top of the sheet. */
-  .intro__ornament { display: block; width: 22px; height: 22px; color: var(--gold); }
+  .intro__ornament { display: block; width: clamp(30px, 8.5vw, 38px); height: clamp(30px, 8.5vw, 38px); color: var(--gold); }
   .intro__ornament svg { width: 100%; height: 100%; display: block; }
 
+  /* The name sits below the middle, not on it, and the line hangs well
+     under the name — the proportions of the reference rather than of a
+     box centred for the sake of it. */
   .intro__mid {
     display: grid;
     align-content: center;
     justify-items: center;
-    gap: clamp(1.6rem, 6vh, 2.6rem);
+    gap: clamp(3.4rem, 13vh, 6rem);
+    padding-top: clamp(2rem, 9vh, 5rem);
   }
 
   .intro__name {
@@ -166,6 +196,7 @@
   html.is-gone .intro { transform: translateY(-100%); opacity: 0; }
 
   /* Everything inside goes before the sheet does. */
+  html.is-opening .intro__frame,
   html.is-opening .intro__top,
   html.is-opening .intro__mid,
   html.is-opening .intro__foot {
