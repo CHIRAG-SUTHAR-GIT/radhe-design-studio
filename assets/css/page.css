@@ -10,4 +10,9 @@
    ========================================================================== */
 @media (max-width: 760px) {
   :root { --page-x: .6cm; }
+
+  /* panels.css takes the whole work block full bleed on a phone and pads
+     only its heading and its chips, so the collage of categories ran to
+     both edges. It is content, so it comes in with the rest. */
+  .folio-category-stage { margin-inline: var(--page-x); }
 }
